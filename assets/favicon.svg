@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7c9bff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#7c9bff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="orb" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5eead4"/>
+      <stop offset="52%" stop-color="#7c9bff"/>
+      <stop offset="100%" stop-color="#d67cff"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="34%" cy="30%" r="45%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="32" fill="url(#halo)"/>
+  <circle cx="32" cy="32" r="19" fill="url(#orb)"/>
+  <circle cx="32" cy="32" r="19" fill="url(#shine)"/>
+</svg>
