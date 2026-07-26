@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">GLOW LAB Magnetic Glow mark</title>
+  <desc id="desc">A monochrome faceted sphere formed by triangular cells.</desc>
+  <defs>
+    <radialGradient id="core" cx="50%" cy="48%" r="52%">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset=".16" stop-color="#d9d9d9"/>
+      <stop offset=".42" stop-color="#777"/>
+      <stop offset="1" stop-color="#161616"/>
+    </radialGradient>
+    <radialGradient id="halo">
+      <stop offset="0" stop-color="#fff" stop-opacity=".9"/>
+      <stop offset=".28" stop-color="#fff" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="80" cy="80" r="62" fill="url(#halo)"/>
+  <g stroke="#050505" stroke-width=".75" stroke-linejoin="round">
+    <path fill="#202020" d="M80 19 103 32 79 45 57 32Z"/>
+    <path fill="#383838" d="m103 32 20 22-29 3-15-12Z"/>
+    <path fill="#555" d="m123 54 9 28-31-10-7-15Z"/>
+    <path fill="#737373" d="m132 82-11 27-24-23 4-14Z"/>
+    <path fill="#292929" d="m121 109-24 24-12-31 12-16Z"/>
+    <path fill="#474747" d="m97 133-30 7 3-34 15-4Z"/>
+    <path fill="#696969" d="m67 140-27-17 22-24 8 7Z"/>
+    <path fill="#303030" d="m40 123-14-27 31-10 5 13Z"/>
+    <path fill="#4d4d4d" d="M26 96 27 66l30 10v10Z"/>
+    <path fill="#767676" d="m27 66 16-27 23 23-9 14Z"/>
+    <path fill="#353535" d="m43 39 14-7 22 13-13 17Z"/>
+    <path fill="#8a8a8a" d="m79 45 15 12 7 15-21 8-14-18Z"/>
+    <path fill="#5e5e5e" d="m66 62 14 18-23-4Z"/>
+    <path fill="#969696" d="m57 76 23 4-23 6Z"/>
+    <path fill="#b0b0b0" d="m80 80 21-8-4 14-12 16Z"/>
+    <path fill="#c6c6c6" d="m80 80 5 22-15 4-13-20Z"/>
+    <path fill="#909090" d="m57 86 13 20-8-7Z"/>
+    <path fill="#ababab" d="m57 86 23-6-10 26Z"/>
+    <path fill="#d0d0d0" d="m80 80 17 6-12 16Z"/>
+    <path fill="url(#core)" d="m80 58 19 22-19 23-20-23Z"/>
+  </g>
+  <circle cx="80" cy="80" r="8" fill="#fff" opacity=".32"/>
+</svg>

@@ -1,235 +1,193 @@
-/* GLOW Lab — site interactions + generative hero */
-
 (function () {
   "use strict";
 
-  /* ---------- Header: solid background after scrolling ---------- */
+  document.documentElement.classList.add("js");
 
-  const header = document.querySelector(".site-header");
-  const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 24);
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
+  var themeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+  var themeToggle = document.querySelector("[data-theme-toggle]");
 
-  /* ---------- Mobile navigation ---------- */
+  function currentTheme() {
+    return document.documentElement.dataset.theme || (themeMedia.matches ? "dark" : "light");
+  }
 
-  const toggle = document.querySelector(".nav-toggle");
-  const links = document.querySelector(".nav-links");
-  if (toggle && links) {
-    toggle.addEventListener("click", () => {
-      const open = links.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", String(open));
-    });
-    links.addEventListener("click", (e) => {
-      if (e.target.closest("a")) {
-        links.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
+  function setTheme(theme, persist) {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    if (themeToggle) {
+      themeToggle.textContent = theme === "dark" ? "Light Theme" : "Dark Theme";
+      themeToggle.setAttribute("aria-label", "Switch to " + (theme === "dark" ? "light" : "dark") + " theme");
+    }
+    if (persist) {
+      try {
+        window.localStorage.setItem("theme", theme);
+      } catch (_error) {
+        // The theme still works for the current page when storage is unavailable.
       }
+    }
+  }
+
+  setTheme(currentTheme(), false);
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", function () {
+      setTheme(currentTheme() === "dark" ? "light" : "dark", true);
     });
   }
 
-  /* ---------- Reveal on scroll ---------- */
-
-  const revealed = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && revealed.length) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            io.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
-    revealed.forEach((el) => io.observe(el));
-  } else {
-    revealed.forEach((el) => el.classList.add("visible"));
-  }
-
-  /* ---------- Hero: a slowly turning generative world ----------
-     A fibonacci-lattice point sphere with gentle noise displacement,
-     rendered with pre-baked glow sprites. Static frame if the user
-     prefers reduced motion. */
-
-  const canvas = document.getElementById("world-canvas");
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const COLORS = ["#0d9488", "#4f46e5", "#9333ea"];
-  const N_POINTS = 520;
-  const N_DUST = 90;
-
-  // Pre-render one soft-dot sprite per color: solid core fading out, so the
-  // points stay saturated on the light background.
-  const sprites = COLORS.map((color) => {
-    const s = document.createElement("canvas");
-    s.width = s.height = 64;
-    const sc = s.getContext("2d");
-    const g = sc.createRadialGradient(32, 32, 0, 32, 32, 32);
-    g.addColorStop(0, color);
-    g.addColorStop(0.45, color);
-    g.addColorStop(1, "rgba(255,255,255,0)");
-    sc.fillStyle = g;
-    sc.fillRect(0, 0, 64, 64);
-    return s;
+  window.addEventListener("storage", function (event) {
+    if (event.key !== "theme") return;
+    setTheme(event.newValue || (themeMedia.matches ? "dark" : "light"), false);
   });
 
-  // Points on a unit sphere via fibonacci lattice.
-  const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-  const points = [];
-  for (let i = 0; i < N_POINTS; i++) {
-    const y = 1 - (i / (N_POINTS - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const theta = GOLDEN * i;
-    points.push({
-      x: Math.cos(theta) * r,
-      y,
-      z: Math.sin(theta) * r,
-      color: (Math.random() * 3) | 0,
-      phase: Math.random() * Math.PI * 2,
-      amp: 0.02 + Math.random() * 0.05,
-    });
-  }
-
-  // Ambient dust drifting around the sphere.
-  const dust = [];
-  for (let i = 0; i < N_DUST; i++) {
-    dust.push({
-      a: Math.random() * Math.PI * 2,
-      d: 1.25 + Math.random() * 1.4,
-      y: (Math.random() - 0.5) * 2.2,
-      speed: (0.02 + Math.random() * 0.05) * (Math.random() < 0.5 ? -1 : 1),
-      size: 1 + Math.random() * 2.2,
-      color: (Math.random() * 3) | 0,
-    });
-  }
-
-  let w = 0, h = 0, dpr = 1, cx = 0, cy = 0, R = 0, dim = 1;
-
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = canvas.clientWidth;
-    h = canvas.clientHeight;
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const wide = w > 900;
-    // On wide screens the world sits right-of-center behind the copy;
-    // on small screens it floats above, behind the text.
-    cx = wide ? w * 0.76 : w * 0.5;
-    cy = wide ? h * 0.5 : h * 0.3;
-    R = Math.min(w, h) * (wide ? 0.3 : 0.22);
-    // On small screens the globe sits behind the headline — keep it subtle.
-    dim = wide ? 1 : 0.45;
-  }
-
-  function draw(t) {
-    ctx.clearRect(0, 0, w, h);
-
-    // Soft ambient halo behind the sphere.
-    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 2.4);
-    halo.addColorStop(0, "rgba(99, 102, 241, 0.07)");
-    halo.addColorStop(0.5, "rgba(147, 51, 234, 0.03)");
-    halo.addColorStop(1, "rgba(255, 255, 255, 0)");
-    ctx.fillStyle = halo;
-    ctx.fillRect(0, 0, w, h);
-
-    const rotY = t * 0.00008;
-    const rotX = 0.42 + Math.sin(t * 0.00003) * 0.05;
-    const sinY = Math.sin(rotY), cosY = Math.cos(rotY);
-    const sinX = Math.sin(rotX), cosX = Math.cos(rotX);
-
-    // Dust ring.
-    for (const p of dust) {
-      const a = p.a + t * 0.00004 * p.speed * 60;
-      let x = Math.cos(a) * p.d;
-      let z = Math.sin(a) * p.d;
-      let y = p.y;
-      let y2 = y * cosX - z * sinX;
-      let z2 = y * sinX + z * cosX;
-      const persp = 1 / (1 + z2 * 0.28);
-      const px = cx + x * R * persp;
-      const py = cy + y2 * R * persp;
-      const size = p.size * persp * 2.6;
-      ctx.globalAlpha = 0.14 * persp * dim;
-      ctx.drawImage(sprites[p.color], px - size / 2, py - size / 2, size, size);
+  themeMedia.addEventListener("change", function (event) {
+    try {
+      if (window.localStorage.getItem("theme")) return;
+    } catch (_error) {
+      // Fall through to the system theme.
     }
-
-    // Faint graticule rings so the point cloud reads as a globe.
-    ctx.lineWidth = 1;
-    for (let ring = 0; ring < 4; ring++) {
-      const lat = -0.6 + ring * 0.4; // ring heights on the unit sphere
-      const rr = Math.sqrt(Math.max(0, 1 - lat * lat));
-      ctx.beginPath();
-      let started = false;
-      for (let s = 0; s <= 72; s++) {
-        const a = (s / 72) * Math.PI * 2;
-        let x = Math.cos(a) * rr, y = lat, z = Math.sin(a) * rr;
-        let x2 = x * cosY - z * sinY;
-        let z1 = x * sinY + z * cosY;
-        let y2 = y * cosX - z1 * sinX;
-        let z2 = y * sinX + z1 * cosX;
-        const persp = 1 / (1 + z2 * 0.32);
-        const px = cx + x2 * R * persp;
-        const py = cy + y2 * R * persp;
-        if (started) ctx.lineTo(px, py);
-        else { ctx.moveTo(px, py); started = true; }
-      }
-      ctx.closePath();
-      ctx.strokeStyle = "rgba(79, 70, 229, 0.09)";
-      ctx.stroke();
-    }
-
-    // Sphere points.
-    for (const p of points) {
-      const wobble = 1 + Math.sin(t * 0.0011 + p.phase) * p.amp;
-      let x = p.x * wobble, y = p.y * wobble, z = p.z * wobble;
-
-      let x2 = x * cosY - z * sinY;
-      let z1 = x * sinY + z * cosY;
-      let y2 = y * cosX - z1 * sinX;
-      let z2 = y * sinX + z1 * cosX;
-
-      const persp = 1 / (1 + z2 * 0.32);
-      const px = cx + x2 * R * persp;
-      const py = cy + y2 * R * persp;
-
-      const depth = (1 - z2) * 0.5; // 0 (far) → 1 (near)
-      const size = (1.3 + depth * 4) * persp;
-      ctx.globalAlpha = (0.14 + depth * 0.62) * dim;
-      ctx.drawImage(sprites[p.color], px - size, py - size, size * 2, size * 2);
-    }
-
-    ctx.globalAlpha = 1;
-  }
-
-  let raf = null;
-  function loop(t) {
-    draw(t);
-    raf = requestAnimationFrame(loop);
-  }
-
-  resize();
-  window.addEventListener("resize", () => {
-    resize();
-    if (reduceMotion) draw(12000);
+    setTheme(event.matches ? "dark" : "light", false);
   });
 
-  if (reduceMotion) {
-    draw(12000);
-  } else {
-    raf = requestAnimationFrame(loop);
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-        raf = null;
-      } else if (!raf) {
-        raf = requestAnimationFrame(loop);
-      }
+  function getInternalPage(anchor) {
+    if (!anchor || anchor.target === "_blank" || anchor.hasAttribute("download")) return null;
+    var url = new URL(anchor.href, window.location.href);
+    if (url.origin !== window.location.origin) return null;
+    if (!url.pathname.endsWith(".html") && !url.pathname.endsWith("/")) return null;
+    return url;
+  }
+
+  var prefetched = new Set();
+
+  function prefetch(url) {
+    if (!url || url.pathname === window.location.pathname || prefetched.has(url.pathname)) return;
+    prefetched.add(url.pathname);
+    var hint = document.createElement("link");
+    hint.rel = "prefetch";
+    hint.href = url.pathname;
+    hint.as = "document";
+    document.head.appendChild(hint);
+  }
+
+  document.addEventListener(
+    "pointerover",
+    function (event) {
+      prefetch(getInternalPage(event.target.closest("a[href]")));
+    },
+    { passive: true },
+  );
+
+  document.addEventListener(
+    "touchstart",
+    function (event) {
+      prefetch(getInternalPage(event.target.closest("a[href]")));
+    },
+    { passive: true },
+  );
+
+  function prefetchNavigation() {
+    document.querySelectorAll(".main-nav a[href]").forEach(function (anchor) {
+      prefetch(getInternalPage(anchor));
     });
+  }
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(prefetchNavigation, { timeout: 900 });
+  } else {
+    window.setTimeout(prefetchNavigation, 450);
+  }
+
+  var publicationList = document.querySelector("[data-publication-list]");
+
+  function primaryLink(publication) {
+    return publication.querySelector(".pub-title a[href]") || publication.querySelector(".pub-links a[href]");
+  }
+
+  function enhancePublicationList() {
+    if (!publicationList) return;
+    publicationList.querySelectorAll(".pub-year").forEach(function (yearHeading) {
+      var year = yearHeading.textContent.trim();
+      var list = yearHeading.nextElementSibling;
+      if (!list || !list.classList.contains("pub-list")) return;
+      list.querySelectorAll(":scope > .pub").forEach(function (publication) {
+        publication.dataset.year = year.replace(" & earlier", "≤");
+      });
+    });
+  }
+
+  function buildPreview(publication, index) {
+    var title = publication.querySelector(".pub-title");
+    var authors = publication.querySelector(".pub-authors");
+    var venue = publication.querySelector(".venue");
+    var award = publication.querySelector(".award");
+    var link = primaryLink(publication);
+    var wrapper = link ? document.createElement("a") : document.createElement("div");
+    wrapper.className = "card-link";
+
+    if (link) {
+      wrapper.href = link.href;
+      wrapper.target = "_blank";
+      wrapper.rel = "noopener";
+    }
+
+    var article = document.createElement("article");
+    article.className = "card publication-card";
+    var visual = document.createElement("div");
+    visual.className = "visual";
+    visual.dataset.visual = String(index % 5);
+    visual.setAttribute("aria-hidden", "true");
+    var copy = document.createElement("div");
+    copy.className = "card-copy";
+    var previewTitle = document.createElement("h3");
+    previewTitle.textContent = title ? title.textContent.trim() : "Publication";
+    var meta = document.createElement("p");
+    meta.className = "card-meta";
+    var metaParts = [];
+    if (venue) metaParts.push(venue.textContent.trim());
+    if (authors) metaParts.push(authors.textContent.trim());
+    meta.textContent = metaParts.join(" · ");
+    if (award) {
+      var awardCopy = document.createElement("span");
+      awardCopy.className = "award";
+      awardCopy.textContent = award.textContent.trim();
+      meta.prepend(awardCopy, " ");
+    }
+    copy.append(previewTitle, meta);
+    article.append(visual, copy);
+    wrapper.append(article);
+    return wrapper;
+  }
+
+  function buildPublicationPreviews() {
+    var previewGrid = document.querySelector("[data-publication-previews]");
+    if (!publicationList || !previewGrid) return;
+    var fragment = document.createDocumentFragment();
+    publicationList.querySelectorAll(".pub").forEach(function (publication, index) {
+      fragment.appendChild(buildPreview(publication, index));
+    });
+    previewGrid.appendChild(fragment);
+  }
+
+  enhancePublicationList();
+  buildPublicationPreviews();
+
+  function loadMagneticLogo() {
+    var logo = document.querySelector("[data-magnetic-glow]");
+    if (!logo || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    var threeScript = document.createElement("script");
+    threeScript.src = "assets/vendor/three.min.js";
+    threeScript.onload = function () {
+      var logoScript = document.createElement("script");
+      logoScript.src = "js/magnetic-glow.js";
+      document.head.appendChild(logoScript);
+    };
+    document.head.appendChild(threeScript);
+  }
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(loadMagneticLogo, { timeout: 1000 });
+  } else {
+    window.setTimeout(loadMagneticLogo, 500);
   }
 })();
