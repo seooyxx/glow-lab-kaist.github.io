@@ -5,9 +5,7 @@
 Website for **GLOW (Generative Learning of Worlds) Lab** — Kim Jaechul Graduate
 School of AI, KAIST. Led by Prof. Seung Wook Kim.
 
-A fully static site: no build step and no package dependencies. Its layout and
-interaction system follows the Scene Representation Group website while keeping
-GLOW Lab's own content and identity.
+A fully static site: no build step and no package dependencies.
 
 ## Structure
 
