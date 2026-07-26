@@ -171,12 +171,6 @@
     glowSprite.position.z = -0.28;
     glowSprite.scale.set(2.5, 2.5, 1);
     scene.add(glowSprite);
-    var innerCore = new THREE.Sprite(glowMaterial.clone());
-    innerCore.material.depthTest = false;
-    innerCore.position.z = -0.12;
-    innerCore.scale.set(0.72, 0.72, 1);
-    innerCore.renderOrder = 4;
-    scene.add(innerCore);
 
     var screenPointer = new THREE.Vector3(0, 0, 1);
     var localPointer = new THREE.Vector3(0, 0, 1);
@@ -292,10 +286,7 @@
       var pulse = 0.88 + Math.sin(time * 0.006) * 0.12;
       glowSprite.material.opacity = explosion * 0.68 * pulse;
       glowSprite.scale.setScalar(2.35 + explosion * 0.5);
-      innerCore.material.opacity = explosion * 0.78 * pulse;
-      innerCore.scale.setScalar(0.62 + explosion * 0.2);
       glowSprite.material.color.set(0xffffff);
-      innerCore.material.color.set(0xffffff);
       material.emissive.set(0x555555);
       material.emissiveIntensity = explosion * 0.72 * pulse;
       render();

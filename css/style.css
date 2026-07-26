@@ -202,7 +202,7 @@ strong {
 }
 
 .brand {
-  min-width: 162px;
+  min-width: 154px;
   display: inline-flex;
   align-items: center;
   color: var(--color-fg-base);
@@ -214,9 +214,9 @@ strong {
 
 .magnetic-logo {
   position: relative;
-  width: 61px;
-  height: 61px;
-  flex: 0 0 61px;
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
   overflow: visible;
   touch-action: none;
 }
@@ -283,7 +283,7 @@ strong {
 }
 
 .institution-marks {
-  min-width: 148px;
+  min-width: 128px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -295,7 +295,7 @@ strong {
 }
 
 .kaist-ai-logo {
-  width: 148px;
+  width: 128px;
   height: auto;
 }
 
@@ -1417,9 +1417,9 @@ html[data-transition-direction="back"]::view-transition-new(page) {
 
 @media (max-width: 480px) {
   .magnetic-logo {
-    width: 52px;
-    height: 52px;
-    flex-basis: 52px;
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
   }
 
   .institution-marks {
@@ -1427,7 +1427,7 @@ html[data-transition-direction="back"]::view-transition-new(page) {
   }
 
   .kaist-ai-logo {
-    width: 112px;
+    width: 96px;
   }
 
   .main-nav {
