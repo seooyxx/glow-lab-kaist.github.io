@@ -1,47 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Publications — GLOW Lab</title>
   <meta name="description" content="Publications from GLOW (Generative Learning of Worlds) Lab at KAIST AI, including work by PI Seung Wook Kim on world models, generative simulation, and video diffusion.">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/MessinaSansWeb-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/MessinaSansWeb-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="publications-page">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="site-header scrolled">
-    <nav class="nav container" aria-label="Main navigation">
-      <a class="brand" href="index.html">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-name">GLOW<span class="brand-sub">Lab</span></span>
-      </a>
-      <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="people.html">People</a></li>
-        <li><a href="publications.html" aria-current="page">Publications</a></li>
-        <li class="nav-cta"><a class="btn btn-primary btn-sm" href="join.html">Join Us</a></li>
-      </ul>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="GLOW LAB home" data-brand-link>
+      <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
+        <img src="assets/magnetic-glow.svg" alt="" width="160" height="160">
+      </span>
+      <span class="wordmark">GLOW<br>LAB</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="people.html">People</a>
+      <a href="publications.html" aria-current="page">Publications</a>
+      <a href="join.html">Join Us</a>
     </nav>
+    <div class="institution-marks" aria-label="KAIST AI">
+      <a class="kaist-wordmark" href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">KAIST</a>
+      <a class="ai-wordmark" href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">Kim Jaechul<br>Graduate School<br>of AI</a>
+    </div>
   </header>
 
   <main id="main">
-    <div class="page-head">
-      <div class="container">
-        <span class="eyebrow">Research</span>
-        <h1><span class="text-gradient">Publications</span></h1>
+    <section class="heading-section">
+      <div>
+        <h1>Publications</h1>
       </div>
-    </div>
+      <nav class="section-jumps" aria-label="Publication sections">
+        <a href="#featured">✪ Featured</a>
+        <a href="#list">▤ List</a>
+        <a href="#previews">⌘ Previews</a>
+      </nav>
+    </section>
 
-    <section class="container" style="padding-bottom: 96px">
-      <p style="font-size: 13.5px; color: var(--text-faint); margin: 0">* indicates equal contribution</p>
+    <section class="featured-scroller dotted-section" id="featured" aria-label="Featured publications">
+      <a class="card-link" href="https://research.nvidia.com/labs/sil/projects/instant-nurec/" target="_blank" rel="noopener">
+        <article class="card publication-card">
+          <div class="visual" data-visual="0" aria-hidden="true"></div>
+          <div class="card-copy">
+            <h3>Instant NuRec: Feed-Forward 3D Gaussian Reconstruction for Driving Scene Simulation</h3>
+            <p class="card-meta"><span class="pill">arXiv</span> · 2026 · NVIDIA</p>
+          </div>
+        </article>
+      </a>
+      <a class="card-link" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
+        <article class="card publication-card">
+          <div class="visual" data-visual="1" aria-hidden="true"></div>
+          <div class="card-copy">
+            <h3>NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</h3>
+            <p class="card-meta"><span class="pill">arXiv</span> · 2026 · NVIDIA</p>
+          </div>
+        </article>
+      </a>
+      <a class="card-link" href="https://dohyun-as.github.io/DDSPO/" target="_blank" rel="noopener">
+        <article class="card publication-card">
+          <div class="visual" data-visual="2" aria-hidden="true"></div>
+          <div class="card-copy">
+            <h3>Direct Diffusion Score Preference Optimization via Stepwise Contrastive Policy-Pair Supervision</h3>
+            <p class="card-meta"><span class="pill">ECCV</span> · 2026 · Dohyun Kim, Seungwoo Lyu, Seung Wook Kim et al.</p>
+          </div>
+        </article>
+      </a>
+      <a class="card-link" href="https://www.sciencedirect.com/science/article/abs/pii/S0167865526002230" target="_blank" rel="noopener">
+        <article class="card publication-card">
+          <div class="visual" data-visual="3" aria-hidden="true"></div>
+          <div class="card-copy">
+            <h3>Connecting the Objects: Relational Occlusion Graphs for Amodal Segmentation</h3>
+            <p class="card-meta"><span class="pill">PRL</span> · 2026 · Huiling Liu, Eunnam Cho, Soyun Choi et al.</p>
+          </div>
+        </article>
+      </a>
+      <a class="card-link" href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams" target="_blank" rel="noopener">
+        <article class="card publication-card">
+          <div class="visual" data-visual="4" aria-hidden="true"></div>
+          <div class="card-copy">
+            <h3>Cosmos-Drive-Dreams: Scalable Synthetic Driving Data Generation with World Foundation Models</h3>
+            <p class="card-meta"><span class="pill">arXiv</span> · 2025 · Xuanchi Ren, Yifan Lu, Tianshi Cao et al.</p>
+          </div>
+        </article>
+      </a>
+    </section>
+
+    <section class="publication-list-wrap" id="list" data-publication-list>
+      <div class="publication-list-head" aria-hidden="true">
+        <span>Date</span>
+        <span>Title</span>
+        <span>Authors</span>
+        <span>✦</span>
+        <span>Venue</span>
+        <span>Links</span>
+      </div>
+      <p class="equal-note">* indicates equal contribution</p>
       <h2 class="pub-year">2026</h2>
       <ul class="pub-list">
         <li class="pub">
@@ -392,24 +453,29 @@
         </li>
       </ul>
     </section>
+
+    <section class="preview-section dotted-section" id="previews" aria-labelledby="previews-title">
+      <div class="section-heading">
+        <h2 id="previews-title">Previews</h2>
+        <span class="section-kicker">All publications</span>
+      </div>
+      <div class="cards preview-grid" data-publication-previews></div>
+      <noscript>
+        <p class="equal-note">The complete publication list remains available in the List section above.</p>
+      </noscript>
+    </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-compact">
-        <a class="brand" href="index.html">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-name">GLOW<span class="brand-sub">Lab</span></span>
-        </a>
-        <p class="footer-address">
-          Kim Jaechul Graduate School of AI, KAIST<br>
-          Seoul AI HUB, 108 Taebong-ro, Seocho-gu, Seoul 06764, Republic of Korea
-        </p>
-      </div>
-      <div class="footer-bottom">
-        <span>© 2026 GLOW Lab, KAIST. All rights reserved.</span>
-      </div>
+    <div class="footer-meta">
+      <span>© 2026 GLOW Lab, KAIST. All rights reserved.</span>
+      <address class="footer-address">Kim Jaechul Graduate School of AI, KAIST · Seoul AI HUB, 108 Taebong-ro, Seocho-gu, Seoul 06764, Republic of Korea</address>
+      <button type="button" data-theme-toggle>Dark Theme</button>
     </div>
+    <nav class="footer-links" aria-label="Institution links">
+      <a href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">→ About KAIST</a>
+      <a href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">→ About KAIST AI</a>
+    </nav>
   </footer>
 
   <script src="js/main.js"></script>

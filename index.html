@@ -1,237 +1,177 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GLOW Lab — Generative Learning of Worlds | KAIST AI</title>
   <meta name="description" content="GLOW (Generative Learning of Worlds) Lab at KAIST AI builds generative world models that learn to simulate, understand, and act in complex environments. Led by Prof. Seung Wook Kim.">
   <meta property="og:title" content="GLOW Lab — Generative Learning of Worlds">
   <meta property="og:description" content="Generative world models that learn to simulate, understand, and act in complex environments. KAIST AI, opening August 2026.">
   <meta property="og:type" content="website">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/MessinaSansWeb-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/MessinaSansWeb-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+  <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="home-page">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- gradient used by the pillar icons -->
-  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
-    <defs>
-      <linearGradient id="icon-gradient" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#5eead4"/>
-        <stop offset="55%" stop-color="#7c9bff"/>
-        <stop offset="100%" stop-color="#d67cff"/>
-      </linearGradient>
-    </defs>
-  </svg>
-
   <header class="site-header">
-    <nav class="nav container" aria-label="Main navigation">
-      <a class="brand" href="index.html">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-name">GLOW<span class="brand-sub">Lab</span></span>
-      </a>
-      <button class="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
-        <span></span><span></span><span></span>
-      </button>
-      <ul class="nav-links">
-        <li><a href="index.html" aria-current="page">Home</a></li>
-        <li><a href="people.html">People</a></li>
-        <li><a href="publications.html">Publications</a></li>
-        <li class="nav-cta"><a class="btn btn-primary btn-sm" href="join.html">Join Us</a></li>
-      </ul>
+    <a class="brand" href="index.html" aria-label="GLOW LAB home" data-brand-link>
+      <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
+        <img src="assets/magnetic-glow.svg" alt="" width="160" height="160">
+      </span>
+      <span class="wordmark">GLOW<br>LAB</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="people.html">People</a>
+      <a href="publications.html">Publications</a>
+      <a href="join.html">Join Us</a>
     </nav>
+    <div class="institution-marks" aria-label="KAIST AI">
+      <a class="kaist-wordmark" href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">KAIST</a>
+      <a class="ai-wordmark" href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">Kim Jaechul<br>Graduate School<br>of AI</a>
+    </div>
   </header>
 
   <main id="main">
+    <div class="home-layout">
+      <section class="mission-section dotted-section" id="research">
+        <h1>
+          Generative Learning of Worlds
+          <span class="mission-at">@ KAIST AI</span>
+        </h1>
+        <p class="mission-lead">
+          Generative models have learned to produce strikingly realistic images and video.
+          The next step is worlds: models that capture how environments evolve, respond to
+          actions, and stay coherent over time. GLOW (Generative Learning of Worlds) Lab,
+          led by (Incoming) Prof. Seung Wook Kim, studies these visual world models
+          in both of their roles — as <strong>simulators</strong> that can stand in for reality, and as
+          <strong>policies</strong> that let agents plan and act — along with the
+          <strong>representations</strong> that make both possible. World models
+          like these are essential for physical AI: any system that must sense, predict, and
+          act in the real world needs one.
+        </p>
+      </section>
 
-    <!-- ================= Hero + Research ================= -->
-    <section class="hero" id="research">
-      <canvas id="world-canvas" aria-hidden="true"></canvas>
-      <div class="container" style="position: relative; z-index: 2">
-        <div class="hero-inner">
-          <h1>Generative Learning of <span class="text-gradient">Worlds</span> <span class="hero-at">@ KAIST AI</span></h1>
+      <section class="home-publications" aria-labelledby="selected-title">
+        <div class="section-heading">
+          <h2 id="selected-title">Selected Publications</h2>
+          <a href="publications.html">→ All Publications</a>
         </div>
-        <div class="reveal">
-          <span class="eyebrow">Research</span>
-          <h2 class="section-title">Worlds you can learn, worlds you can act in</h2>
-          <p class="section-lead" style="max-width: 780px">
-            Generative models have learned to produce strikingly realistic images and video.
-            The next step is worlds: models that capture how environments evolve, respond to
-            actions, and stay coherent over time. GLOW (Generative Learning of Worlds) Lab,
-            led by (Incoming) Prof. Seung Wook Kim, studies these visual world models
-            in both of their roles — as <strong style="color: var(--text)">simulators</strong> that can stand in for reality, and as
-            <strong style="color: var(--text)">policies</strong> that let agents plan and act — along with the
-            <strong style="color: var(--text)">representations</strong> that make both possible. World models
-            like these are essential for physical AI: any system that must sense, predict, and
-            act in the real world needs one.
-          </p>
+        <div class="cards home-publication-grid">
+          <a class="card-link" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
+            <article class="card publication-card">
+              <div class="visual" data-visual="0" aria-hidden="true"></div>
+              <div class="card-copy">
+                <h3>NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</h3>
+                <p class="card-meta"><span class="pill">arXiv</span> · 2026 · NVIDIA</p>
+              </div>
+            </article>
+          </a>
+          <a class="card-link" href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">
+            <article class="card publication-card">
+              <div class="visual" data-visual="1" aria-hidden="true"></div>
+              <div class="card-copy">
+                <h3>Cosmos World Foundation Model Platform for Physical AI</h3>
+                <p class="card-meta"><span class="pill">arXiv</span> · 2025 · NVIDIA</p>
+              </div>
+            </article>
+          </a>
+          <a class="card-link" href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">
+            <article class="card publication-card">
+              <div class="visual" data-visual="2" aria-hidden="true"></div>
+              <div class="card-copy">
+                <h3>Align Your Gaussians: Text-to-4D with Dynamic 3D Gaussians and Composed Diffusion Models</h3>
+                <p class="card-meta"><span class="pill">CVPR</span> · 2024 · Huan Ling, Seung Wook Kim et al. · ✦ Highlight</p>
+              </div>
+            </article>
+          </a>
+          <a class="card-link" href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">
+            <article class="card publication-card">
+              <div class="visual" data-visual="3" aria-hidden="true"></div>
+              <div class="card-copy">
+                <h3>Align your Latents: High-Resolution Video Synthesis with Latent Diffusion Models</h3>
+                <p class="card-meta"><span class="pill">CVPR</span> · 2023 · Andreas Blattmann, Robin Rombach, Huan Ling et al.</p>
+              </div>
+            </article>
+          </a>
+          <a class="card-link" href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">
+            <article class="card publication-card">
+              <div class="visual" data-visual="4" aria-hidden="true"></div>
+              <div class="card-copy">
+                <h3>DriveGAN: Towards a Controllable High-Quality Neural Simulation</h3>
+                <p class="card-meta"><span class="pill">CVPR</span> · 2021 · Seung Wook Kim et al. · ✦ Oral</p>
+              </div>
+            </article>
+          </a>
+          <a class="card-link" href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">
+            <article class="card publication-card">
+              <div class="visual" data-visual="0" aria-hidden="true"></div>
+              <div class="card-copy">
+                <h3>Learning to Simulate Dynamic Environments with GameGAN</h3>
+                <p class="card-meta"><span class="pill">CVPR</span> · 2020 · Seung Wook Kim et al.</p>
+              </div>
+            </article>
+          </a>
         </div>
-        <div class="pillars">
-          <article class="pillar reveal">
-            <div class="pillar-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><path d="M12 3a13.5 13.5 0 0 1 0 18M12 3a13.5 13.5 0 0 0 0 18"/></svg>
-            </div>
+        <p class="equal-note">* indicates equal contribution</p>
+      </section>
+
+      <section class="home-research dotted-section" aria-labelledby="research-title">
+        <div class="section-heading">
+          <h2 id="research-title">Research</h2>
+        </div>
+        <div class="cards research-grid">
+          <article class="research-card">
+            <span class="research-index">01 / Simulation</span>
             <h3>Worlds as simulators</h3>
-            <p>
-              Can a neural network learn an environment well enough to replace it?
-              We study action-conditioned video and world prediction, neural game and
-              robotics simulators, and controllable video generation.
-            </p>
+            <p>Can a neural network learn an environment well enough to replace it? We study action-conditioned video and world prediction, neural game and robotics simulators, and controllable video generation.</p>
           </article>
-          <article class="pillar reveal reveal-delay-1">
-            <div class="pillar-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19c3-1 4.5-4 5-7M9 12c.5-3 2-6 5-7M14 5l5-1-1 5M9 12l6 6M15 18l4 1"/><circle cx="4" cy="19" r="1.6"/><circle cx="19" cy="4" r="1.6"/></svg>
-            </div>
+          <article class="research-card">
+            <span class="research-index">02 / Action</span>
             <h3>Worlds for action</h3>
-            <p>
-              A model that predicts the world can also decide in it. We use world models
-              as the backbone of policy models: planning with learned dynamics,
-              video-as-policy, and grounding control in inverse dynamics.
-            </p>
+            <p>A model that predicts the world can also decide in it. We use world models as the backbone of policy models: planning with learned dynamics, video-as-policy, and grounding control in inverse dynamics.</p>
           </article>
-          <article class="pillar reveal reveal-delay-2">
-            <div class="pillar-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="7" cy="18" r="2.2"/><circle cx="17" cy="17" r="2.2"/><path d="M8 7l8-.6M7.3 8.1l-.6 7.7M8.9 18.6l6-.9M17.7 15l-.4-5.8"/></svg>
-            </div>
+          <article class="research-card">
+            <span class="research-index">03 / Representation</span>
             <h3>Representations of worlds</h3>
-            <p>
-              What makes a latent space good for prediction and control? We investigate
-              the representations world models learn and are built on — video VAEs and
-              latent-space design, predictive representation learning, and latents that
-              are rich in dynamics.
-            </p>
+            <p>What makes a latent space good for prediction and control? We investigate the representations world models learn and are built on — video VAEs and latent-space design, predictive representation learning, and latents that are rich in dynamics.</p>
           </article>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= News ================= -->
-    <section class="section section-alt">
-      <div class="container">
-        <div class="reveal">
-          <span class="eyebrow">News</span>
-          <h2 class="section-title">Latest from the lab</h2>
+      <section class="home-news" aria-labelledby="news-title">
+        <div>
+          <h2 id="news-title">Recent News</h2>
+          <p class="section-kicker">Latest from the lab</p>
         </div>
-        <ul class="news-list reveal" style="max-width: 720px">
+        <ul class="news-list">
           <li class="news-item">
-            <span class="news-date">August 2026</span>
-            <p>Wonjun Chang, Sanghyeop Kim, Kyaw Ye Thu, Minseo Kim, and Yeonwoo Shin
-               join the lab as research interns — welcome!</p>
+            <time class="news-date" datetime="2026-08">August 2026</time>
+            <p>Wonjun Chang, Sanghyeop Kim, Kyaw Ye Thu, Minseo Kim, and Yeonwoo Shin join the lab as research interns — welcome!</p>
           </li>
           <li class="news-item">
-            <span class="news-date">August 2026</span>
+            <time class="news-date" datetime="2026-08">August 2026</time>
             <p>GLOW Lab opens at the Kim Jaechul Graduate School of AI, KAIST.</p>
           </li>
         </ul>
-      </div>
-    </section>
-
-    <!-- ================= Selected publications ================= -->
-    <section class="section">
-      <div class="container">
-        <div class="reveal">
-          <span class="eyebrow">Selected Work</span>
-          <h2 class="section-title">Research highlights</h2>
-          <p class="section-lead">
-            <a href="publications.html" style="color: var(--glow-b)">See all publications →</a>
-          </p>
-        </div>
-        <ul class="pub-list">
-          <li class="pub reveal">
-            <h3 class="pub-title"><a href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</a></h3>
-            <p class="pub-authors">NVIDIA</p>
-            <div class="pub-meta">
-              <span class="venue">arXiv 2026</span>
-              <div class="pub-links">
-                <a href="https://arxiv.org/abs/2606.03159" target="_blank" rel="noopener">Paper</a>
-                <a href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">Project</a>
-              </div>
-            </div>
-          </li>
-          <li class="pub reveal">
-            <h3 class="pub-title"><a href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">Cosmos World Foundation Model Platform for Physical AI</a></h3>
-            <p class="pub-authors">NVIDIA</p>
-            <div class="pub-meta">
-              <span class="venue">arXiv 2025</span>
-              <div class="pub-links">
-                <a href="https://arxiv.org/abs/2501.03575" target="_blank" rel="noopener">Paper</a>
-                <a href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">Project</a>
-              </div>
-            </div>
-          </li>
-          <li class="pub reveal">
-            <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">Align Your Gaussians: Text-to-4D with Dynamic 3D Gaussians and Composed Diffusion Models</a></h3>
-            <p class="pub-authors">Huan Ling*, <span class="me">Seung Wook Kim</span>*, Antonio Torralba, Sanja Fidler, Karsten Kreis</p>
-            <div class="pub-meta">
-              <span class="venue">CVPR 2024</span>
-              <span class="award">Highlight</span>
-              <div class="pub-links">
-                <a href="https://arxiv.org/abs/2312.13763" target="_blank" rel="noopener">Paper</a>
-                <a href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">Project</a>
-              </div>
-            </div>
-          </li>
-          <li class="pub reveal">
-            <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">Align your Latents: High-Resolution Video Synthesis with Latent Diffusion Models</a></h3>
-            <p class="pub-authors">Andreas Blattmann*, Robin Rombach*, Huan Ling*, Tim Dockhorn*, <span class="me">Seung Wook Kim</span>, Sanja Fidler, Karsten Kreis</p>
-            <div class="pub-meta">
-              <span class="venue">CVPR 2023</span>
-              <div class="pub-links">
-                <a href="https://arxiv.org/abs/2304.08818" target="_blank" rel="noopener">Paper</a>
-                <a href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">Project</a>
-              </div>
-            </div>
-          </li>
-          <li class="pub reveal">
-            <h3 class="pub-title"><a href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">DriveGAN: Towards a Controllable High-Quality Neural Simulation</a></h3>
-            <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
-            <div class="pub-meta">
-              <span class="venue">CVPR 2021</span>
-              <span class="award">Oral</span>
-              <div class="pub-links">
-                <a href="https://arxiv.org/abs/2104.15060" target="_blank" rel="noopener">Paper</a>
-                <a href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">Project</a>
-              </div>
-            </div>
-          </li>
-          <li class="pub reveal">
-            <h3 class="pub-title"><a href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">Learning to Simulate Dynamic Environments with GameGAN</a></h3>
-            <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Henry Zhou, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
-            <div class="pub-meta">
-              <span class="venue">CVPR 2020</span>
-              <div class="pub-links">
-                <a href="https://arxiv.org/abs/2005.12126" target="_blank" rel="noopener">Paper</a>
-                <a href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">Project</a>
-              </div>
-            </div>
-          </li>
-        </ul>
-        <p style="font-size: 13.5px; color: var(--text-faint); margin: 14px 0 0">* indicates equal contribution</p>
-      </div>
-    </section>
-
+      </section>
+    </div>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-compact">
-        <a class="brand" href="index.html">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-name">GLOW<span class="brand-sub">Lab</span></span>
-        </a>
-        <p class="footer-address">
-          Kim Jaechul Graduate School of AI, KAIST<br>
-          Seoul AI HUB, 108 Taebong-ro, Seocho-gu, Seoul 06764, Republic of Korea
-        </p>
-      </div>
-      <div class="footer-bottom">
-        <span>© 2026 GLOW Lab, KAIST. All rights reserved.</span>
-      </div>
+    <div class="footer-meta">
+      <span>© 2026 GLOW Lab, KAIST. All rights reserved.</span>
+      <address class="footer-address">Kim Jaechul Graduate School of AI, KAIST · Seoul AI HUB, 108 Taebong-ro, Seocho-gu, Seoul 06764, Republic of Korea</address>
+      <button type="button" data-theme-toggle>Dark Theme</button>
     </div>
+    <nav class="footer-links" aria-label="Institution links">
+      <a href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">→ About KAIST</a>
+      <a href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">→ About KAIST AI</a>
+    </nav>
   </footer>
 
   <script src="js/main.js"></script>
