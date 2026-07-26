@@ -1273,6 +1273,15 @@ html[data-theme="dark"] .visual {
   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
 }
 
+.preview-grid .visual {
+  background: var(--color-bg-2);
+}
+
+.preview-grid .visual::before,
+.preview-grid .visual::after {
+  display: none;
+}
+
 .preview-grid .card {
   min-height: 297px;
 }
