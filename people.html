@@ -18,7 +18,7 @@
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="GLOW LAB home" data-brand-link>
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
-        <img src="assets/magnetic-glow-fallback.png" alt="" width="740" height="740">
+        <img src="assets/magnetic-glow-fallback.png" alt="" width="260" height="260">
       </span>
       <span class="wordmark">GLOW<br>LAB</span>
     </a>
@@ -42,16 +42,33 @@
         <p>The team</p>
       </div>
       <nav class="section-jumps" aria-label="People sections">
-        <a href="#members">▣ Members</a>
-        <a href="#profile">▦ PI Profile</a>
+        <a class="with-icon" href="#members">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 16q-1.725 0-3.225.525T6 18v2h12v-2q-1.275-.95-2.775-1.475T12 16m-6 6q-.825 0-1.412-.587T4 20V4q0-.825.588-1.412T6 2h12q.825 0 1.413.588T20 4v16q0 .825-.587 1.413T18 22zm6-8q1.45 0 2.475-1.025T15.5 10.5t-1.025-2.475T12 7 9.525 8.025 8.5 10.5t1.025 2.475T12 14"/></svg>
+          <span>Members</span>
+        </a>
+        <a class="with-icon" href="#profile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 13h5v-2h-5zm0-3h5V8h-5zm-9 6h8v-.55q0-1.125-1.1-1.787T9 13t-2.9.663T5 15.45zm4-4q.825 0 1.413-.587T11 10t-.587-1.412T9 8t-1.412.588T7 10t.588 1.413T9 12m-5 8q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20z"/></svg>
+          <span>PI Profile</span>
+        </a>
       </nav>
     </section>
 
     <section class="people-overview dotted-section" id="members" aria-labelledby="members-title">
       <h2 id="members-title">Members</h2>
       <div class="cards people-grid">
+        <a class="card-link" href="#profile" aria-label="View Seung Wook Kim's profile">
+          <article class="card person-card person-pi">
+            <div class="person-avatar" data-member-transition="seung-wook-kim" style="view-transition-name: member-img-seung-wook-kim">
+              <img class="person-avatar-photo" src="assets/seungwook-kim.jpg" alt="Seung Wook Kim" width="413" height="531">
+            </div>
+            <div class="card-copy">
+              <h3>Seung Wook Kim</h3>
+              <p class="person-role">Principal Investigator</p>
+            </div>
+          </article>
+        </a>
         <article class="card person-card">
-          <div class="person-avatar" aria-hidden="true">
+          <div class="person-avatar" data-member-transition="wonjun-chang" style="view-transition-name: member-img-wonjun-chang" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
           <div class="card-copy">
@@ -60,7 +77,7 @@
           </div>
         </article>
         <article class="card person-card">
-          <div class="person-avatar" aria-hidden="true">
+          <div class="person-avatar" data-member-transition="sanghyeop-kim" style="view-transition-name: member-img-sanghyeop-kim" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
           <div class="card-copy">
@@ -69,7 +86,7 @@
           </div>
         </article>
         <article class="card person-card">
-          <div class="person-avatar" aria-hidden="true">
+          <div class="person-avatar" data-member-transition="kyaw-ye-thu" style="view-transition-name: member-img-kyaw-ye-thu" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
           <div class="card-copy">
@@ -78,7 +95,7 @@
           </div>
         </article>
         <article class="card person-card">
-          <div class="person-avatar" aria-hidden="true">
+          <div class="person-avatar" data-member-transition="minseo-kim" style="view-transition-name: member-img-minseo-kim" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
           <div class="card-copy">
@@ -87,7 +104,7 @@
           </div>
         </article>
         <article class="card person-card">
-          <div class="person-avatar" aria-hidden="true">
+          <div class="person-avatar" data-member-transition="yeonwoo-shin" style="view-transition-name: member-img-yeonwoo-shin" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
           <div class="card-copy">
@@ -183,7 +200,7 @@
 
   <footer class="site-footer">
     <div class="footer-meta">
-      <span>© 2026 GLOW Lab, KAIST. All rights reserved.</span>
+      <span>© 2026 GLOW Lab @ KAIST AI</span>
       <address class="footer-address">Kim Jaechul Graduate School of AI, KAIST · Seoul AI HUB, 108 Taebong-ro, Seocho-gu, Seoul 06764, Republic of Korea</address>
       <button type="button" data-theme-toggle>Dark Theme</button>
     </div>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="GLOW Lab polygon sphere">
+  <g shape-rendering="geometricPrecision">
+    <path fill="#f8f8f8" d="M31.5 14.5 69 21.5 44 37.5Z"/>
+    <path fill="#dedfe1" d="M31.5 14.5 44 37.5 15.5 49Z"/>
+    <path fill="#afb1b3" d="M15.5 49 44 37.5 29 75Z"/>
+    <path fill="#d2d3d8" d="M44 37.5 69 21.5 65 67Z"/>
+    <path fill="#9ca1ab" d="M69 21.5 85 52.5 65 67Z"/>
+    <path fill="#a8aaae" d="M44 37.5 65 67 29 75Z"/>
+    <path fill="#4e5561" d="M29 75 65 67 62 82Z"/>
+    <path fill="#68707d" d="M65 67 85 52.5 62 82Z"/>
+  </g>
+</svg>

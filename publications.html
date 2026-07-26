@@ -18,7 +18,7 @@
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="GLOW LAB home" data-brand-link>
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
-        <img src="assets/magnetic-glow-fallback.png" alt="" width="740" height="740">
+        <img src="assets/magnetic-glow-fallback.png" alt="" width="260" height="260">
       </span>
       <span class="wordmark">GLOW<br>LAB</span>
     </a>
@@ -41,54 +41,63 @@
         <h1>Publications</h1>
       </div>
       <nav class="section-jumps" aria-label="Publication sections">
-        <a href="#featured">✪ Featured</a>
-        <a href="#list">▤ List</a>
-        <a href="#previews">⌘ Previews</a>
+        <a class="with-icon" href="#featured">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m8 18 4-3.05L16 18l-1.5-4.95 4-2.85h-4.9L12 5l-1.6 5.2H5.5l4 2.85zm4 4q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9 2 12t.788-3.9 2.137-3.175T8.1 2.788 12 2t3.9.788 3.175 2.137T21.213 8.1 22 12t-.788 3.9-2.137 3.175-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4 6.325 6.325 4 12t2.325 5.675T12 20m0-8"/></svg>
+          <span>Featured</span>
+        </a>
+        <a class="with-icon" href="#list">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 18h11v-2.675H9zM4 8.675h3V6H4zm0 4.675h3v-2.675H4zM4 18h3v-2.675H4zm5-4.65h11v-2.675H9zm0-4.675h11V6H9zM4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20z"/></svg>
+          <span>List</span>
+        </a>
+        <a class="with-icon" href="#previews">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8.5 10.5H5q-.825 0-1.412-.587T3 8.5V5q0-.825.588-1.412T5 3h3.5q.825 0 1.413.588T10.5 5v3.5q0 .825-.587 1.413T8.5 10.5M5 8.5h3.5V5H5zM8.5 21H5q-.825 0-1.412-.587T3 19v-3.5q0-.825.588-1.412T5 13.5h3.5q.825 0 1.413.588T10.5 15.5V19q0 .825-.587 1.413T8.5 21M5 19h3.5v-3.5H5zm14-8.5h-3.5q-.825 0-1.412-.587T13.5 8.5V5q0-.825.588-1.412T15.5 3H19q.825 0 1.413.588T21 5v3.5q0 .825-.587 1.413T19 10.5m-3.5-2H19V5h-3.5zM19 21h-3.5q-.825 0-1.412-.587T13.5 19v-3.5q0-.825.588-1.412T15.5 13.5H19q.825 0 1.413.588T21 15.5V19q0 .825-.587 1.413T19 21m-3.5-2H19v-3.5h-3.5zm0-3.5"/></svg>
+          <span>Previews</span>
+        </a>
       </nav>
     </section>
 
     <section class="featured-scroller dotted-section" id="featured" aria-label="Featured publications">
-      <a class="card-link" href="https://research.nvidia.com/labs/sil/projects/instant-nurec/" target="_blank" rel="noopener">
+      <a class="card-link" data-transition-key="instant-nurec" href="https://research.nvidia.com/labs/sil/projects/instant-nurec/" target="_blank" rel="noopener">
         <article class="card publication-card">
-          <div class="visual" data-visual="0" aria-hidden="true"></div>
+          <div class="visual" data-visual="0" aria-hidden="true" style="view-transition-name: publication-thumbnail-instant-nurec"></div>
           <div class="card-copy">
-            <h3>Instant NuRec: Feed-Forward 3D Gaussian Reconstruction for Driving Scene Simulation</h3>
+            <h3 style="view-transition-name: publication-heading-instant-nurec">Instant NuRec: Feed-Forward 3D Gaussian Reconstruction for Driving Scene Simulation</h3>
             <p class="card-meta"><span class="pill">arXiv</span> · 2026 · NVIDIA</p>
           </div>
         </article>
       </a>
-      <a class="card-link" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
+      <a class="card-link" data-transition-key="omnidreams" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
         <article class="card publication-card">
-          <div class="visual" data-visual="1" aria-hidden="true"></div>
+          <div class="visual" data-visual="1" aria-hidden="true" style="view-transition-name: publication-thumbnail-omnidreams"></div>
           <div class="card-copy">
-            <h3>NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</h3>
+            <h3 style="view-transition-name: publication-heading-omnidreams">NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</h3>
             <p class="card-meta"><span class="pill">arXiv</span> · 2026 · NVIDIA</p>
           </div>
         </article>
       </a>
-      <a class="card-link" href="https://dohyun-as.github.io/DDSPO/" target="_blank" rel="noopener">
+      <a class="card-link" data-transition-key="ddspo" href="https://dohyun-as.github.io/DDSPO/" target="_blank" rel="noopener">
         <article class="card publication-card">
-          <div class="visual" data-visual="2" aria-hidden="true"></div>
+          <div class="visual" data-visual="2" aria-hidden="true" style="view-transition-name: publication-thumbnail-ddspo"></div>
           <div class="card-copy">
-            <h3>Direct Diffusion Score Preference Optimization via Stepwise Contrastive Policy-Pair Supervision</h3>
+            <h3 style="view-transition-name: publication-heading-ddspo">Direct Diffusion Score Preference Optimization via Stepwise Contrastive Policy-Pair Supervision</h3>
             <p class="card-meta"><span class="pill">ECCV</span> · 2026 · Dohyun Kim, Seungwoo Lyu, Seung Wook Kim et al.</p>
           </div>
         </article>
       </a>
-      <a class="card-link" href="https://www.sciencedirect.com/science/article/abs/pii/S0167865526002230" target="_blank" rel="noopener">
+      <a class="card-link" data-transition-key="connecting-the-objects" href="https://www.sciencedirect.com/science/article/abs/pii/S0167865526002230" target="_blank" rel="noopener">
         <article class="card publication-card">
-          <div class="visual" data-visual="3" aria-hidden="true"></div>
+          <div class="visual" data-visual="3" aria-hidden="true" style="view-transition-name: publication-thumbnail-connecting-the-objects"></div>
           <div class="card-copy">
-            <h3>Connecting the Objects: Relational Occlusion Graphs for Amodal Segmentation</h3>
+            <h3 style="view-transition-name: publication-heading-connecting-the-objects">Connecting the Objects: Relational Occlusion Graphs for Amodal Segmentation</h3>
             <p class="card-meta"><span class="pill">PRL</span> · 2026 · Huiling Liu, Eunnam Cho, Soyun Choi et al.</p>
           </div>
         </article>
       </a>
-      <a class="card-link" href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams" target="_blank" rel="noopener">
+      <a class="card-link" data-transition-key="cosmos-drive-dreams" href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams" target="_blank" rel="noopener">
         <article class="card publication-card">
-          <div class="visual" data-visual="4" aria-hidden="true"></div>
+          <div class="visual" data-visual="4" aria-hidden="true" style="view-transition-name: publication-thumbnail-cosmos-drive-dreams"></div>
           <div class="card-copy">
-            <h3>Cosmos-Drive-Dreams: Scalable Synthetic Driving Data Generation with World Foundation Models</h3>
+            <h3 style="view-transition-name: publication-heading-cosmos-drive-dreams">Cosmos-Drive-Dreams: Scalable Synthetic Driving Data Generation with World Foundation Models</h3>
             <p class="card-meta"><span class="pill">arXiv</span> · 2025 · Xuanchi Ren, Yifan Lu, Tianshi Cao et al.</p>
           </div>
         </article>
@@ -99,12 +108,14 @@
       <div class="publication-list-head" aria-hidden="true">
         <span>Date</span>
         <span></span>
-        <span>Title</span>
+        <div class="publication-title-head">
+          <span>Title</span>
+          <span>Subtitle</span>
+        </div>
         <span>Authors</span>
-        <span>✦</span>
+        <span></span>
         <span>Venue</span>
       </div>
-      <p class="equal-note">* indicates equal contribution</p>
       <h2 class="pub-year">2026</h2>
       <ul class="pub-list">
         <li class="pub">
@@ -456,11 +467,7 @@
       </ul>
     </section>
 
-    <section class="preview-section dotted-section" id="previews" aria-labelledby="previews-title">
-      <div class="section-heading">
-        <h2 id="previews-title">Previews</h2>
-        <span class="section-kicker">All publications</span>
-      </div>
+    <section class="preview-section dotted-section" id="previews" aria-label="Publication previews">
       <div class="cards preview-grid" data-publication-previews></div>
       <noscript>
         <p class="equal-note">The complete publication list remains available in the List section above.</p>
@@ -470,7 +477,7 @@
 
   <footer class="site-footer">
     <div class="footer-meta">
-      <span>© 2026 GLOW Lab, KAIST. All rights reserved.</span>
+      <span>© 2026 GLOW Lab @ KAIST AI</span>
       <address class="footer-address">Kim Jaechul Graduate School of AI, KAIST · Seoul AI HUB, 108 Taebong-ro, Seocho-gu, Seoul 06764, Republic of Korea</address>
       <button type="button" data-theme-toggle>Dark Theme</button>
     </div>

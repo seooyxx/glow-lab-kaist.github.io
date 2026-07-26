@@ -22,8 +22,13 @@
       return;
     }
 
+    function renderPixelRatio() {
+      var deviceScale = window.devicePixelRatio || 1;
+      return Math.min(7, Math.max(5, deviceScale * 2.5));
+    }
+
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 4));
+    renderer.setPixelRatio(renderPixelRatio());
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     var canvas = renderer.domElement;
@@ -128,7 +133,7 @@
       shininess: 24,
       specular: 0x242424,
       side: THREE.DoubleSide,
-      emissive: 0x006d7d,
+      emissive: 0x000000,
       emissiveIntensity: 0,
     });
     var mesh = new THREE.Mesh(geometry, material);
@@ -136,6 +141,7 @@
     group.rotation.set(-0.22, 0.56, -0.08);
     group.add(mesh);
     scene.add(group);
+    var homeQuaternion = group.quaternion.clone();
 
     scene.add(new THREE.HemisphereLight(0xffffff, 0x2a2a2a, 1.35));
     var keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
@@ -148,13 +154,21 @@
     var glowCanvas = document.createElement("canvas");
     glowCanvas.width = glowCanvas.height = 128;
     var glowContext = glowCanvas.getContext("2d");
-    var gradient = glowContext.createRadialGradient(64, 64, 2, 64, 64, 64);
-    gradient.addColorStop(0, "rgba(255,255,255,1)");
-    gradient.addColorStop(0.18, "rgba(255,255,255,.72)");
-    gradient.addColorStop(0.52, "rgba(255,255,255,.2)");
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
-    glowContext.fillStyle = gradient;
+    var spectrumGradient = glowContext.createLinearGradient(0, 0, 128, 128);
+    spectrumGradient.addColorStop(0, "rgb(13,148,136)");
+    spectrumGradient.addColorStop(0.48, "rgb(79,70,229)");
+    spectrumGradient.addColorStop(1, "rgb(147,51,234)");
+    glowContext.fillStyle = spectrumGradient;
     glowContext.fillRect(0, 0, 128, 128);
+    var alphaGradient = glowContext.createRadialGradient(64, 64, 2, 64, 64, 64);
+    alphaGradient.addColorStop(0, "rgba(255,255,255,.2)");
+    alphaGradient.addColorStop(0.32, "rgba(255,255,255,.22)");
+    alphaGradient.addColorStop(0.68, "rgba(255,255,255,.1)");
+    alphaGradient.addColorStop(1, "rgba(255,255,255,0)");
+    glowContext.globalCompositeOperation = "destination-in";
+    glowContext.fillStyle = alphaGradient;
+    glowContext.fillRect(0, 0, 128, 128);
+    glowContext.globalCompositeOperation = "source-over";
 
     var glowTexture = new THREE.CanvasTexture(glowCanvas);
     glowTexture.colorSpace = THREE.SRGBColorSpace;
@@ -163,32 +177,55 @@
       color: 0xffffff,
       transparent: true,
       opacity: 0,
-      blending: THREE.AdditiveBlending,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       depthTest: true,
+      toneMapped: false,
     });
     var glowSprite = new THREE.Sprite(glowMaterial);
-    glowSprite.position.z = -0.28;
-    glowSprite.scale.set(2.5, 2.5, 1);
+    glowSprite.position.z = -0.34;
+    glowSprite.scale.set(2.4, 2.4, 1);
     scene.add(glowSprite);
 
+    var glowTeal = new THREE.Color(0x0d9488);
+    var glowIndigo = new THREE.Color(0x4f46e5);
+    var glowPurple = new THREE.Color(0x9333ea);
+    var glowColor = new THREE.Color();
     var screenPointer = new THREE.Vector3(0, 0, 1);
     var localPointer = new THREE.Vector3(0, 0, 1);
+    var vertexDirection = new THREE.Vector3();
+    var gradientDirection = new THREE.Vector3();
     var inverseQuaternion = new THREE.Quaternion();
     var dragStart = new THREE.Vector3();
     var dragCurrent = new THREE.Vector3();
     var dragStartQuaternion = new THREE.Quaternion();
     var dragDeltaQuaternion = new THREE.Quaternion();
+    var springDeltaQuaternion = new THREE.Quaternion();
+    var springInverseQuaternion = new THREE.Quaternion();
+    var springStepQuaternion = new THREE.Quaternion();
+    var rotationError = new THREE.Vector3();
+    var rotationAxis = new THREE.Vector3();
+    var rotationVelocity = new THREE.Vector3();
     var frameId = null;
+    var lastFrameTime = performance.now();
     var explosion = 0;
     var explosionTarget = 0;
     var explosionVelocity = 0;
     var dragging = false;
+    var returning = false;
     var dragPointerId = null;
     var draggedDistance = 0;
     var dragOriginX = 0;
     var dragOriginY = 0;
     var firstRender = true;
+
+    function setGlowColor(value) {
+      if (value <= 0.48) {
+        glowColor.copy(glowTeal).lerp(glowIndigo, value / 0.48);
+      } else {
+        glowColor.copy(glowIndigo).lerp(glowPurple, (value - 0.48) / 0.52);
+      }
+    }
 
     function updateColors() {
       var colors = colorAttribute.array;
@@ -203,15 +240,53 @@
           directionZ * 0.2 +
           faceVariation[cell] * 0.14;
         var baseLight = Math.min(0.82, Math.max(0.28, light));
+        var pointerFacing = Math.max(
+          0,
+          faceDirections[directionOffset] * localPointer.x +
+            directionY * localPointer.y +
+            directionZ * localPointer.z,
+        );
+        var cursorGlow = explosion * Math.pow(pointerFacing, 2.2);
 
         for (var triangle = 0; triangle < 4; triangle += 1) {
           var triangleLight = baseLight * sideBrightness[triangle];
+          var surfaceGlow =
+            triangle === 0
+              ? Math.min(0.58, explosion * 0.08 + cursorGlow * 0.5)
+              : Math.min(0.64, explosion * 0.24 + cursorGlow * 0.42);
           var triangleOffset = cell * floatsPerCell + triangle * 9;
           for (var vertex = 0; vertex < 3; vertex += 1) {
             var offset = triangleOffset + vertex * 3;
-            colors[offset] = triangleLight;
-            colors[offset + 1] = triangleLight;
-            colors[offset + 2] = triangleLight;
+            vertexDirection.fromArray(basePositions, offset).normalize();
+            gradientDirection.copy(vertexDirection).applyQuaternion(group.quaternion);
+            var gradientValue = Math.min(
+              1,
+              Math.max(0, 0.5 + (gradientDirection.x - gradientDirection.y) * 0.35),
+            );
+            setGlowColor(gradientValue);
+            var vertexGlow = surfaceGlow;
+            if (triangle === 0) {
+              var vertexFacing = Math.max(0, vertexDirection.dot(localPointer));
+              vertexGlow = Math.min(
+                0.58,
+                explosion * 0.06 + explosion * Math.pow(vertexFacing, 2.2) * 0.52,
+              );
+            }
+            colors[offset] = THREE.MathUtils.lerp(
+              triangleLight,
+              glowColor.r,
+              vertexGlow,
+            );
+            colors[offset + 1] = THREE.MathUtils.lerp(
+              triangleLight,
+              glowColor.g,
+              vertexGlow,
+            );
+            colors[offset + 2] = THREE.MathUtils.lerp(
+              triangleLight,
+              glowColor.b,
+              vertexGlow,
+            );
           }
         }
       }
@@ -270,8 +345,67 @@
       frameId = requestAnimationFrame(tick);
     }
 
+    function updateRotationSpring(frameScale) {
+      if (!returning || dragging) return;
+
+      springDeltaQuaternion
+        .copy(homeQuaternion)
+        .multiply(springInverseQuaternion.copy(group.quaternion).invert())
+        .normalize();
+      if (springDeltaQuaternion.w < 0) {
+        springDeltaQuaternion.x *= -1;
+        springDeltaQuaternion.y *= -1;
+        springDeltaQuaternion.z *= -1;
+        springDeltaQuaternion.w *= -1;
+      }
+
+      var sinHalfAngle = Math.hypot(
+        springDeltaQuaternion.x,
+        springDeltaQuaternion.y,
+        springDeltaQuaternion.z,
+      );
+      var angle = 2 * Math.atan2(sinHalfAngle, Math.max(0, springDeltaQuaternion.w));
+
+      if (sinHalfAngle > 0.000001) {
+        rotationError
+          .set(
+            springDeltaQuaternion.x,
+            springDeltaQuaternion.y,
+            springDeltaQuaternion.z,
+          )
+          .multiplyScalar(angle / sinHalfAngle);
+      } else {
+        rotationError.set(0, 0, 0);
+      }
+
+      rotationVelocity.addScaledVector(rotationError, 0.075 * frameScale);
+      rotationVelocity.multiplyScalar(Math.pow(0.82, frameScale));
+      var speed = rotationVelocity.length();
+
+      if (angle < 0.0008 && speed < 0.00035) {
+        group.quaternion.copy(homeQuaternion);
+        rotationVelocity.set(0, 0, 0);
+        returning = false;
+      } else if (speed > 0.000001) {
+        rotationAxis.copy(rotationVelocity).multiplyScalar(1 / speed);
+        springStepQuaternion.setFromAxisAngle(
+          rotationAxis,
+          Math.min(0.16, speed * frameScale),
+        );
+        group.quaternion.premultiply(springStepQuaternion).normalize();
+      }
+
+      inverseQuaternion.copy(group.quaternion).invert();
+      localPointer.copy(screenPointer).applyQuaternion(inverseQuaternion).normalize();
+    }
+
     function tick(time) {
       frameId = null;
+      var frameScale = Math.min(
+        2,
+        Math.max(0.25, (time - lastFrameTime) / (1000 / 60)),
+      );
+      lastFrameTime = time;
       var delta = explosionTarget - explosion;
       explosionVelocity = (explosionVelocity + delta * 0.12) * 0.76;
       explosion += explosionVelocity;
@@ -281,17 +415,19 @@
         explosionVelocity = 0;
       }
 
+      updateRotationSpring(frameScale);
       updatePositions(explosion);
       updateColors();
-      var pulse = 0.88 + Math.sin(time * 0.006) * 0.12;
-      glowSprite.material.opacity = explosion * 0.68 * pulse;
-      glowSprite.scale.setScalar(2.35 + explosion * 0.5);
-      glowSprite.material.color.set(0xffffff);
-      material.emissive.set(0x555555);
-      material.emissiveIntensity = explosion * 0.72 * pulse;
+      var pulse = 0.92 + Math.sin(time * 0.0055) * 0.08;
+      glowSprite.material.opacity = explosion * 0.72 * pulse;
+      glowSprite.scale.setScalar(2.26 + explosion * 0.18);
+      material.emissive.set(0x000000);
+      material.emissiveIntensity = 0;
       render();
 
-      if (explosionVelocity !== 0 || dragging || explosion > 0.001) invalidate();
+      if (explosionVelocity !== 0 || dragging || returning || explosion > 0.001) {
+        invalidate();
+      }
     }
 
     function setTarget(value) {
@@ -353,6 +489,8 @@
     canvas.addEventListener("pointerdown", function (event) {
       event.preventDefault();
       dragging = true;
+      returning = false;
+      rotationVelocity.set(0, 0, 0);
       dragPointerId = event.pointerId;
       draggedDistance = 0;
       dragOriginX = event.clientX;
@@ -384,6 +522,7 @@
     function endDrag(event) {
       if (!dragging || event.pointerId !== dragPointerId) return;
       dragging = false;
+      returning = true;
       dragPointerId = null;
       container.dataset.dragging = "false";
       if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
@@ -419,17 +558,42 @@
           new THREE.Euler(rotation[0], rotation[1], 0, "XYZ"),
         );
         group.quaternion.premultiply(delta).normalize();
+        returning = true;
         setTarget(Math.max(0.42, explosionTarget));
         invalidate();
       });
+      brandLink.addEventListener("keyup", function (event) {
+        if (!event.key.startsWith("Arrow")) return;
+        setTarget(0);
+      });
     }
 
-    var resizeObserver = new ResizeObserver(function () {
+    function resizeRenderer() {
       var size = Math.max(1, Math.round(container.clientWidth));
+      renderer.setPixelRatio(renderPixelRatio());
       renderer.setSize(size, size, false);
       invalidate();
-    });
+    }
+
+    var resizeObserver = new ResizeObserver(resizeRenderer);
     resizeObserver.observe(container);
+    window.addEventListener("resize", resizeRenderer, { passive: true });
+
+    var resolutionMedia;
+    function watchResolution() {
+      if (resolutionMedia) resolutionMedia.removeEventListener("change", handleResolutionChange);
+      resolutionMedia = window.matchMedia(
+        "(resolution: " + (window.devicePixelRatio || 1) + "dppx)",
+      );
+      resolutionMedia.addEventListener("change", handleResolutionChange, { once: true });
+    }
+
+    function handleResolutionChange() {
+      resizeRenderer();
+      watchResolution();
+    }
+
+    watchResolution();
 
     var themeObserver = new MutationObserver(function () {
       updateColors();
@@ -446,6 +610,18 @@
     container.dataset.cellType = "tetrahedron";
     container.dataset.verticesPerCell = "12";
     container.dataset.variantActual = "magnetic-glow";
+    resizeRenderer();
+    var pendingPointerX = Number(container.dataset.pendingPointerX);
+    var pendingPointerY = Number(container.dataset.pendingPointerY);
+    delete container.dataset.pendingPointerX;
+    delete container.dataset.pendingPointerY;
+    if (Number.isFinite(pendingPointerX) && Number.isFinite(pendingPointerY)) {
+      updateProximity({
+        clientX: pendingPointerX,
+        clientY: pendingPointerY,
+        pointerType: "mouse",
+      });
+    }
     invalidate();
   }
 
