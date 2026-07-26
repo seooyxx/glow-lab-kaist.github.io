@@ -1,5 +1,7 @@
 # GLOW Lab Website
 
+**Vercel Preview:** [glow-lab-kaistgithub-49frdnghf-seooyxxs-projects.vercel.app](https://glow-lab-kaistgithub-49frdnghf-seooyxxs-projects.vercel.app)
+
 Website for **GLOW (Generative Learning of Worlds) Lab** — Kim Jaechul Graduate
 School of AI, KAIST. Led by Prof. Seung Wook Kim.
 
