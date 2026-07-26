@@ -3,18 +3,22 @@
 Website for **GLOW (Generative Learning of Worlds) Lab** — Kim Jaechul Graduate
 School of AI, KAIST. Led by Prof. Seung Wook Kim.
 
-A fully static site: no build step, no dependencies.
+A fully static site: no build step and no package dependencies. Its layout and
+interaction system follows the Scene Representation Group website while keeping
+GLOW Lab's own content and identity.
 
 ## Structure
 
 ```
-index.html          Home — hero + research areas, news, selected work
+index.html          Home — mission + research areas, news, selected work
 publications.html   Full publication list, grouped by year
 people.html         PI profile, career timeline, students grid
 join.html           How to apply
-css/style.css       All styles (design tokens at the top under :root)
-js/main.js          Nav, scroll reveals, and the animated hero globe
-assets/             Photos, CV, and favicon
+css/style.css       Scene-style design tokens, layouts, themes, and motion
+js/theme-init.js    Applies the saved/system theme before first paint
+js/main.js          Theme control, prefetching, and publication enhancement
+js/magnetic-glow.js Interactive Magnetic Glow header mark
+assets/             Fonts, logo fallback, WebGL runtime, photo, CV, favicon
 ```
 
 ## Local preview
@@ -42,10 +46,13 @@ Any other static host (Netlify, Cloudflare Pages) also works as-is.
 - **New publication**: copy a `<li class="pub">` block in `publications.html`
   under the right year (add the year heading if needed). Use
   `<span class="me">` around lab-member names, `*` for equal contribution, and
-  `<span class="award">` for oral/spotlight/highlight badges.
+  `<span class="award">` for oral/spotlight/highlight badges. The preview grid is
+  generated from this list, so it does not need a second manual entry.
 - **New lab member**: in `people.html`, copy a `.person-card` in the students
   grid. To use a photo instead of the placeholder icon, put it in `assets/`
   and replace the icon with `<img src="assets/name.jpg" alt="Portrait of …">`.
 - **CV**: replace `assets/CV-SeungWookKim.pdf` when it changes.
-- **Colors / fonts**: edit the CSS custom properties in `:root` at the top of
-  `css/style.css`.
+- **Colors / fonts**: edit the CSS custom properties and `@font-face` rules at
+  the top of `css/style.css`.
+- **Header logo**: `assets/magnetic-glow.svg` is the immediate fallback;
+  `js/magnetic-glow.js` progressively adds the interactive monochrome WebGL mark.

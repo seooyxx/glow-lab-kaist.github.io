@@ -168,7 +168,12 @@
   }
 
   enhancePublicationList();
-  buildPublicationPreviews();
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(buildPublicationPreviews, { timeout: 700 });
+  } else {
+    window.setTimeout(buildPublicationPreviews, 120);
+  }
 
   function loadMagneticLogo() {
     var logo = document.querySelector("[data-magnetic-glow]");
