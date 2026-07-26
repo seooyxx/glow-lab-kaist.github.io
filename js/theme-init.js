@@ -2,6 +2,16 @@
   "use strict";
 
   try {
+    var navigation = performance.getEntriesByType("navigation")[0];
+    var direction = window.sessionStorage.getItem("transition-direction");
+    if (navigation && navigation.type === "back_forward") direction = "back";
+    if (direction) document.documentElement.dataset.transitionDirection = direction;
+    window.sessionStorage.removeItem("transition-direction");
+  } catch (_error) {
+    // Directional transitions are an enhancement only.
+  }
+
+  try {
     var stored = window.localStorage.getItem("theme");
     var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     var theme = stored || (systemDark ? "dark" : "light");
