@@ -8,6 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preload" href="assets/fonts/MessinaSansWeb-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/MessinaSansWeb-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/magnetic-glow-fallback.png" as="image" type="image/png">
   <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,7 +18,7 @@
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="GLOW LAB home" data-brand-link>
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
-        <img src="assets/magnetic-glow.svg" alt="" width="160" height="160">
+        <img src="assets/magnetic-glow-fallback.png" alt="" width="740" height="740">
       </span>
       <span class="wordmark">GLOW<br>LAB</span>
     </a>
@@ -28,8 +29,9 @@
       <a href="join.html">Join Us</a>
     </nav>
     <div class="institution-marks" aria-label="KAIST AI">
-      <a class="kaist-wordmark" href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">KAIST</a>
-      <a class="ai-wordmark" href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">Kim Jaechul<br>Graduate School<br>of AI</a>
+      <a href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">
+        <img class="kaist-ai-logo" src="assets/kaist-ai-logo.svg" alt="KAIST Kim Jaechul Graduate School of AI" width="188" height="49">
+      </a>
     </div>
   </header>
 

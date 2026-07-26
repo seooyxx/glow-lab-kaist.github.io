@@ -391,7 +391,6 @@
   function loadMagneticLogo() {
     var logo = document.querySelector("[data-magnetic-glow]");
     if (!logo || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    if (!window.matchMedia("(pointer: fine)").matches) return;
 
     var threeScript = document.createElement("script");
     threeScript.src = "assets/vendor/three.min.js";

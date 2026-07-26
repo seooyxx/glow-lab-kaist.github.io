@@ -23,12 +23,27 @@
     }
 
     renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 4));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     var canvas = renderer.domElement;
     canvas.setAttribute("aria-hidden", "true");
     canvas.tabIndex = -1;
+    canvas.addEventListener(
+      "webglcontextlost",
+      function (event) {
+        event.preventDefault();
+        container.classList.remove("is-enhanced");
+      },
+      false,
+    );
+    canvas.addEventListener(
+      "webglcontextrestored",
+      function () {
+        invalidate();
+      },
+      false,
+    );
     container.appendChild(canvas);
 
     var source = new THREE.IcosahedronGeometry(1, 0);
@@ -39,7 +54,7 @@
     var tetrahedronPositions = new Float32Array(faceCount * floatsPerCell);
     var faceDirections = new Float32Array(faceCount * 3);
     var faceVariation = new Float32Array(faceCount);
-    var sideBrightness = [1, 0.82, 0.68, 0.76];
+    var sideBrightness = [1, 0.72, 0.84, 0.62];
 
     var pointA = new THREE.Vector3();
     var pointB = new THREE.Vector3();
@@ -110,10 +125,10 @@
     var material = new THREE.MeshPhongMaterial({
       vertexColors: true,
       flatShading: true,
-      shininess: 28,
-      specular: 0x343434,
+      shininess: 24,
+      specular: 0x242424,
       side: THREE.DoubleSide,
-      emissive: 0x111111,
+      emissive: 0x006d7d,
       emissiveIntensity: 0,
     });
     var mesh = new THREE.Mesh(geometry, material);
@@ -157,6 +172,7 @@
     glowSprite.scale.set(2.5, 2.5, 1);
     scene.add(glowSprite);
     var innerCore = new THREE.Sprite(glowMaterial.clone());
+    innerCore.material.depthTest = false;
     innerCore.position.z = -0.12;
     innerCore.scale.set(0.72, 0.72, 1);
     innerCore.renderOrder = 4;
@@ -180,34 +196,28 @@
     var dragOriginY = 0;
     var firstRender = true;
 
-    function isDarkTheme() {
-      return document.documentElement.dataset.theme === "dark";
-    }
-
     function updateColors() {
       var colors = colorAttribute.array;
-      var dark = isDarkTheme();
 
       for (var cell = 0; cell < faceCount; cell += 1) {
         var directionOffset = cell * 3;
-        var facing = Math.max(
-          0,
-          faceDirections[directionOffset] * localPointer.x +
-            faceDirections[directionOffset + 1] * localPointer.y +
-            faceDirections[directionOffset + 2] * localPointer.z,
-        );
-        var baseLight = dark
-          ? 0.48 + faceVariation[cell] * 0.28 + facing * explosion * 0.14
-          : 0.18 + faceVariation[cell] * 0.34 + facing * explosion * 0.12;
+        var directionY = faceDirections[directionOffset + 1];
+        var directionZ = faceDirections[directionOffset + 2];
+        var light =
+          0.52 +
+          directionY * 0.12 +
+          directionZ * 0.2 +
+          faceVariation[cell] * 0.14;
+        var baseLight = Math.min(0.82, Math.max(0.28, light));
 
         for (var triangle = 0; triangle < 4; triangle += 1) {
-          var light = Math.min(0.96, baseLight * sideBrightness[triangle]);
+          var triangleLight = baseLight * sideBrightness[triangle];
           var triangleOffset = cell * floatsPerCell + triangle * 9;
           for (var vertex = 0; vertex < 3; vertex += 1) {
             var offset = triangleOffset + vertex * 3;
-            colors[offset] = light;
-            colors[offset + 1] = light;
-            colors[offset + 2] = light;
+            colors[offset] = triangleLight;
+            colors[offset + 1] = triangleLight;
+            colors[offset + 2] = triangleLight;
           }
         }
       }
@@ -251,7 +261,6 @@
       }
 
       positionAttribute.needsUpdate = true;
-      geometry.computeVertexNormals();
     }
 
     function render() {
@@ -267,7 +276,7 @@
       frameId = requestAnimationFrame(tick);
     }
 
-    function tick() {
+    function tick(time) {
       frameId = null;
       var delta = explosionTarget - explosion;
       explosionVelocity = (explosionVelocity + delta * 0.12) * 0.76;
@@ -280,13 +289,15 @@
 
       updatePositions(explosion);
       updateColors();
-      var pulse = 0.88 + Math.sin(performance.now() * 0.006) * 0.12;
-      glowSprite.material.opacity = explosion * 0.62 * pulse;
+      var pulse = 0.88 + Math.sin(time * 0.006) * 0.12;
+      glowSprite.material.opacity = explosion * 0.68 * pulse;
       glowSprite.scale.setScalar(2.35 + explosion * 0.5);
-      innerCore.material.opacity = explosion * 0.74 * pulse;
+      innerCore.material.opacity = explosion * 0.78 * pulse;
       innerCore.scale.setScalar(0.62 + explosion * 0.2);
-      material.emissive.set(isDarkTheme() ? 0x555555 : 0x202020);
-      material.emissiveIntensity = explosion * 0.6 * pulse;
+      glowSprite.material.color.set(0xffffff);
+      innerCore.material.color.set(0xffffff);
+      material.emissive.set(0x555555);
+      material.emissiveIntensity = explosion * 0.72 * pulse;
       render();
 
       if (explosionVelocity !== 0 || dragging || explosion > 0.001) invalidate();
@@ -319,16 +330,19 @@
     }
 
     function updateProximity(event) {
-      if (dragging) return;
+      if (event.pointerType === "touch") {
+        if (!dragging) setTarget(0);
+        return;
+      }
       var bounds = container.getBoundingClientRect();
       updatePointerDirection(event, bounds);
       var centerX = bounds.left + bounds.width / 2;
       var centerY = bounds.top + bounds.height / 2;
       var distance = Math.hypot(event.clientX - centerX, event.clientY - centerY);
-      var radius = Math.max(bounds.width, bounds.height) * 1.2;
+      var radius = Math.max(bounds.width, bounds.height) * 0.82;
       var proximity = Math.min(1, Math.max(0, 1 - distance / radius));
       var eased = proximity * proximity * (3 - 2 * proximity);
-      setTarget(eased);
+      setTarget(dragging ? Math.max(0.72, eased) : eased);
     }
 
     function projectArcball(event, target) {
@@ -346,6 +360,7 @@
     }
 
     canvas.addEventListener("pointerdown", function (event) {
+      event.preventDefault();
       dragging = true;
       dragPointerId = event.pointerId;
       draggedDistance = 0;
@@ -357,6 +372,8 @@
       projectArcball(event, dragStart);
       dragStartQuaternion.copy(group.quaternion);
       setTarget(Math.max(0.72, explosionTarget));
+      if (brandLink) brandLink.focus({ preventScroll: true });
+      invalidate();
     });
 
     canvas.addEventListener("pointermove", function (event) {
@@ -397,6 +414,23 @@
           draggedDistance = 0;
         }
       });
+      brandLink.addEventListener("keydown", function (event) {
+        var rotations = {
+          ArrowLeft: [0, -0.12],
+          ArrowRight: [0, 0.12],
+          ArrowUp: [-0.12, 0],
+          ArrowDown: [0.12, 0],
+        };
+        var rotation = rotations[event.key];
+        if (!rotation) return;
+        event.preventDefault();
+        var delta = new THREE.Quaternion().setFromEuler(
+          new THREE.Euler(rotation[0], rotation[1], 0, "XYZ"),
+        );
+        group.quaternion.premultiply(delta).normalize();
+        setTarget(Math.max(0.42, explosionTarget));
+        invalidate();
+      });
     }
 
     var resizeObserver = new ResizeObserver(function () {
@@ -417,6 +451,10 @@
 
     updatePositions(0);
     updateColors();
+    container.dataset.faceCountActual = String(faceCount);
+    container.dataset.cellType = "tetrahedron";
+    container.dataset.verticesPerCell = "12";
+    container.dataset.variantActual = "magnetic-glow";
     invalidate();
   }
 

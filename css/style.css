@@ -233,10 +233,6 @@ strong {
   transition: opacity 180ms ease-out;
 }
 
-html[data-theme="dark"] .magnetic-logo img {
-  filter: invert(1);
-}
-
 .magnetic-logo canvas {
   opacity: 0;
   cursor: grab;
@@ -287,31 +283,24 @@ html[data-theme="dark"] .magnetic-logo img {
 }
 
 .institution-marks {
-  min-width: 144px;
+  min-width: 148px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--space-sm);
   color: var(--color-fg-base);
 }
 
-.kaist-wordmark {
-  font-size: 1.375rem;
-  font-weight: 600;
-  letter-spacing: -0.04em;
+.institution-marks a {
+  display: block;
 }
 
-.ai-wordmark {
-  width: max-content;
-  max-width: none;
-  padding-left: var(--space-sm);
-  border-left: 1px solid var(--color-ui-border-strong);
-  color: var(--color-fg-2);
-  font-size: 0.625rem;
-  font-weight: 600;
-  line-height: 1.05;
-  text-transform: uppercase;
-  white-space: nowrap;
+.kaist-ai-logo {
+  width: 148px;
+  height: auto;
+}
+
+html[data-theme="dark"] .kaist-ai-logo {
+  filter: brightness(0) invert(1);
 }
 
 .site-footer {
@@ -677,6 +666,11 @@ html[data-theme="dark"] .visual {
   max-width: 12ch;
 }
 
+#main-heading {
+  max-width: 22ch;
+  font-size: 36px;
+}
+
 .mission-section .mission-lead {
   max-width: var(--text-max-width);
   color: var(--color-fg-2);
@@ -687,7 +681,7 @@ html[data-theme="dark"] .visual {
   display: block;
   padding-top: var(--space-sm);
   color: var(--color-fg-2);
-  font-size: 0.42em;
+  font-size: 15px;
   letter-spacing: 0;
 }
 
@@ -1432,12 +1426,8 @@ html[data-transition-direction="back"]::view-transition-new(page) {
     margin-left: auto;
   }
 
-  .kaist-wordmark {
-    font-size: 1.125rem;
-  }
-
-  .ai-wordmark {
-    display: none;
+  .kaist-ai-logo {
+    width: 112px;
   }
 
   .main-nav {

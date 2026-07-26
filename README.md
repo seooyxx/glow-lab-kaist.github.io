@@ -54,5 +54,6 @@ Any other static host (Netlify, Cloudflare Pages) also works as-is.
 - **CV**: replace `assets/CV-SeungWookKim.pdf` when it changes.
 - **Colors / fonts**: edit the CSS custom properties and `@font-face` rules at
   the top of `css/style.css`.
-- **Header logo**: `assets/magnetic-glow.svg` is the immediate fallback;
-  `js/magnetic-glow.js` progressively adds the interactive monochrome WebGL mark.
+- **Header logos**: `assets/magnetic-glow-fallback.png` is the high-resolution
+  immediate fallback and `js/magnetic-glow.js` progressively adds the interactive
+  monochrome WebGL mark. `assets/kaist-ai-logo.svg` is the official KAIST AI mark.
