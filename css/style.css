@@ -157,7 +157,7 @@ h2 {
 }
 
 h3 {
-  font-size: 1.125rem;
+  font-size: 1.3125rem;
 }
 
 p + p {
@@ -190,19 +190,19 @@ strong {
 .site-header {
   position: relative;
   z-index: 5;
-  min-height: 79px;
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-pad);
-  padding: var(--space-sm) var(--space-pad);
+  padding: var(--space) var(--space-pad);
   border-bottom: 1px solid var(--color-ui-border-strong);
   background: var(--color-bg-3);
   view-transition-name: site-header;
 }
 
 .brand {
-  min-width: 154px;
+  min-width: 112px;
   display: inline-flex;
   align-items: center;
   color: var(--color-fg-base);
@@ -214,9 +214,9 @@ strong {
 
 .magnetic-logo {
   position: relative;
-  width: 54px;
-  height: 54px;
-  flex: 0 0 54px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   overflow: visible;
   touch-action: none;
 }
@@ -262,10 +262,40 @@ strong {
 }
 
 .main-nav {
+  --nav-indicator-x: 0px;
+  --nav-indicator-width: 0px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--space);
+}
+
+.main-nav::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: 0;
+  width: var(--nav-indicator-width);
+  height: 1px;
+  background: var(--color-hl);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(var(--nav-indicator-x));
+  transform-origin: left center;
+  transition:
+    width 333ms cubic-bezier(0.76, 0, 0.24, 1),
+    transform 333ms cubic-bezier(0.76, 0, 0.24, 1),
+    opacity 100ms ease-out;
+}
+
+.main-nav.indicator-ready::after {
+  opacity: 1;
+}
+
+.main-nav.indicator-immediate::after {
+  transition: none;
 }
 
 .main-nav a {
@@ -282,8 +312,12 @@ strong {
   color: var(--color-fg-base);
 }
 
+.js .main-nav.indicator-ready a {
+  border-color: transparent;
+}
+
 .institution-marks {
-  min-width: 128px;
+  min-width: 112px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -295,7 +329,7 @@ strong {
 }
 
 .kaist-ai-logo {
-  width: 128px;
+  width: 112px;
   height: auto;
 }
 
@@ -344,16 +378,20 @@ html[data-theme="dark"] .kaist-ai-logo {
   color: var(--color-hl);
 }
 
+.site-footer a {
+  border-bottom: 1px solid var(--color-hl);
+}
+
 .dotted-section,
 .background-dotted {
   background-color: var(--color-bg);
-  background-image: radial-gradient(var(--color-ui-border-strong) 0.65px, transparent 0.65px);
+  background-image: radial-gradient(var(--color-ui-border-strong) 0.9px, transparent 0.9px);
   background-position: 0 0;
   background-size: 14.4px 14.4px;
 }
 
 .heading-section {
-  min-height: 101px;
+  min-height: 74px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -366,6 +404,11 @@ html[data-theme="dark"] .kaist-ai-logo {
 .heading-section h1 {
   padding: 0;
   font-size: 2.25rem;
+}
+
+body.home-page #main-heading,
+body:not(.home-page) .heading-section h1 {
+  view-transition-name: page-heading;
 }
 
 .heading-section > div {
@@ -403,6 +446,14 @@ html[data-theme="dark"] .kaist-ai-logo {
   scroll-margin-top: var(--space);
 }
 
+main a {
+  border-bottom: 1px solid var(--color-hl);
+}
+
+main a:focus-visible {
+  border-bottom-color: currentColor;
+}
+
 .section-heading {
   display: flex;
   align-items: baseline;
@@ -429,6 +480,7 @@ html[data-theme="dark"] .kaist-ai-logo {
 .card-link {
   min-width: 0;
   display: block;
+  border-bottom: 0;
 }
 
 .card {
@@ -498,6 +550,10 @@ html[data-theme="dark"] .kaist-ai-logo {
   position: absolute;
   inset: 0;
   z-index: 1;
+}
+
+.publication-card h3 a {
+  border-bottom: 0;
 }
 
 .card-actions {
@@ -654,7 +710,7 @@ html[data-theme="dark"] .visual {
     "mission publications"
     "research publications"
     "news news";
-  grid-template-columns: minmax(0, 1fr) minmax(432px, 1.2fr);
+  grid-template-columns: fit-content(621px) minmax(0, 1fr);
 }
 
 .mission-section {
@@ -731,6 +787,10 @@ html[data-theme="dark"] .visual {
   padding-bottom: var(--space-pad);
   color: var(--color-fg-2);
   font-size: 0.8125rem;
+}
+
+.research-card h3 {
+  font-size: 1.125rem;
 }
 
 .research-card p {
@@ -883,6 +943,7 @@ html[data-theme="dark"] .visual {
 .publication-list-wrap .pub-title a {
   min-width: 0;
   overflow: hidden;
+  border-bottom: 0;
   text-overflow: ellipsis;
 }
 
@@ -1000,6 +1061,12 @@ html[data-theme="dark"] .visual {
   padding: var(--space-sm);
 }
 
+.person-card:hover {
+  border-color: var(--color-hl);
+  background: var(--color-bg-2-hover);
+  transition-duration: 100ms;
+}
+
 .person-avatar {
   min-height: 0;
   display: grid;
@@ -1009,6 +1076,16 @@ html[data-theme="dark"] .visual {
     linear-gradient(145deg, transparent 20%, color-mix(in srgb, var(--color-hl) 18%, transparent)),
     radial-gradient(circle at 65% 35%, var(--color-bg), var(--color-bg-2));
   color: var(--color-fg-2);
+}
+
+.person-avatar svg {
+  transition: color 333ms ease-out, transform 333ms ease-out;
+}
+
+.person-card:hover .person-avatar svg {
+  color: var(--color-hl);
+  transform: translateY(-1px) scale(1.04);
+  transition-duration: 100ms;
 }
 
 .person-card h3 {
@@ -1119,6 +1196,7 @@ html[data-theme="dark"] .visual {
   color: var(--color-fg);
   font-size: 0.8125rem;
   line-height: 1.2;
+  transition: color 333ms ease-out, border-color 333ms ease-out, background-color 333ms ease-out;
 }
 
 .btn:hover {
@@ -1184,9 +1262,68 @@ html[data-theme="dark"] .visual {
   navigation: auto;
 }
 
+html[data-shared-transition="publications"] body.home-page .home-publications .section-heading h2,
+html[data-shared-transition="publications"] body.publications-page .heading-section h1 {
+  view-transition-name: publications-heading;
+}
+
+html[data-shared-transition="publications"] body.home-page .home-publication-grid > :nth-child(1) .card,
+html[data-shared-transition="publications"] body.publications-page .featured-scroller > :nth-child(1) .card {
+  view-transition-name: publication-slot-1;
+}
+
+html[data-shared-transition="publications"] body.home-page .home-publication-grid > :nth-child(2) .card,
+html[data-shared-transition="publications"] body.publications-page .featured-scroller > :nth-child(2) .card {
+  view-transition-name: publication-slot-2;
+}
+
+html[data-shared-transition="publications"] body.home-page .home-publication-grid > :nth-child(3) .card,
+html[data-shared-transition="publications"] body.publications-page .featured-scroller > :nth-child(3) .card {
+  view-transition-name: publication-slot-3;
+}
+
+html[data-shared-transition="publications"] body.home-page .home-publication-grid > :nth-child(4) .card,
+html[data-shared-transition="publications"] body.publications-page .featured-scroller > :nth-child(4) .card {
+  view-transition-name: publication-slot-4;
+}
+
+html[data-shared-transition="publications"] body.home-page .home-publication-grid > :nth-child(5) .card,
+html[data-shared-transition="publications"] body.publications-page .featured-scroller > :nth-child(5) .card {
+  view-transition-name: publication-slot-5;
+}
+
 ::view-transition-group(*) {
   animation-duration: 360ms;
   animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+::view-transition-group(publications-heading),
+::view-transition-group(page-heading),
+::view-transition-group(publication-slot-1),
+::view-transition-group(publication-slot-2),
+::view-transition-group(publication-slot-3),
+::view-transition-group(publication-slot-4),
+::view-transition-group(publication-slot-5) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+::view-transition-old(publications-heading),
+::view-transition-new(publications-heading),
+::view-transition-old(page-heading),
+::view-transition-new(page-heading),
+::view-transition-old(publication-slot-1),
+::view-transition-new(publication-slot-1),
+::view-transition-old(publication-slot-2),
+::view-transition-new(publication-slot-2),
+::view-transition-old(publication-slot-3),
+::view-transition-new(publication-slot-3),
+::view-transition-old(publication-slot-4),
+::view-transition-new(publication-slot-4),
+::view-transition-old(publication-slot-5),
+::view-transition-new(publication-slot-5) {
+  height: 100%;
+  mix-blend-mode: normal;
 }
 
 ::view-transition-old(page) {
@@ -1417,9 +1554,9 @@ html[data-transition-direction="back"]::view-transition-new(page) {
 
 @media (max-width: 480px) {
   .magnetic-logo {
-    width: 46px;
-    height: 46px;
-    flex-basis: 46px;
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
   }
 
   .institution-marks {
@@ -1427,7 +1564,7 @@ html[data-transition-direction="back"]::view-transition-new(page) {
   }
 
   .kaist-ai-logo {
-    width: 96px;
+    width: 88px;
   }
 
   .main-nav {
@@ -1463,6 +1600,15 @@ html[data-transition-direction="back"]::view-transition-new(page) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  body.home-page #main-heading,
+  body:not(.home-page) .heading-section h1,
+  html[data-shared-transition="publications"] body.home-page .home-publications .section-heading h2,
+  html[data-shared-transition="publications"] body.publications-page .heading-section h1,
+  html[data-shared-transition="publications"] body.home-page .home-publication-grid .card,
+  html[data-shared-transition="publications"] body.publications-page .featured-scroller .card {
+    view-transition-name: none;
+  }
+
   *,
   *::before,
   *::after {

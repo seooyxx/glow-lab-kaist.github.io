@@ -4,9 +4,12 @@
   try {
     var navigation = performance.getEntriesByType("navigation")[0];
     var direction = window.sessionStorage.getItem("transition-direction");
+    var sharedTransition = window.sessionStorage.getItem("shared-transition");
     if (navigation && navigation.type === "back_forward") direction = "back";
     if (direction) document.documentElement.dataset.transitionDirection = direction;
+    if (sharedTransition) document.documentElement.dataset.sharedTransition = sharedTransition;
     window.sessionStorage.removeItem("transition-direction");
+    window.sessionStorage.removeItem("shared-transition");
   } catch (_error) {
     // Directional transitions are an enhancement only.
   }

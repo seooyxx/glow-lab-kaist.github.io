@@ -73,6 +73,22 @@
     return pageOrder.indexOf(page);
   }
 
+  function pageName(pathname) {
+    return pathname.split("/").pop() || "index.html";
+  }
+
+  function sharedTransitionFor(currentPath, nextPath) {
+    var current = pageName(currentPath);
+    var next = pageName(nextPath);
+    if (
+      (current === "index.html" && next === "publications.html") ||
+      (current === "publications.html" && next === "index.html")
+    ) {
+      return "publications";
+    }
+    return "";
+  }
+
   document.addEventListener(
     "click",
     function (event) {
@@ -89,9 +105,20 @@
       var currentIndex = pageIndex(window.location.pathname);
       var nextIndex = pageIndex(url.pathname);
       var direction = currentIndex >= 0 && nextIndex >= 0 && nextIndex < currentIndex ? "back" : "forward";
+      var sharedTransition = sharedTransitionFor(window.location.pathname, url.pathname);
       document.documentElement.dataset.transitionDirection = direction;
+      if (sharedTransition) {
+        document.documentElement.dataset.sharedTransition = sharedTransition;
+      } else {
+        delete document.documentElement.dataset.sharedTransition;
+      }
       try {
         window.sessionStorage.setItem("transition-direction", direction);
+        if (sharedTransition) {
+          window.sessionStorage.setItem("shared-transition", sharedTransition);
+        } else {
+          window.sessionStorage.removeItem("shared-transition");
+        }
       } catch (_error) {
         // Navigation remains fully functional without storage.
       }
@@ -101,15 +128,74 @@
 
   window.setTimeout(function () {
     delete document.documentElement.dataset.transitionDirection;
-  }, 500);
+    delete document.documentElement.dataset.sharedTransition;
+  }, 600);
 
   window.addEventListener("pageshow", function (event) {
     if (!event.persisted) return;
     document.documentElement.dataset.transitionDirection = "back";
     window.setTimeout(function () {
       delete document.documentElement.dataset.transitionDirection;
-    }, 500);
+      delete document.documentElement.dataset.sharedTransition;
+    }, 600);
   });
+
+  function initNavigationIndicator() {
+    var nav = document.querySelector(".main-nav");
+    if (!nav) return;
+    var links = Array.from(nav.querySelectorAll("a[href]"));
+    var current = nav.querySelector('[aria-current="page"]') || links[0];
+    if (!current) return;
+
+    function moveTo(link, immediate) {
+      if (!link) return;
+      var navBounds = nav.getBoundingClientRect();
+      var linkBounds = link.getBoundingClientRect();
+      nav.classList.toggle("indicator-immediate", Boolean(immediate));
+      nav.style.setProperty("--nav-indicator-x", (linkBounds.left - navBounds.left) + "px");
+      nav.style.setProperty("--nav-indicator-width", linkBounds.width + "px");
+      nav.classList.add("indicator-ready");
+      if (immediate) {
+        window.requestAnimationFrame(function () {
+          nav.classList.remove("indicator-immediate");
+        });
+      }
+    }
+
+    links.forEach(function (link) {
+      link.addEventListener("pointerenter", function (event) {
+        if (event.pointerType === "touch") return;
+        moveTo(link, false);
+      });
+      link.addEventListener("focus", function () {
+        moveTo(link, false);
+      });
+      link.addEventListener("click", function () {
+        moveTo(link, false);
+      });
+    });
+
+    nav.addEventListener("pointerleave", function () {
+      moveTo(current, false);
+    });
+    nav.addEventListener("focusout", function (event) {
+      if (nav.contains(event.relatedTarget)) return;
+      moveTo(current, false);
+    });
+
+    var scheduleMeasure = function () {
+      window.requestAnimationFrame(function () {
+        moveTo(current, true);
+      });
+    };
+    scheduleMeasure();
+    window.addEventListener("resize", scheduleMeasure, { passive: true });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(scheduleMeasure);
+    }
+  }
+
+  initNavigationIndicator();
 
   var prefetched = new Set();
 
@@ -290,7 +376,20 @@
 
   function initFeaturedScroller() {
     var scroller = document.querySelector(".featured-scroller");
-    if (!scroller || reduceMotion.matches) return;
+    if (!scroller) return;
+    scroller.tabIndex = 0;
+    scroller.addEventListener("keydown", function (event) {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      var card = scroller.querySelector(".card-link");
+      var distance = card ? card.getBoundingClientRect().width + 16 : scroller.clientWidth * 0.8;
+      scroller.scrollBy({
+        left: event.key === "ArrowLeft" ? -distance : distance,
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+      });
+    });
+
+    if (reduceMotion.matches) return;
     var pointerId = null;
     var startX = 0;
     var startScroll = 0;
