@@ -5,28 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Publications — GLOW Lab</title>
   <meta name="description" content="Publications from GLOW (Generative Learning of Worlds) Lab at KAIST AI, including work by PI Seung Wook Kim on world models, generative simulation, and video diffusion.">
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="preload" href="assets/fonts/MessinaSansWeb-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/MessinaSansWeb-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/magnetic-glow-fallback.png" as="image" type="image/png">
+  <link rel="icon" type="image/svg+xml" href="assets/glow-mark.svg">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preload" href="assets/glow-mark.svg" as="image" type="image/svg+xml">
   <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="publications-page">
-  <a class="skip-link" href="#main">Skip to content</a>
-
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="GLOW LAB home" data-brand-link>
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
-        <img src="assets/magnetic-glow-fallback.png" alt="" width="260" height="260">
+        <img src="assets/glow-mark.svg" alt="" width="69" height="70">
       </span>
       <span class="wordmark">GLOW<br>LAB</span>
     </a>
     <nav class="main-nav" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="people.html">People</a>
-      <a href="publications.html" aria-current="page">Publications</a>
-      <a href="join.html">Join Us</a>
+      <a href="index.html" data-nav-label="Home"><span class="nav-label">Home</span></a>
+      <a href="people.html" data-nav-label="People"><span class="nav-label">People</span></a>
+      <a href="publications.html" data-nav-label="Publications" aria-current="page"><span class="nav-label">Publications</span></a>
+      <a href="join.html" data-nav-label="Join Us"><span class="nav-label">Join Us</span></a>
     </nav>
     <div class="institution-marks" aria-label="KAIST AI">
       <a href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">
@@ -43,7 +40,7 @@
       <nav class="section-jumps" aria-label="Publication sections">
         <a class="with-icon" href="#featured">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m8 18 4-3.05L16 18l-1.5-4.95 4-2.85h-4.9L12 5l-1.6 5.2H5.5l4 2.85zm4 4q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9 2 12t.788-3.9 2.137-3.175T8.1 2.788 12 2t3.9.788 3.175 2.137T21.213 8.1 22 12t-.788 3.9-2.137 3.175-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4 6.325 6.325 4 12t2.325 5.675T12 20m0-8"/></svg>
-          <span>Featured</span>
+          <span>Selected Publications</span>
         </a>
         <a class="with-icon" href="#list">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 18h11v-2.675H9zM4 8.675h3V6H4zm0 4.675h3v-2.675H4zM4 18h3v-2.675H4zm5-4.65h11v-2.675H9zm0-4.675h11V6H9zM4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20z"/></svg>
@@ -56,49 +53,72 @@
       </nav>
     </section>
 
-    <section class="featured-scroller dotted-section" id="featured" aria-label="Featured publications">
-      <a class="card-link" data-transition-key="instant-nurec" href="https://research.nvidia.com/labs/sil/projects/instant-nurec/" target="_blank" rel="noopener">
-        <article class="card publication-card">
-          <div class="visual" data-visual="0" aria-hidden="true" style="view-transition-name: publication-thumbnail-instant-nurec"></div>
-          <div class="card-copy">
-            <h3 style="view-transition-name: publication-heading-instant-nurec">Instant NuRec: Feed-Forward 3D Gaussian Reconstruction for Driving Scene Simulation</h3>
-            <p class="card-meta"><span class="pill">arXiv</span> · 2026 · NVIDIA</p>
-          </div>
-        </article>
-      </a>
+    <section class="featured-scroller dotted-section" id="featured" aria-label="Selected publications">
       <a class="card-link" data-transition-key="omnidreams" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
-        <article class="card publication-card">
+        <article class="card publication-card selected-publication-card">
           <div class="visual" data-visual="1" aria-hidden="true" style="view-transition-name: publication-thumbnail-omnidreams"></div>
           <div class="card-copy">
             <h3 style="view-transition-name: publication-heading-omnidreams">NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</h3>
-            <p class="card-meta"><span class="pill">arXiv</span> · 2026 · NVIDIA</p>
+            <p class="card-authors">NVIDIA</p>
+            <p class="card-meta"><span class="pill">arXiv</span><span class="publication-year">2026</span></p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="ddspo" href="https://dohyun-as.github.io/DDSPO/" target="_blank" rel="noopener">
-        <article class="card publication-card">
-          <div class="visual" data-visual="2" aria-hidden="true" style="view-transition-name: publication-thumbnail-ddspo"></div>
+      <a class="card-link" data-transition-key="cosmos-world" href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card">
+          <div class="visual" data-visual="2" aria-hidden="true" style="view-transition-name: publication-thumbnail-cosmos-world"></div>
           <div class="card-copy">
-            <h3 style="view-transition-name: publication-heading-ddspo">Direct Diffusion Score Preference Optimization via Stepwise Contrastive Policy-Pair Supervision</h3>
-            <p class="card-meta"><span class="pill">ECCV</span> · 2026 · Dohyun Kim, Seungwoo Lyu, Seung Wook Kim et al.</p>
+            <h3 style="view-transition-name: publication-heading-cosmos-world">Cosmos World Foundation Model Platform for Physical AI</h3>
+            <p class="card-authors">NVIDIA</p>
+            <p class="card-meta"><span class="pill">arXiv</span><span class="publication-year">2025</span></p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="connecting-the-objects" href="https://www.sciencedirect.com/science/article/abs/pii/S0167865526002230" target="_blank" rel="noopener">
-        <article class="card publication-card">
-          <div class="visual" data-visual="3" aria-hidden="true" style="view-transition-name: publication-thumbnail-connecting-the-objects"></div>
+      <a class="card-link" data-transition-key="align-your-gaussians" href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card">
+          <div class="visual" data-visual="3" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-gaussians"></div>
           <div class="card-copy">
-            <h3 style="view-transition-name: publication-heading-connecting-the-objects">Connecting the Objects: Relational Occlusion Graphs for Amodal Segmentation</h3>
-            <p class="card-meta"><span class="pill">PRL</span> · 2026 · Huiling Liu, Eunnam Cho, Soyun Choi et al.</p>
+            <h3 style="view-transition-name: publication-heading-align-your-gaussians">Align Your Gaussians: Text-to-4D with Dynamic 3D Gaussians and Composed Diffusion Models</h3>
+            <p class="card-authors">Huan Ling*, Seung Wook Kim*, Antonio Torralba, Sanja Fidler, Karsten Kreis</p>
+            <p class="card-meta">
+              <span class="pill">CVPR</span>
+              <span class="publication-year">2024</span>
+              <span class="card-distinction">Highlight</span>
+            </p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="cosmos-drive-dreams" href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams" target="_blank" rel="noopener">
-        <article class="card publication-card">
-          <div class="visual" data-visual="4" aria-hidden="true" style="view-transition-name: publication-thumbnail-cosmos-drive-dreams"></div>
+      <a class="card-link" data-transition-key="align-your-latents" href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card">
+          <div class="visual" data-visual="4" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-latents"></div>
           <div class="card-copy">
-            <h3 style="view-transition-name: publication-heading-cosmos-drive-dreams">Cosmos-Drive-Dreams: Scalable Synthetic Driving Data Generation with World Foundation Models</h3>
-            <p class="card-meta"><span class="pill">arXiv</span> · 2025 · Xuanchi Ren, Yifan Lu, Tianshi Cao et al.</p>
+            <h3 style="view-transition-name: publication-heading-align-your-latents">Align your Latents: High-Resolution Video Synthesis with Latent Diffusion Models</h3>
+            <p class="card-authors">Andreas Blattmann*, Robin Rombach*, Huan Ling*, Tim Dockhorn*, Seung Wook Kim, Sanja Fidler, Karsten Kreis</p>
+            <p class="card-meta"><span class="pill">CVPR</span><span class="publication-year">2023</span></p>
+          </div>
+        </article>
+      </a>
+      <a class="card-link" data-transition-key="drivegan" href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card">
+          <div class="visual" data-visual="0" aria-hidden="true" style="view-transition-name: publication-thumbnail-drivegan"></div>
+          <div class="card-copy">
+            <h3 style="view-transition-name: publication-heading-drivegan">DriveGAN: Towards a Controllable High-Quality Neural Simulation</h3>
+            <p class="card-authors">Seung Wook Kim, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
+            <p class="card-meta">
+              <span class="pill">CVPR</span>
+              <span class="publication-year">2021</span>
+              <span class="card-distinction">Oral</span>
+            </p>
+          </div>
+        </article>
+      </a>
+      <a class="card-link" data-transition-key="gamegan" href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card">
+          <div class="visual" data-visual="1" aria-hidden="true" style="view-transition-name: publication-thumbnail-gamegan"></div>
+          <div class="card-copy">
+            <h3 style="view-transition-name: publication-heading-gamegan">Learning to Simulate Dynamic Environments with GameGAN</h3>
+            <p class="card-authors">Seung Wook Kim, Henry Zhou, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
+            <p class="card-meta"><span class="pill">CVPR</span><span class="publication-year">2020</span></p>
           </div>
         </article>
       </a>
@@ -482,9 +502,19 @@
       <button type="button" data-theme-toggle>Dark Theme</button>
     </div>
     <nav class="footer-links" aria-label="Institution links">
-      <a href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">→ About KAIST</a>
-      <a href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">→ About KAIST AI</a>
+      <a class="axis-arrow-link" data-axis-arrow-trigger href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">
+        <span class="axis-arrow-icon" aria-hidden="true"></span>
+        <span>About KAIST</span>
+      </a>
+      <a class="axis-arrow-link" data-axis-arrow-trigger href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">
+        <span class="axis-arrow-icon" aria-hidden="true"></span>
+        <span>About KAIST AI</span>
+      </a>
     </nav>
+    <a class="footer-brand" href="index.html" aria-label="GLOW LAB home">
+      <img src="assets/glow-mark.svg" alt="" width="42" height="43">
+      <span>GLOW<br>LAB</span>
+    </a>
   </footer>
 
   <script src="js/main.js"></script>

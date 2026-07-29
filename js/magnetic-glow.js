@@ -8,8 +8,8 @@
   function initMagneticGlow(container) {
     var brandLink = container.closest("[data-brand-link]");
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
-    camera.position.z = 5.2;
+    var camera = new THREE.PerspectiveCamera(26.77, 1, 0.1, 100);
+    camera.position.z = 5.1104;
 
     var renderer;
     try {
@@ -58,8 +58,41 @@
     var floatsPerCell = 36;
     var tetrahedronPositions = new Float32Array(faceCount * floatsPerCell);
     var faceDirections = new Float32Array(faceCount * 3);
-    var faceVariation = new Float32Array(faceCount);
+    var faceBaseColors = new Float32Array(faceCount * 3);
     var sideBrightness = [1, 0.72, 0.84, 0.62];
+    var sourceVertexIds = new Map();
+    var nextSourceVertexId = 0;
+    var highlightLineOffsets = new Int32Array(faceCount);
+    highlightLineOffsets.fill(-1);
+    var highlightLinePositionList = [];
+    var highlightLineColorList = [];
+
+    var figmaFaceColors = {
+      "1-2-3": 0x3a18b9,
+      "1-3-6": 0x552bed,
+      "1-6-7": 0x31159b,
+      "0-1-7": 0x3a18b9,
+      "0-7-8": 0x3617a5,
+      "0-5-8": 0x552bed,
+      "0-2-5": 0x754fff,
+      "0-1-2": 0x411bce,
+    };
+    var figmaHighlightColors = {
+      "1-6-7": { 1: 0x754fff, 6: 0x754fff, 7: 0x754fff },
+      "0-7-8": { 0: 0xb19cff, 7: 0x462f99, 8: 0x917fdc },
+      "0-2-5": { 0: 0xb29dff, 2: 0xb19bff, 5: 0xb29dff },
+      "0-1-2": { 0: 0xb19cff, 1: 0x462f99, 2: 0x7c66cc },
+    };
+    var brandPalette = [
+      new THREE.Color(0x3a18b9),
+      new THREE.Color(0x552bed),
+      new THREE.Color(0x31159b),
+      new THREE.Color(0x3617a5),
+      new THREE.Color(0x754fff),
+      new THREE.Color(0x411bce),
+    ];
+    var faceColor = new THREE.Color();
+    var lineColor = new THREE.Color();
 
     var pointA = new THREE.Vector3();
     var pointB = new THREE.Vector3();
@@ -70,6 +103,31 @@
     var cellCenter = new THREE.Vector3();
     var sideCenter = new THREE.Vector3();
     var sideNormal = new THREE.Vector3();
+
+    function sourceVertexId(point) {
+      var key = [point.x, point.y, point.z]
+        .map(function (value) {
+          return value.toFixed(6);
+        })
+        .join(",");
+      if (!sourceVertexIds.has(key)) {
+        sourceVertexIds.set(key, nextSourceVertexId);
+        nextSourceVertexId += 1;
+      }
+      return sourceVertexIds.get(key);
+    }
+
+    function appendHighlightEdge(a, colorA, b, colorB) {
+      [
+        [a, colorA],
+        [b, colorB],
+      ].forEach(function (entry) {
+        var point = entry[0];
+        highlightLinePositionList.push(point.x * 1.002, point.y * 1.002, point.z * 1.002);
+        lineColor.set(entry[1]);
+        highlightLineColorList.push(lineColor.r, lineColor.g, lineColor.b);
+      });
+    }
 
     function writeTriangle(offset, a, b, c, tetraCenter) {
       sideCenter.copy(a).add(b).add(c).multiplyScalar(1 / 3);
@@ -90,6 +148,17 @@
       pointA.fromArray(sourcePositions, sourceOffset);
       pointB.fromArray(sourcePositions, sourceOffset + 3);
       pointC.fromArray(sourcePositions, sourceOffset + 6);
+      var faceVertexIds = [
+        sourceVertexId(pointA),
+        sourceVertexId(pointB),
+        sourceVertexId(pointC),
+      ];
+      var faceKey = faceVertexIds
+        .slice()
+        .sort(function (a, b) {
+          return a - b;
+        })
+        .join("-");
       center.copy(pointA).add(pointB).add(pointC).multiplyScalar(1 / 3);
       normal.subVectors(pointB, pointA).cross(edge.subVectors(pointC, pointA)).normalize();
       if (normal.dot(center) < 0) normal.negate();
@@ -109,9 +178,37 @@
       faceDirections[face * 3] = direction.x;
       faceDirections[face * 3 + 1] = direction.y;
       faceDirections[face * 3 + 2] = direction.z;
-      faceVariation[face] = Math.abs(
-        (Math.sin((face + 1) * 12.9898) * 43758.5453) % 1,
+      faceColor.set(
+        figmaFaceColors[faceKey] !== undefined
+          ? figmaFaceColors[faceKey]
+          : brandPalette[(face * 5 + 1) % brandPalette.length],
       );
+      faceBaseColors[face * 3] = faceColor.r;
+      faceBaseColors[face * 3 + 1] = faceColor.g;
+      faceBaseColors[face * 3 + 2] = faceColor.b;
+
+      if (figmaHighlightColors[faceKey] !== undefined) {
+        highlightLineOffsets[face] = highlightLinePositionList.length / 3;
+        var highlightColors = figmaHighlightColors[faceKey];
+        appendHighlightEdge(
+          pointA,
+          highlightColors[faceVertexIds[0]],
+          pointB,
+          highlightColors[faceVertexIds[1]],
+        );
+        appendHighlightEdge(
+          pointB,
+          highlightColors[faceVertexIds[1]],
+          pointC,
+          highlightColors[faceVertexIds[2]],
+        );
+        appendHighlightEdge(
+          pointC,
+          highlightColors[faceVertexIds[2]],
+          pointA,
+          highlightColors[faceVertexIds[0]],
+        );
+      }
     }
 
     var geometry = new THREE.BufferGeometry();
@@ -127,37 +224,47 @@
     var positionAttribute = geometry.getAttribute("position");
     var basePositions = new Float32Array(positionAttribute.array);
     var colorAttribute = geometry.getAttribute("color");
-    var material = new THREE.MeshPhongMaterial({
+    var material = new THREE.MeshBasicMaterial({
       vertexColors: true,
-      flatShading: true,
-      shininess: 24,
-      specular: 0x242424,
       side: THREE.DoubleSide,
-      emissive: 0x000000,
-      emissiveIntensity: 0,
+      toneMapped: false,
     });
     var mesh = new THREE.Mesh(geometry, material);
+    var highlightGeometry = new THREE.BufferGeometry();
+    highlightGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(new Float32Array(highlightLinePositionList), 3),
+    );
+    highlightGeometry.setAttribute(
+      "color",
+      new THREE.BufferAttribute(new Float32Array(highlightLineColorList), 3),
+    );
+    var highlightPositionAttribute = highlightGeometry.getAttribute("position");
+    var baseHighlightPositions = new Float32Array(highlightPositionAttribute.array);
+    var highlightMaterial = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.82,
+      depthTest: true,
+      depthWrite: false,
+      toneMapped: false,
+    });
+    var highlights = new THREE.LineSegments(highlightGeometry, highlightMaterial);
+    highlights.renderOrder = 2;
     var group = new THREE.Group();
-    group.rotation.set(-0.22, 0.56, -0.08);
+    group.quaternion.set(0.295371, 0.150507, -0.486855, 0.808131).normalize();
     group.add(mesh);
+    group.add(highlights);
     scene.add(group);
     var homeQuaternion = group.quaternion.clone();
-
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x2a2a2a, 1.35));
-    var keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
-    keyLight.position.set(-3.5, 4.5, 5);
-    scene.add(keyLight);
-    var fillLight = new THREE.DirectionalLight(0xbfd8ff, 0.7);
-    fillLight.position.set(4, -2, 3);
-    scene.add(fillLight);
 
     var glowCanvas = document.createElement("canvas");
     glowCanvas.width = glowCanvas.height = 128;
     var glowContext = glowCanvas.getContext("2d");
     var spectrumGradient = glowContext.createLinearGradient(0, 0, 128, 128);
-    spectrumGradient.addColorStop(0, "rgb(13,148,136)");
-    spectrumGradient.addColorStop(0.48, "rgb(79,70,229)");
-    spectrumGradient.addColorStop(1, "rgb(147,51,234)");
+    spectrumGradient.addColorStop(0, "rgb(117,79,255)");
+    spectrumGradient.addColorStop(0.48, "rgb(85,43,237)");
+    spectrumGradient.addColorStop(1, "rgb(177,156,255)");
     glowContext.fillStyle = spectrumGradient;
     glowContext.fillRect(0, 0, 128, 128);
     var alphaGradient = glowContext.createRadialGradient(64, 64, 2, 64, 64, 64);
@@ -187,10 +294,11 @@
     glowSprite.scale.set(2.4, 2.4, 1);
     scene.add(glowSprite);
 
-    var glowTeal = new THREE.Color(0x0d9488);
-    var glowIndigo = new THREE.Color(0x4f46e5);
-    var glowPurple = new THREE.Color(0x9333ea);
+    var glowTeal = new THREE.Color(0x754fff);
+    var glowIndigo = new THREE.Color(0x552bed);
+    var glowPurple = new THREE.Color(0xb19cff);
     var glowColor = new THREE.Color();
+    var facetColor = new THREE.Color();
     var screenPointer = new THREE.Vector3(0, 0, 1);
     var localPointer = new THREE.Vector3(0, 0, 1);
     var vertexDirection = new THREE.Vector3();
@@ -232,24 +340,22 @@
 
       for (var cell = 0; cell < faceCount; cell += 1) {
         var directionOffset = cell * 3;
-        var directionY = faceDirections[directionOffset + 1];
-        var directionZ = faceDirections[directionOffset + 2];
-        var light =
-          0.52 +
-          directionY * 0.12 +
-          directionZ * 0.2 +
-          faceVariation[cell] * 0.14;
-        var baseLight = Math.min(0.82, Math.max(0.28, light));
         var pointerFacing = Math.max(
           0,
           faceDirections[directionOffset] * localPointer.x +
-            directionY * localPointer.y +
-            directionZ * localPointer.z,
+            faceDirections[directionOffset + 1] * localPointer.y +
+            faceDirections[directionOffset + 2] * localPointer.z,
         );
         var cursorGlow = explosion * Math.pow(pointerFacing, 2.2);
 
         for (var triangle = 0; triangle < 4; triangle += 1) {
-          var triangleLight = baseLight * sideBrightness[triangle];
+          facetColor
+            .setRGB(
+              faceBaseColors[cell * 3],
+              faceBaseColors[cell * 3 + 1],
+              faceBaseColors[cell * 3 + 2],
+            )
+            .multiplyScalar(sideBrightness[triangle]);
           var surfaceGlow =
             triangle === 0
               ? Math.min(0.58, explosion * 0.08 + cursorGlow * 0.5)
@@ -272,18 +378,19 @@
                 explosion * 0.06 + explosion * Math.pow(vertexFacing, 2.2) * 0.52,
               );
             }
+            vertexGlow *= triangle === 0 ? 0.42 : 0.55;
             colors[offset] = THREE.MathUtils.lerp(
-              triangleLight,
+              facetColor.r,
               glowColor.r,
               vertexGlow,
             );
             colors[offset + 1] = THREE.MathUtils.lerp(
-              triangleLight,
+              facetColor.g,
               glowColor.g,
               vertexGlow,
             );
             colors[offset + 2] = THREE.MathUtils.lerp(
-              triangleLight,
+              facetColor.b,
               glowColor.b,
               vertexGlow,
             );
@@ -295,6 +402,7 @@
 
     function updatePositions(amount) {
       var positions = positionAttribute.array;
+      var highlightPositions = highlightPositionAttribute.array;
 
       for (var cell = 0; cell < faceCount; cell += 1) {
         var directionOffset = cell * 3;
@@ -327,14 +435,33 @@
           positions[offset + 1] = basePositions[offset + 1] + dy;
           positions[offset + 2] = basePositions[offset + 2] + dz;
         }
+
+        var highlightOffset = highlightLineOffsets[cell];
+        if (highlightOffset >= 0) {
+          for (var lineVertex = 0; lineVertex < 6; lineVertex += 1) {
+            var lineOffset = (highlightOffset + lineVertex) * 3;
+            highlightPositions[lineOffset] = baseHighlightPositions[lineOffset] + dx;
+            highlightPositions[lineOffset + 1] =
+              baseHighlightPositions[lineOffset + 1] + dy;
+            highlightPositions[lineOffset + 2] =
+              baseHighlightPositions[lineOffset + 2] + dz;
+          }
+        }
       }
 
       positionAttribute.needsUpdate = true;
+      highlightPositionAttribute.needsUpdate = true;
     }
 
     function render() {
       renderer.render(scene, camera);
-      if (firstRender) {
+      if (
+        firstRender ||
+        explosionTarget > 0.002 ||
+        explosion > 0.002 ||
+        dragging ||
+        returning
+      ) {
         firstRender = false;
         container.classList.add("is-enhanced");
       }
@@ -421,12 +548,12 @@
       var pulse = 0.92 + Math.sin(time * 0.0055) * 0.08;
       glowSprite.material.opacity = explosion * 0.72 * pulse;
       glowSprite.scale.setScalar(2.26 + explosion * 0.18);
-      material.emissive.set(0x000000);
-      material.emissiveIntensity = 0;
       render();
 
       if (explosionVelocity !== 0 || dragging || returning || explosion > 0.001) {
         invalidate();
+      } else if (explosionTarget === 0) {
+        container.classList.remove("is-enhanced");
       }
     }
 
@@ -486,8 +613,9 @@
       }
     }
 
-    canvas.addEventListener("pointerdown", function (event) {
-      event.preventDefault();
+    function beginDrag(event, capturePointer) {
+      if (dragging || (Number.isFinite(event.button) && event.button !== 0)) return;
+      if (event.cancelable && event.preventDefault) event.preventDefault();
       dragging = true;
       returning = false;
       rotationVelocity.set(0, 0, 0);
@@ -496,28 +624,50 @@
       dragOriginX = event.clientX;
       dragOriginY = event.clientY;
       container.dataset.dragging = "true";
-      canvas.setPointerCapture(event.pointerId);
+      if (capturePointer && Number.isFinite(event.pointerId)) {
+        try {
+          container.setPointerCapture(event.pointerId);
+        } catch (_error) {
+          // The initial touch may predate WebGL initialization. Its implicit
+          // capture still bubbles through the logo container.
+        }
+      }
       updatePointerDirection(event, container.getBoundingClientRect());
       projectArcball(event, dragStart);
       dragStartQuaternion.copy(group.quaternion);
       setTarget(Math.max(0.72, explosionTarget));
       if (brandLink) brandLink.focus({ preventScroll: true });
       invalidate();
-    });
+    }
 
-    canvas.addEventListener("pointermove", function (event) {
-      if (!dragging || event.pointerId !== dragPointerId) return;
-      draggedDistance = Math.max(
-        draggedDistance,
-        Math.hypot(event.clientX - dragOriginX, event.clientY - dragOriginY),
-      );
-      projectArcball(event, dragCurrent);
-      dragDeltaQuaternion.setFromUnitVectors(dragStart, dragCurrent);
-      group.quaternion.copy(dragDeltaQuaternion).multiply(dragStartQuaternion).normalize();
-      inverseQuaternion.copy(group.quaternion).invert();
-      localPointer.copy(screenPointer).applyQuaternion(inverseQuaternion).normalize();
-      invalidate();
-    });
+    container.addEventListener(
+      "pointerdown",
+      function (event) {
+        beginDrag(event, true);
+      },
+      { passive: false },
+    );
+
+    container.addEventListener(
+      "pointermove",
+      function (event) {
+        if (!dragging || event.pointerId !== dragPointerId) return;
+        if (event.cancelable) event.preventDefault();
+        draggedDistance = Math.max(
+          draggedDistance,
+          Math.hypot(event.clientX - dragOriginX, event.clientY - dragOriginY),
+        );
+        updatePointerDirection(event, container.getBoundingClientRect());
+        projectArcball(event, dragCurrent);
+        dragDeltaQuaternion.setFromUnitVectors(dragStart, dragCurrent);
+        group.quaternion.copy(dragDeltaQuaternion).multiply(dragStartQuaternion).normalize();
+        inverseQuaternion.copy(group.quaternion).invert();
+        localPointer.copy(screenPointer).applyQuaternion(inverseQuaternion).normalize();
+        setTarget(Math.max(0.72, explosionTarget));
+        invalidate();
+      },
+      { passive: false },
+    );
 
     function endDrag(event) {
       if (!dragging || event.pointerId !== dragPointerId) return;
@@ -525,13 +675,19 @@
       returning = true;
       dragPointerId = null;
       container.dataset.dragging = "false";
-      if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+      try {
+        if (container.hasPointerCapture(event.pointerId)) {
+          container.releasePointerCapture(event.pointerId);
+        }
+      } catch (_error) {
+        // The browser may already have released implicit touch capture.
+      }
       updateProximity(event);
       invalidate();
     }
 
-    canvas.addEventListener("pointerup", endDrag);
-    canvas.addEventListener("pointercancel", endDrag);
+    container.addEventListener("pointerup", endDrag);
+    container.addEventListener("pointercancel", endDrag);
     window.addEventListener("pointermove", updateProximity, { passive: true });
     document.documentElement.addEventListener("mouseleave", function () {
       setTarget(0);
@@ -613,14 +769,29 @@
     resizeRenderer();
     var pendingPointerX = Number(container.dataset.pendingPointerX);
     var pendingPointerY = Number(container.dataset.pendingPointerY);
+    var pendingPointerId = Number(container.dataset.pendingPointerId);
+    var pendingPointerType = container.dataset.pendingPointerType || "mouse";
+    var pendingPointerDown = container.dataset.pendingPointerDown === "true";
     delete container.dataset.pendingPointerX;
     delete container.dataset.pendingPointerY;
+    delete container.dataset.pendingPointerId;
+    delete container.dataset.pendingPointerType;
+    delete container.dataset.pendingPointerDown;
     if (Number.isFinite(pendingPointerX) && Number.isFinite(pendingPointerY)) {
-      updateProximity({
+      var pendingEvent = {
         clientX: pendingPointerX,
         clientY: pendingPointerY,
-        pointerType: "mouse",
-      });
+        pointerId: pendingPointerId,
+        pointerType: pendingPointerType,
+        button: 0,
+        cancelable: false,
+        preventDefault: function () {},
+      };
+      if (pendingPointerDown && Number.isFinite(pendingPointerId)) {
+        beginDrag(pendingEvent, true);
+      } else {
+        updateProximity(pendingEvent);
+      }
     }
     invalidate();
   }

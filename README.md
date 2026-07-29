@@ -48,9 +48,18 @@ Any other static host (Netlify, Cloudflare Pages) also works as-is.
   `<span class="me">` around lab-member names, `*` for equal contribution, and
   `<span class="award">` for oral/spotlight/highlight badges. The preview grid is
   generated from this list, so it does not need a second manual entry.
-- **New lab member**: in `people.html`, copy a `.person-card` in the students
-  grid. To use a photo instead of the placeholder icon, put it in `assets/`
-  and replace the icon with `<img src="assets/name.jpg" alt="Portrait of …">`.
+- **New lab member**: `people.html` is the single source for both the People page
+  and the Home member preview. In the `#members .people-grid`, copy an existing
+  `<article class="card person-card" data-member-record>` and update its name,
+  role, and avatar. Give the avatar a unique
+  `data-member-transition="first-last"` value. To use a photo, put it in
+  `assets/` and replace the placeholder SVG with
+  `<img class="person-avatar-photo" src="assets/name.jpg" alt="Full Name">`.
+  Keep `data-member-record` only on real member cards (not the Join card).
+  Home follows this People-page order automatically and previews the first
+  **16** members; additional members remain available on the People page. The
+  filled arrow hexagon is a separate, permanent CTA to `join.html` and does not
+  count toward the 16-member limit.
 - **CV**: replace `assets/CV-SeungWookKim.pdf` when it changes.
 - **Colors / fonts**: edit the CSS custom properties and `@font-face` rules at
   the top of `css/style.css`.

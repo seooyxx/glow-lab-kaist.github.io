@@ -5,28 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>People — GLOW Lab</title>
   <meta name="description" content="The people of GLOW Lab at KAIST AI, led by Prof. Seung Wook Kim.">
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="preload" href="assets/fonts/MessinaSansWeb-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/MessinaSansWeb-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/magnetic-glow-fallback.png" as="image" type="image/png">
+  <link rel="icon" type="image/svg+xml" href="assets/glow-mark.svg">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preload" href="assets/glow-mark.svg" as="image" type="image/svg+xml">
   <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="people-page">
-  <a class="skip-link" href="#main">Skip to content</a>
-
   <header class="site-header">
     <a class="brand" href="index.html" aria-label="GLOW LAB home" data-brand-link>
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
-        <img src="assets/magnetic-glow-fallback.png" alt="" width="260" height="260">
+        <img src="assets/glow-mark.svg" alt="" width="69" height="70">
       </span>
       <span class="wordmark">GLOW<br>LAB</span>
     </a>
     <nav class="main-nav" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a href="people.html" aria-current="page">People</a>
-      <a href="publications.html">Publications</a>
-      <a href="join.html">Join Us</a>
+      <a href="index.html" data-nav-label="Home"><span class="nav-label">Home</span></a>
+      <a href="people.html" data-nav-label="People" aria-current="page"><span class="nav-label">People</span></a>
+      <a href="publications.html" data-nav-label="Publications"><span class="nav-label">Publications</span></a>
+      <a href="join.html" data-nav-label="Join Us"><span class="nav-label">Join Us</span></a>
     </nav>
     <div class="institution-marks" aria-label="KAIST AI">
       <a href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">
@@ -57,7 +54,7 @@
       <h2 id="members-title">Members</h2>
       <div class="cards people-grid">
         <a class="card-link" href="#profile" aria-label="View Seung Wook Kim's profile">
-          <article class="card person-card person-pi">
+          <article class="card person-card person-pi" data-member-record>
             <div class="person-avatar" data-member-transition="seung-wook-kim" style="view-transition-name: member-img-seung-wook-kim">
               <img class="person-avatar-photo" src="assets/seungwook-kim.jpg" alt="Seung Wook Kim" width="413" height="531">
             </div>
@@ -67,7 +64,7 @@
             </div>
           </article>
         </a>
-        <article class="card person-card">
+        <article class="card person-card" data-member-record>
           <div class="person-avatar" data-member-transition="seoyeon-byun" style="view-transition-name: member-img-seoyeon-byun" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
@@ -76,7 +73,7 @@
             <p class="person-role">MS Student</p>
           </div>
         </article>
-        <article class="card person-card">
+        <article class="card person-card" data-member-record>
           <div class="person-avatar" data-member-transition="wonjun-chang" style="view-transition-name: member-img-wonjun-chang" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
@@ -85,7 +82,7 @@
             <p class="person-role">Research Intern</p>
           </div>
         </article>
-        <article class="card person-card">
+        <article class="card person-card" data-member-record>
           <div class="person-avatar" data-member-transition="sanghyeop-kim" style="view-transition-name: member-img-sanghyeop-kim" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
@@ -94,7 +91,7 @@
             <p class="person-role">Research Intern</p>
           </div>
         </article>
-        <article class="card person-card">
+        <article class="card person-card" data-member-record>
           <div class="person-avatar" data-member-transition="kyaw-ye-thu" style="view-transition-name: member-img-kyaw-ye-thu" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
@@ -103,7 +100,7 @@
             <p class="person-role">Research Intern</p>
           </div>
         </article>
-        <article class="card person-card">
+        <article class="card person-card" data-member-record>
           <div class="person-avatar" data-member-transition="minseo-kim" style="view-transition-name: member-img-minseo-kim" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
@@ -112,7 +109,7 @@
             <p class="person-role">Research Intern</p>
           </div>
         </article>
-        <article class="card person-card">
+        <article class="card person-card" data-member-record>
           <div class="person-avatar" data-member-transition="yeonwoo-shin" style="view-transition-name: member-img-yeonwoo-shin" aria-hidden="true">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c.9-3.6 3.9-5.5 7.5-5.5s6.6 1.9 7.5 5.5"/></svg>
           </div>
@@ -121,14 +118,17 @@
             <p class="person-role">Research Intern</p>
           </div>
         </article>
-        <a class="card-link" href="join.html">
+        <a class="card-link" data-axis-arrow-trigger href="join.html">
           <article class="card person-card person-join">
             <div class="person-avatar" aria-hidden="true">
               <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             </div>
             <div class="card-copy">
               <h3>This could be you</h3>
-              <p class="person-role">→ Join GLOW Lab</p>
+              <p class="person-role">
+                <span class="axis-arrow-icon" aria-hidden="true"></span>
+                <span>Join GLOW Lab</span>
+              </p>
             </div>
           </article>
         </a>
@@ -166,7 +166,6 @@
         </div>
         <div>
           <h2 class="pi-name">Seung Wook Kim <span class="pi-name-kr">(김승욱)</span></h2>
-          <p class="pi-role">Principal Investigator</p>
           <div class="pi-bio">
             <p>
               Seung Wook Kim is currently a <strong>Senior Research Scientist at NVIDIA</strong>,
@@ -214,9 +213,19 @@
       <button type="button" data-theme-toggle>Dark Theme</button>
     </div>
     <nav class="footer-links" aria-label="Institution links">
-      <a href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">→ About KAIST</a>
-      <a href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">→ About KAIST AI</a>
+      <a class="axis-arrow-link" data-axis-arrow-trigger href="https://www.kaist.ac.kr/en/" target="_blank" rel="noopener">
+        <span class="axis-arrow-icon" aria-hidden="true"></span>
+        <span>About KAIST</span>
+      </a>
+      <a class="axis-arrow-link" data-axis-arrow-trigger href="https://gsai.kaist.ac.kr/" target="_blank" rel="noopener">
+        <span class="axis-arrow-icon" aria-hidden="true"></span>
+        <span>About KAIST AI</span>
+      </a>
     </nav>
+    <a class="footer-brand" href="index.html" aria-label="GLOW LAB home">
+      <img src="assets/glow-mark.svg" alt="" width="42" height="43">
+      <span>GLOW<br>LAB</span>
+    </a>
   </footer>
 
   <script src="js/main.js"></script>

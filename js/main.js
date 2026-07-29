@@ -102,9 +102,14 @@
       if (!link) return;
       var navBounds = nav.getBoundingClientRect();
       var linkBounds = link.getBoundingClientRect();
+      var label = link.querySelector(".nav-label") || link;
+      var labelBounds = label.getBoundingClientRect();
+      var targetRight = link.matches('[aria-current="page"]')
+        ? linkBounds.right
+        : labelBounds.right;
       nav.classList.toggle("indicator-immediate", Boolean(immediate));
-      nav.style.setProperty("--nav-indicator-x", (linkBounds.left - navBounds.left) + "px");
-      nav.style.setProperty("--nav-indicator-width", linkBounds.width + "px");
+      nav.style.setProperty("--nav-indicator-x", (labelBounds.left - navBounds.left) + "px");
+      nav.style.setProperty("--nav-indicator-width", (targetRight - labelBounds.left) + "px");
       nav.classList.add("indicator-ready");
       if (immediate) {
         window.requestAnimationFrame(function () {
@@ -228,6 +233,23 @@
     return parts[parts.length - 1] || author.trim();
   }
 
+  function setHighlightedAuthorText(element, text) {
+    if (!element) return;
+    var highlightedAuthor = "Seung Wook Kim";
+    var chunks = String(text || "").split(highlightedAuthor);
+    element.textContent = "";
+
+    chunks.forEach(function (chunk, index) {
+      if (index) {
+        var highlight = document.createElement("span");
+        highlight.className = "me";
+        highlight.textContent = highlightedAuthor;
+        element.appendChild(highlight);
+      }
+      element.appendChild(document.createTextNode(chunk));
+    });
+  }
+
   function formatListAuthors(authors) {
     if (!authors || authors.dataset.listFormatted === "true") return;
     var fullAuthors = authors.textContent.replace(/\s+/g, " ").trim();
@@ -239,7 +261,19 @@
     authors.dataset.fullAuthors = fullAuthors;
     authors.setAttribute("aria-label", fullAuthors);
     authors.title = fullAuthors;
-    authors.textContent = authorList.slice(0, 2).map(authorSurname).join(", ");
+    authors.textContent = "";
+    authorList.slice(0, 2).forEach(function (author, index) {
+      if (index) authors.appendChild(document.createTextNode(", "));
+      var surname = authorSurname(author);
+      if (author.replace(/\*/g, "").trim() === "Seung Wook Kim") {
+        var highlight = document.createElement("span");
+        highlight.className = "me";
+        highlight.textContent = surname;
+        authors.appendChild(highlight);
+      } else {
+        authors.appendChild(document.createTextNode(surname));
+      }
+    });
 
     if (authorList.length > 2) {
       var etAl = document.createElement("span");
@@ -365,7 +399,7 @@
     }
 
     var article = document.createElement("article");
-    article.className = "card publication-card";
+    article.className = "card publication-card selected-publication-card";
     var visual = document.createElement("div");
     visual.className = "visual";
     visual.dataset.visual = String(index % 5);
@@ -374,19 +408,39 @@
     copy.className = "card-copy";
     var previewTitle = document.createElement("h3");
     previewTitle.textContent = title ? (title.dataset.fullTitle || title.textContent.trim()) : "Publication";
+    var previewAuthors = document.createElement("p");
+    previewAuthors.className = "card-authors";
+    setHighlightedAuthorText(
+      previewAuthors,
+      authors ? (authors.dataset.fullAuthors || authors.textContent.trim()) : "",
+    );
     var meta = document.createElement("p");
     meta.className = "card-meta";
-    var metaParts = [];
-    if (venue) metaParts.push(venue.dataset.fullVenue || venue.textContent.trim());
-    if (authors) metaParts.push(authors.dataset.fullAuthors || authors.textContent.trim());
-    meta.textContent = metaParts.join(" · ");
+    var fullVenue = venue ? (venue.dataset.fullVenue || venue.textContent.trim()) : "";
+    var venueMatch = fullVenue.match(/^(.*?)(?:\s+((?:19|20)\d{2}))$/);
+    var venueName = venueMatch ? venueMatch[1] : fullVenue;
+    var publicationYear = venueMatch ? venueMatch[2] : publication.dataset.year;
+    if (venueName) {
+      var venuePill = document.createElement("span");
+      venuePill.className = "pill";
+      venuePill.textContent = venueName;
+      meta.appendChild(venuePill);
+    }
+    if (publicationYear) {
+      var year = document.createElement("span");
+      year.className = "publication-year";
+      year.textContent = publicationYear;
+      meta.appendChild(year);
+    }
     if (award) {
       var awardCopy = document.createElement("span");
-      awardCopy.className = "award";
+      awardCopy.className = "card-distinction";
       awardCopy.textContent = award.textContent.trim();
-      meta.prepend(awardCopy, " ");
+      meta.appendChild(awardCopy);
     }
-    copy.append(previewTitle, meta);
+    copy.append(previewTitle);
+    if (previewAuthors.textContent) copy.append(previewAuthors);
+    copy.append(meta);
     article.append(visual, copy);
     wrapper.append(article);
     return wrapper;
@@ -515,15 +569,861 @@
     activate(pairs[0].link);
   }
 
+  var memberStackRenderId = 0;
+  var memberStackLimit = 16;
+  var memberStackRowSize = 9;
+  var memberHexHeight = 2 / Math.sqrt(3);
+  var memberHexRowOffset = memberHexHeight * 0.75;
+
+  function memberRecordsFromPeoplePage(scope) {
+    return Array.from(scope.querySelectorAll("[data-member-record]")).map(function (card) {
+      var avatar = card.querySelector(".person-avatar[data-member-transition]");
+      var heading = card.querySelector("h3");
+      var image = avatar && avatar.querySelector("img");
+      if (!avatar || !heading) return null;
+      return {
+        slug: avatar.dataset.memberTransition,
+        name: heading.textContent.trim(),
+        image: image ? image.getAttribute("src") : "",
+      };
+    }).filter(Boolean);
+  }
+
+  function memberRecordsFromFallback(stack) {
+    return Array.from(stack.querySelectorAll(".member-cell[data-member-transition]")).map(
+      function (cell) {
+        var image = cell.querySelector("img");
+        return {
+          slug: cell.dataset.memberTransition,
+          name: cell.getAttribute("title") || cell.dataset.memberTransition,
+          image: image ? image.getAttribute("src") : "",
+        };
+      },
+    );
+  }
+
+  function memberHexPoints(left, top) {
+    var half = 0.5;
+    var quarterHeight = memberHexHeight * 0.25;
+    return [
+      [left + half, top],
+      [left + 1, top + quarterHeight],
+      [left + 1, top + memberHexHeight - quarterHeight],
+      [left + half, top + memberHexHeight],
+      [left, top + memberHexHeight - quarterHeight],
+      [left, top + quarterHeight],
+    ];
+  }
+
+  function memberOutlinePath(positions) {
+    var edges = new Map();
+    var pointsByKey = new Map();
+    var adjacency = new Map();
+
+    function edgeKey(firstKey, secondKey) {
+      return firstKey < secondKey
+        ? firstKey + "|" + secondKey
+        : secondKey + "|" + firstKey;
+    }
+
+    function connect(firstKey, secondKey) {
+      if (!adjacency.has(firstKey)) adjacency.set(firstKey, new Set());
+      if (!adjacency.has(secondKey)) adjacency.set(secondKey, new Set());
+      adjacency.get(firstKey).add(secondKey);
+      adjacency.get(secondKey).add(firstKey);
+    }
+
+    positions.forEach(function (position) {
+      var points = memberHexPoints(position.x, position.y);
+      points.forEach(function (point, index) {
+        var next = points[(index + 1) % points.length];
+        var first = point.map(function (value) {
+          return Math.round(value * 1000) / 10;
+        });
+        var second = next.map(function (value) {
+          return Math.round(value * 1000) / 10;
+        });
+        var firstKey = first.join(",");
+        var secondKey = second.join(",");
+        var key = edgeKey(firstKey, secondKey);
+        pointsByKey.set(firstKey, first);
+        pointsByKey.set(secondKey, second);
+        if (!edges.has(key)) {
+          edges.set(key, [firstKey, secondKey]);
+          connect(firstKey, secondKey);
+        }
+      });
+    });
+
+    var visited = new Set();
+    var polylines = [];
+
+    function walk(firstKey, secondKey) {
+      var line = [firstKey];
+      var previous = firstKey;
+      var current = secondKey;
+      visited.add(edgeKey(firstKey, secondKey));
+
+      while (true) {
+        line.push(current);
+        var neighbors = Array.from(adjacency.get(current) || []);
+        if (neighbors.length !== 2) break;
+        var next = neighbors.find(function (candidate) {
+          return candidate !== previous && !visited.has(edgeKey(current, candidate));
+        });
+        if (!next) break;
+        visited.add(edgeKey(current, next));
+        previous = current;
+        current = next;
+      }
+      return line;
+    }
+
+    adjacency.forEach(function (neighbors, pointKey) {
+      if (neighbors.size === 2) return;
+      neighbors.forEach(function (neighborKey) {
+        if (visited.has(edgeKey(pointKey, neighborKey))) return;
+        polylines.push(walk(pointKey, neighborKey));
+      });
+    });
+
+    edges.forEach(function (edge) {
+      if (visited.has(edgeKey(edge[0], edge[1]))) return;
+      polylines.push(walk(edge[0], edge[1]));
+    });
+
+    return polylines.map(function (line) {
+      var closed = line.length > 2 && line[0] === line[line.length - 1];
+      var pointKeys = closed ? line.slice(0, -1) : line;
+      var commands = pointKeys.map(function (pointKey, index) {
+        var point = pointsByKey.get(pointKey);
+        return (index ? "L" : "M") + point.join(" ");
+      });
+      return commands.join("") + (closed ? "Z" : "");
+    }).join("");
+  }
+
+  function renderMemberStack(stack, records, totalCount) {
+    var members = records.slice(0, memberStackLimit);
+    if (!members.length) {
+      stack.hidden = true;
+      return;
+    }
+
+    var visualCount = members.length + 1;
+    var positions = Array.from({ length: visualCount }, function (_item, index) {
+      var row = index >= memberStackRowSize ? 1 : 0;
+      var column = row ? index - memberStackRowSize : index;
+      return {
+        x: column + (row ? 0.5 : 0),
+        y: row ? memberHexRowOffset : 0,
+      };
+    });
+    var joinPosition = positions[positions.length - 1];
+    var topCount = Math.min(visualCount, memberStackRowSize);
+    var bottomCount = Math.max(0, visualCount - memberStackRowSize);
+    var width = Math.max(topCount, bottomCount ? bottomCount + 0.5 : 0);
+    var height = bottomCount ? memberHexHeight + memberHexRowOffset : memberHexHeight;
+    var svgNamespace = "http://www.w3.org/2000/svg";
+    var gradientId = "member-stack-gradient-" + (++memberStackRenderId);
+    var peopleLink = document.createElement("a");
+    var joinLink = document.createElement("a");
+    var joinArrow = document.createElement("span");
+    var cells = document.createElement("span");
+    var outline = document.createElementNS(svgNamespace, "svg");
+    var definitions = document.createElementNS(svgNamespace, "defs");
+    var gradient = document.createElementNS(svgNamespace, "linearGradient");
+    var gradientStart = document.createElementNS(svgNamespace, "stop");
+    var gradientEnd = document.createElementNS(svgNamespace, "stop");
+    var path = document.createElementNS(svgNamespace, "path");
+
+    stack.hidden = false;
+    stack.style.setProperty("--member-stack-width", String(width));
+    stack.style.setProperty("--member-stack-height", String(height));
+    stack.dataset.memberCount = String(members.length);
+    peopleLink.className = "member-stack-people";
+    peopleLink.href = "people.html";
+    peopleLink.setAttribute(
+      "aria-label",
+      "Meet " + totalCount + " " + (totalCount === 1 ? "member" : "members") + " of GLOW Lab",
+    );
+
+    cells.className = "member-stack-cells";
+    cells.setAttribute("aria-hidden", "true");
+    members.forEach(function (member, index) {
+      var cell = document.createElement("span");
+      var position = positions[index];
+      cell.className = "member-avatar member-cell" + (member.image ? " member-photo" : "");
+      cell.dataset.memberTransition = member.slug;
+      cell.title = member.name;
+      cell.style.setProperty("--member-x", String(position.x));
+      cell.style.setProperty("--member-y", String(position.y));
+      cell.style.left = (position.x / width * 100) + "%";
+      cell.style.top = (position.y / height * 100) + "%";
+      cell.style.width = (1 / width * 100) + "%";
+      cell.style.height = (memberHexHeight / height * 100) + "%";
+      cell.style.viewTransitionName = "member-img-" + member.slug;
+
+      if (member.image) {
+        var image = document.createElement("img");
+        image.src = member.image;
+        image.alt = "";
+        image.loading = "eager";
+        image.decoding = "async";
+        cell.appendChild(image);
+      }
+      cells.appendChild(cell);
+    });
+
+    joinLink.className = "member-stack-join";
+    joinLink.dataset.axisArrowTrigger = "";
+    joinLink.href = "join.html";
+    joinLink.setAttribute("aria-label", "Join GLOW Lab");
+    joinLink.style.left = (joinPosition.x / width * 100) + "%";
+    joinLink.style.top = (joinPosition.y / height * 100) + "%";
+    joinLink.style.width = (1 / width * 100) + "%";
+    joinLink.style.height = (memberHexHeight / height * 100) + "%";
+    joinArrow.className = "axis-arrow-icon";
+    joinArrow.setAttribute("aria-hidden", "true");
+    joinLink.appendChild(joinArrow);
+
+    outline.classList.add("member-stack-outline");
+    outline.setAttribute("viewBox", "0 0 " + width * 100 + " " + height * 100);
+    outline.setAttribute("preserveAspectRatio", "none");
+    outline.setAttribute("aria-hidden", "true");
+    gradient.id = gradientId;
+    gradient.setAttribute("gradientUnits", "userSpaceOnUse");
+    gradient.setAttribute("x1", "0");
+    gradient.setAttribute("y1", "0");
+    gradient.setAttribute("x2", String(width * 100));
+    gradient.setAttribute("y2", String(height * 100));
+    gradientStart.setAttribute("offset", "0");
+    gradientStart.classList.add("member-stack-gradient-start");
+    gradientEnd.setAttribute("offset", "1");
+    gradientEnd.classList.add("member-stack-gradient-end");
+    gradient.append(gradientStart, gradientEnd);
+    definitions.appendChild(gradient);
+    path.setAttribute("d", memberOutlinePath(positions));
+    path.setAttribute("pathLength", String(Math.max(1, positions.length * 6)));
+    path.setAttribute("stroke", "url(#" + gradientId + ")");
+    outline.append(definitions, path);
+
+    stack.replaceChildren(peopleLink, cells, outline, joinLink);
+    stack.classList.add("is-member-stack-ready");
+  }
+
+  function initMemberStack() {
+    var stack = document.querySelector("[data-member-stack]");
+    if (!stack || stack.dataset.memberStackReady === "true") return;
+    stack.dataset.memberStackReady = "true";
+
+    var fallbackMembers = memberRecordsFromFallback(stack);
+    renderMemberStack(stack, fallbackMembers, fallbackMembers.length);
+
+    var peopleUrl = new URL("people.html", window.location.href);
+    fetchPage(peopleUrl).then(function (peopleDocument) {
+      if (!stack.isConnected) return;
+      var records = memberRecordsFromPeoplePage(peopleDocument);
+      if (records.length) renderMemberStack(stack, records, records.length);
+    }).catch(function () {
+      // The seven current members in index.html remain as a no-network fallback.
+    });
+  }
+
+  var destroyHomeWheel = function () {};
+
+  function initHomeWheel() {
+    destroyHomeWheel();
+
+    var wheel = document.querySelector("[data-home-wheel]");
+    if (!wheel) {
+      destroyHomeWheel = function () {};
+      return;
+    }
+
+    var logicalPanels = Array.from(
+      wheel.querySelectorAll("[data-home-wheel-panel]"),
+    );
+    var researchIndex = logicalPanels.findIndex(function (panel) {
+      return panel.dataset.homeWheelPanel === "research";
+    });
+    var researchLinks = Array.from(document.querySelectorAll(".research-term[href^='#research-']"));
+    var desktopWheel = window.matchMedia("(min-width: 1288px)");
+    var frame = 0;
+    var scrollStopTimer = 0;
+    var programmaticStopTimer = 0;
+    var wheelTargetIndex = 0;
+    var wheelGestureDistance = 0;
+    var wheelGestureStartIndex = 0;
+    var lastWheelDirection = 1;
+    var loopJumping = false;
+    var updatingMetrics = false;
+    var resizeObserver = null;
+
+    if (logicalPanels.length < 2 || researchIndex < 0) {
+      destroyHomeWheel = function () {};
+      return;
+    }
+
+    logicalPanels.forEach(function (panel, index) {
+      panel.dataset.wheelIndex = String(index);
+    });
+
+    function panelIndex(panel) {
+      var index = Number(panel && panel.dataset.wheelIndex);
+      return Number.isInteger(index) ? index : 0;
+    }
+
+    function createLoopClone(panel, position, index) {
+      var clone = panel.cloneNode(true);
+      clone.classList.add("home-wheel-clone");
+      clone.dataset.wheelClone = position;
+      clone.dataset.wheelIndex = String(index);
+      clone.removeAttribute("data-home-wheel-panel");
+      clone.removeAttribute("aria-labelledby");
+      clone.setAttribute("aria-hidden", "true");
+      clone.setAttribute("inert", "");
+      clone.style.viewTransitionName = "none";
+
+      clone.querySelectorAll("[id]").forEach(function (node) {
+        node.removeAttribute("id");
+      });
+      clone.querySelectorAll("[style]").forEach(function (node) {
+        node.style.viewTransitionName = "none";
+      });
+      clone.querySelectorAll(".section-heading h2").forEach(function (node) {
+        node.style.viewTransitionName = "none";
+      });
+      clone.querySelectorAll("a, button, input, select, textarea, [tabindex]").forEach(function (node) {
+        node.setAttribute("tabindex", "-1");
+      });
+      return clone;
+    }
+
+    var leadingClones = logicalPanels.map(function (panel, index) {
+      return createLoopClone(panel, "before", index);
+    });
+    var trailingClones = logicalPanels.map(function (panel, index) {
+      return createLoopClone(panel, "after", index);
+    });
+    var leadingFragment = document.createDocumentFragment();
+    leadingClones.forEach(function (clone) {
+      leadingFragment.appendChild(clone);
+    });
+    wheel.insertBefore(leadingFragment, logicalPanels[0]);
+    trailingClones.forEach(function (clone) {
+      wheel.appendChild(clone);
+    });
+
+    function createDepthLayer(position) {
+      var layer = document.createElement("div");
+      layer.className = "home-wheel-depth home-wheel-depth-" + position;
+      layer.setAttribute("aria-hidden", "true");
+      layer.setAttribute("inert", "");
+      return layer;
+    }
+
+    var topDepthLayer = createDepthLayer("top");
+    var bottomDepthLayer = createDepthLayer("bottom");
+    wheel.prepend(topDepthLayer);
+    wheel.append(bottomDepthLayer);
+
+    var physicalPanels = leadingClones.concat(logicalPanels, trailingClones);
+
+    function resetPanelMotion() {
+      physicalPanels.forEach(function (panel) {
+        [
+          "--wheel-panel-y",
+          "--wheel-panel-tilt",
+          "--wheel-panel-scale",
+          "--wheel-panel-opacity",
+          "--wheel-panel-blur",
+        ].forEach(function (property) {
+          panel.style.removeProperty(property);
+        });
+      });
+    }
+
+    function renderWheel() {
+      frame = 0;
+      if (!desktopWheel.matches || !wheel.classList.contains("is-wheel-ready")) {
+        resetPanelMotion();
+        delete wheel.dataset.wheelPosition;
+        return;
+      }
+
+      var closestPanel = physicalPanels.reduce(function (closest, panel) {
+        return Math.abs(panelScrollTop(panel) - wheel.scrollTop) <
+          Math.abs(panelScrollTop(closest) - wheel.scrollTop)
+          ? panel
+          : closest;
+      }, physicalPanels[0]);
+      wheelTargetIndex = panelIndex(closestPanel);
+      wheel.dataset.wheelPosition =
+        logicalPanels[wheelTargetIndex].dataset.homeWheelPanel ||
+        String(wheelTargetIndex);
+
+      if (reduceMotion.matches) {
+        resetPanelMotion();
+        return;
+      }
+
+      var panelSpan = Math.max(1, logicalPanels[0].offsetHeight);
+      physicalPanels.forEach(function (panel) {
+        var distance = (panelScrollTop(panel) - wheel.scrollTop) / panelSpan;
+        var absoluteDistance = Math.abs(distance);
+        var boundedDistance = Math.max(-1, Math.min(1, distance));
+        var magnitude = Math.abs(boundedDistance);
+        var incoming = boundedDistance >= 0;
+        var panelY = incoming
+          ? 20 * boundedDistance
+          : 26 * boundedDistance;
+        var panelTilt = incoming
+          ? 6 * boundedDistance
+          : 4.5 * boundedDistance;
+        var panelScale = 1 - (incoming ? 0.045 : 0.035) * magnitude;
+        var focusFalloff = Math.pow(magnitude, 1.35);
+        var panelOpacity =
+          absoluteDistance > 1.12
+            ? 0
+            : 1 - (incoming ? 0.64 : 0.58) * focusFalloff;
+        var panelBlur =
+          absoluteDistance > 1.12
+            ? 0
+            : 5.5 * Math.pow(Math.max(0, magnitude - 0.08) / 0.92, 1.2);
+
+        panel.style.setProperty("--wheel-panel-y", panelY.toFixed(2) + "px");
+        panel.style.setProperty("--wheel-panel-tilt", panelTilt.toFixed(2) + "deg");
+        panel.style.setProperty("--wheel-panel-scale", panelScale.toFixed(4));
+        panel.style.setProperty("--wheel-panel-opacity", panelOpacity.toFixed(3));
+        panel.style.setProperty("--wheel-panel-blur", panelBlur.toFixed(2) + "px");
+      });
+    }
+
+    function requestWheelRender() {
+      if (frame) return;
+      frame = window.requestAnimationFrame(renderWheel);
+    }
+
+    function panelContentHeight(panel) {
+      var children = Array.from(panel.children).filter(function (child) {
+        return child.offsetHeight > 0;
+      });
+      if (!children.length) return 0;
+      var top = Math.min.apply(
+        null,
+        children.map(function (child) {
+          return child.offsetTop;
+        }),
+      );
+      var bottom = Math.max.apply(
+        null,
+        children.map(function (child) {
+          return child.offsetTop + child.offsetHeight;
+        }),
+      );
+      return bottom - top;
+    }
+
+    function syncPublicationCardHeight() {
+      wheel.style.removeProperty("--home-publication-card-height");
+      var cards = logicalPanels.flatMap(function (panel) {
+        return Array.from(
+          panel.querySelectorAll(".home-publication-grid > .card-link .card"),
+        );
+      });
+      if (!cards.length) return;
+      var cardHeight = Math.ceil(
+        Math.max.apply(
+          null,
+          cards.map(function (card) {
+            return card.offsetHeight;
+          }),
+        ),
+      );
+      wheel.style.setProperty(
+        "--home-publication-card-height",
+        cardHeight + "px",
+      );
+    }
+
+    function updateMetrics() {
+      if (updatingMetrics) return;
+      if (!desktopWheel.matches) {
+        wheel.classList.remove(
+          "is-wheel-ready",
+          "is-wheel-moving",
+          "is-wheel-programmatic",
+          "is-wheel-resetting",
+        );
+        wheel.style.removeProperty("--home-wheel-height");
+        wheel.style.removeProperty("--home-wheel-step-height");
+        wheel.style.removeProperty("--home-publication-card-height");
+        wheel.removeAttribute("tabindex");
+        wheel.scrollTop = 0;
+        wheelTargetIndex = 0;
+        wheelGestureDistance = 0;
+        resetPanelMotion();
+        delete wheel.dataset.wheelPosition;
+        return;
+      }
+
+      updatingMetrics = true;
+      wheel.classList.add("is-wheel-ready");
+      syncPublicationCardHeight();
+      var contentHeight = Math.max.apply(
+        null,
+        logicalPanels.map(panelContentHeight),
+      );
+      var stepHeight = Math.max(260, Math.ceil(contentHeight + 28));
+      wheel.style.setProperty(
+        "--home-wheel-step-height",
+        stepHeight + "px",
+      );
+      var availableHeight = Math.max(
+        520,
+        Math.floor(window.innerHeight - wheel.getBoundingClientRect().top),
+      );
+      var wheelHeight = Math.min(
+        availableHeight,
+        Math.max(560, Math.round(stepHeight * 2.05)),
+      );
+      wheel.style.setProperty(
+        "--home-wheel-height",
+        wheelHeight + "px",
+      );
+      wheel.setAttribute("tabindex", "0");
+
+      jumpToPanel(logicalPanels[wheelTargetIndex]);
+      requestWheelRender();
+      updatingMetrics = false;
+    }
+
+    function jumpToScrollPosition(top) {
+      if (!wheel.isConnected) return;
+      loopJumping = true;
+      wheel.classList.add("is-wheel-resetting");
+      wheel.scrollTop = top;
+      wheel.getBoundingClientRect();
+      wheel.classList.remove("is-wheel-resetting");
+      loopJumping = false;
+      requestWheelRender();
+    }
+
+    function jumpToPanel(panel) {
+      if (!panel) return;
+      jumpToScrollPosition(panelScrollTop(panel));
+    }
+
+    function panelScrollTop(panel) {
+      return (
+        panel.offsetTop -
+        (wheel.clientHeight - panel.offsetHeight) / 2
+      );
+    }
+
+    function loopCycleHeight() {
+      return (
+        panelScrollTop(trailingClones[0]) -
+        panelScrollTop(logicalPanels[0])
+      );
+    }
+
+    function normalizedLoopTop(top) {
+      var cycleStart = panelScrollTop(logicalPanels[0]);
+      var cycleHeight = loopCycleHeight();
+      if (cycleHeight <= 0) return top;
+
+      return (
+        cycleStart +
+        ((top - cycleStart) % cycleHeight + cycleHeight) % cycleHeight
+      );
+    }
+
+    function recenterLoopContinuously() {
+      if (
+        loopJumping ||
+        !desktopWheel.matches ||
+        !wheel.classList.contains("is-wheel-ready")
+      ) {
+        return;
+      }
+
+      var cycleHeight = loopCycleHeight();
+      if (cycleHeight <= 0) return;
+
+      var normalizedTop = normalizedLoopTop(wheel.scrollTop);
+      if (Math.abs(normalizedTop - wheel.scrollTop) > 0.5) {
+        jumpToScrollPosition(normalizedTop);
+      }
+    }
+
+    function recenterLoopAtRest() {
+      recenterLoopContinuously();
+    }
+
+    function scrollToPanel(panel, targetIndex) {
+      if (!panel) return;
+      wheelTargetIndex =
+        typeof targetIndex === "number"
+          ? targetIndex
+          : panelIndex(panel);
+      wheel.classList.add("is-wheel-programmatic");
+      window.clearTimeout(programmaticStopTimer);
+      wheel.scrollTo({
+        top: panelScrollTop(panel),
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+      });
+      if (reduceMotion.matches) {
+        window.requestAnimationFrame(function () {
+          finishProgrammaticScroll();
+        });
+      } else {
+        programmaticStopTimer = window.setTimeout(
+          finishProgrammaticScroll,
+          700,
+        );
+      }
+    }
+
+    function moveWheel(targetIndex) {
+      var normalizedIndex =
+        ((targetIndex % logicalPanels.length) + logicalPanels.length) %
+        logicalPanels.length;
+      scrollToPanel(logicalPanels[normalizedIndex], normalizedIndex);
+    }
+
+    function stepWheel(direction) {
+      if (direction > 0) {
+        if (wheelTargetIndex === logicalPanels.length - 1) {
+          scrollToPanel(trailingClones[0], 0);
+        } else {
+          scrollToPanel(
+            logicalPanels[wheelTargetIndex + 1],
+            wheelTargetIndex + 1,
+          );
+        }
+      } else {
+        if (wheelTargetIndex === 0) {
+          scrollToPanel(
+            leadingClones[logicalPanels.length - 1],
+            logicalPanels.length - 1,
+          );
+        } else {
+          scrollToPanel(
+            logicalPanels[wheelTargetIndex - 1],
+            wheelTargetIndex - 1,
+          );
+        }
+      }
+    }
+
+    function nearestRestPanel() {
+      var candidates = logicalPanels.concat(trailingClones[0]);
+      var closestDistance = Infinity;
+      var closestPanels = [];
+
+      candidates.forEach(function (panel) {
+        var distance = Math.abs(panelScrollTop(panel) - wheel.scrollTop);
+        if (distance < closestDistance - 0.5) {
+          closestDistance = distance;
+          closestPanels = [panel];
+        } else if (Math.abs(distance - closestDistance) <= 0.5) {
+          closestPanels.push(panel);
+        }
+      });
+
+      if (closestPanels.length === 1) return closestPanels[0];
+      return lastWheelDirection > 0
+        ? closestPanels[closestPanels.length - 1]
+        : closestPanels[0];
+    }
+
+    function settleWheel() {
+      if (!desktopWheel.matches || !wheel.classList.contains("is-wheel-ready")) {
+        return;
+      }
+
+      recenterLoopContinuously();
+      var target = nearestRestPanel();
+      var panelSpan = Math.max(1, logicalPanels[0].offsetHeight);
+      if (
+        panelIndex(target) === wheelGestureStartIndex &&
+        Math.abs(wheelGestureDistance) >= 44 &&
+        Math.abs(wheelGestureDistance) < panelSpan * 0.5
+      ) {
+        if (wheelGestureDistance > 0) {
+          target =
+            wheelGestureStartIndex === logicalPanels.length - 1
+              ? trailingClones[0]
+              : logicalPanels[wheelGestureStartIndex + 1];
+        } else {
+          target =
+            wheelGestureStartIndex === 0
+              ? leadingClones[logicalPanels.length - 1]
+              : logicalPanels[wheelGestureStartIndex - 1];
+        }
+      }
+      wheelGestureDistance = 0;
+      wheel.classList.remove("is-wheel-moving");
+      scrollToPanel(target, panelIndex(target));
+    }
+
+    function handleWheel(event) {
+      if (
+        !desktopWheel.matches ||
+        !wheel.classList.contains("is-wheel-ready") ||
+        event.ctrlKey
+      ) {
+        return;
+      }
+
+      var delta = event.deltaY;
+      if (event.deltaMode === 1) {
+        delta *= 16;
+      } else if (event.deltaMode === 2) {
+        delta *= wheel.clientHeight;
+      }
+      if (!Number.isFinite(delta) || Math.abs(delta) < 0.1) return;
+
+      event.preventDefault();
+      lastWheelDirection = delta > 0 ? 1 : -1;
+      wheel.classList.remove("is-wheel-programmatic");
+      if (!wheel.classList.contains("is-wheel-moving")) {
+        wheelGestureDistance = 0;
+        wheelGestureStartIndex = wheelTargetIndex;
+      }
+      wheelGestureDistance += delta;
+      wheel.classList.add("is-wheel-moving");
+
+      jumpToScrollPosition(
+        normalizedLoopTop(wheel.scrollTop + delta),
+      );
+
+      window.clearTimeout(scrollStopTimer);
+      scrollStopTimer = window.setTimeout(settleWheel, 80);
+    }
+
+    function handleScroll() {
+      requestWheelRender();
+    }
+
+    function finishProgrammaticScroll() {
+      if (wheel.classList.contains("is-wheel-moving")) return;
+      window.clearTimeout(programmaticStopTimer);
+      wheel.classList.remove("is-wheel-programmatic");
+      jumpToPanel(logicalPanels[wheelTargetIndex]);
+    }
+
+    function handleScrollEnd() {
+      if (wheel.classList.contains("is-wheel-moving")) return;
+      window.requestAnimationFrame(finishProgrammaticScroll);
+    }
+
+    function handleKeydown(event) {
+      if (event.target !== wheel) return;
+      if (["ArrowDown", "PageDown"].includes(event.key)) {
+        event.preventDefault();
+        stepWheel(1);
+      } else if (["ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        stepWheel(-1);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        moveWheel(logicalPanels.length - 1);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        moveWheel(0);
+      }
+    }
+
+    function handleResearchLink(event) {
+      if (!desktopWheel.matches) return;
+      event.preventDefault();
+      moveWheel(researchIndex);
+      var target = document.querySelector(event.currentTarget.hash);
+      if (target) {
+        window.history.replaceState(window.history.state, "", event.currentTarget.hash);
+      }
+    }
+
+    wheel.addEventListener("wheel", handleWheel, { passive: false });
+    wheel.addEventListener("scroll", handleScroll, { passive: true });
+    wheel.addEventListener("scrollend", handleScrollEnd);
+    wheel.addEventListener("keydown", handleKeydown);
+    desktopWheel.addEventListener("change", updateMetrics);
+    reduceMotion.addEventListener("change", requestWheelRender);
+    researchLinks.forEach(function (link) {
+      link.addEventListener("click", handleResearchLink);
+    });
+
+    if ("ResizeObserver" in window) {
+      resizeObserver = new ResizeObserver(updateMetrics);
+      logicalPanels.forEach(function (panel) {
+        Array.from(panel.children).forEach(function (child) {
+          resizeObserver.observe(child);
+        });
+      });
+    }
+    window.addEventListener("resize", updateMetrics, { passive: true });
+
+    updateMetrics();
+    if (window.location.hash.indexOf("#research-") === 0 && desktopWheel.matches) {
+      window.requestAnimationFrame(function () {
+        moveWheel(researchIndex);
+      });
+    }
+
+    destroyHomeWheel = function () {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.clearTimeout(scrollStopTimer);
+      window.clearTimeout(programmaticStopTimer);
+      wheel.removeEventListener("wheel", handleWheel);
+      wheel.removeEventListener("scroll", handleScroll);
+      wheel.removeEventListener("scrollend", handleScrollEnd);
+      wheel.removeEventListener("keydown", handleKeydown);
+      wheel.classList.remove(
+        "is-wheel-moving",
+        "is-wheel-programmatic",
+        "is-wheel-resetting",
+      );
+      desktopWheel.removeEventListener("change", updateMetrics);
+      reduceMotion.removeEventListener("change", requestWheelRender);
+      researchLinks.forEach(function (link) {
+        link.removeEventListener("click", handleResearchLink);
+      });
+      if (resizeObserver) resizeObserver.disconnect();
+      window.removeEventListener("resize", updateMetrics);
+      leadingClones.forEach(function (clone) {
+        clone.remove();
+      });
+      trailingClones.forEach(function (clone) {
+        clone.remove();
+      });
+      topDepthLayer.remove();
+      bottomDepthLayer.remove();
+      logicalPanels.forEach(function (panel) {
+        delete panel.dataset.wheelIndex;
+      });
+    };
+  }
+
   function enhancePage() {
     var publicationList = document.querySelector("[data-publication-list]");
     enhancePublicationList(publicationList);
+    document.querySelectorAll(".publication-card .card-authors").forEach(function (authors) {
+      setHighlightedAuthorText(authors, authors.textContent);
+    });
     initVisualParallax(document.querySelector("main") || document);
     initFeaturedScroller();
     initSectionJumps();
+    initMemberStack();
+    initHomeWheel();
 
     if (document.querySelector("[data-publication-previews]")) {
-      if ("requestIdleCallback" in window) {
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        buildPublicationPreviews();
+      } else if ("requestIdleCallback" in window) {
         window.requestIdleCallback(buildPublicationPreviews, { timeout: 700 });
       } else {
         window.setTimeout(buildPublicationPreviews, 120);
@@ -704,6 +1604,10 @@
     if (logo && event && Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) {
       logo.dataset.pendingPointerX = String(event.clientX);
       logo.dataset.pendingPointerY = String(event.clientY);
+      if (event.pointerType) logo.dataset.pendingPointerType = event.pointerType;
+      if (Number.isFinite(event.pointerId)) {
+        logo.dataset.pendingPointerId = String(event.pointerId);
+      }
     }
     if (
       magneticLogoStarted ||
@@ -730,8 +1634,46 @@
   var magneticLogo = document.querySelector("[data-magnetic-glow]");
   var magneticBrand = magneticLogo && magneticLogo.closest("[data-brand-link]");
   if (magneticLogo) {
+    function rememberMagneticPointer(event) {
+      if (magneticLogo.querySelector("canvas")) return;
+
+      if (Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) {
+        magneticLogo.dataset.pendingPointerX = String(event.clientX);
+        magneticLogo.dataset.pendingPointerY = String(event.clientY);
+      }
+      if (event.pointerType) {
+        magneticLogo.dataset.pendingPointerType = event.pointerType;
+      }
+      if (Number.isFinite(event.pointerId)) {
+        magneticLogo.dataset.pendingPointerId = String(event.pointerId);
+      }
+
+      if (event.type === "pointerdown") {
+        if (event.button !== 0) return;
+        magneticLogo.dataset.pendingPointerDown = "true";
+        loadMagneticLogo(event);
+      } else if (
+        (event.type === "pointerup" || event.type === "pointercancel") &&
+        magneticLogo.dataset.pendingPointerId === String(event.pointerId)
+      ) {
+        magneticLogo.dataset.pendingPointerDown = "false";
+      }
+    }
+
     magneticLogo.addEventListener("pointerenter", loadMagneticLogo, {
       once: true,
+      passive: true,
+    });
+    magneticLogo.addEventListener("pointerdown", rememberMagneticPointer, {
+      passive: true,
+    });
+    magneticLogo.addEventListener("pointermove", rememberMagneticPointer, {
+      passive: true,
+    });
+    magneticLogo.addEventListener("pointerup", rememberMagneticPointer, {
+      passive: true,
+    });
+    magneticLogo.addEventListener("pointercancel", rememberMagneticPointer, {
       passive: true,
     });
     magneticLogo.addEventListener("touchstart", loadMagneticLogo, {
@@ -748,8 +1690,11 @@
       "pointerleave",
       function () {
         if (!magneticLogo || magneticLogo.classList.contains("is-enhanced")) return;
+        if (magneticLogo.dataset.pendingPointerDown === "true") return;
         delete magneticLogo.dataset.pendingPointerX;
         delete magneticLogo.dataset.pendingPointerY;
+        delete magneticLogo.dataset.pendingPointerType;
+        delete magneticLogo.dataset.pendingPointerId;
       },
       { passive: true },
     );
