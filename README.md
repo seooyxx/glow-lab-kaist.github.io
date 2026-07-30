@@ -19,6 +19,7 @@ js/theme-init.js    Applies the saved/system theme before first paint
 js/main.js          Theme control, prefetching, and publication enhancement
 js/magnetic-glow.js Interactive Magnetic Glow header mark
 assets/             Fonts, logo fallback, WebGL runtime, photo, CV, favicon
+scripts/             Publication media optimization utilities
 ```
 
 ## Local preview
@@ -47,7 +48,27 @@ Any other static host (Netlify, Cloudflare Pages) also works as-is.
   under the right year (add the year heading if needed). Use
   `<span class="me">` around lab-member names, `*` for equal contribution, and
   `<span class="award">` for oral/spotlight/highlight badges. The preview grid is
-  generated from this list, so it does not need a second manual entry.
+  generated from this list, so it does not need a second manual entry. Add one
+  entry to `assets/publications/media-manifest.json`, reference
+  `assets/publications/<slug>.webp` with `data-thumbnail`, and run
+  `bash scripts/optimize-publication-media.sh <slug>`. The script generates the
+  list thumbnail, cropped card still, and optional motion preview. If motion is
+  configured, reference it with
+  `data-preview-video="assets/publications/motion/<slug>.mp4"`. Raw downloads
+  are temporary and are not stored in the deployed site.
+- **Publication media**: use
+  `bash scripts/optimize-publication-media.sh --check` to validate all 30 media
+  sets, or pass `--all` to rebuild them. Edit a manifest entry's
+  `focalPoint` to tune the 3:4 crop and `posterTime` to select the still frame
+  used before its matching hover video.
+- **Publication card styles**: `.publication-card` remains the original
+  landscape-thumbnail card. Add the independent
+  `.publication-card--media-reveal` modifier for option 2: portrait copy by
+  default, then a cropped still or lazily loaded video on hover/focus. Removing
+  only the modifier restores the original card design.
+- **Venue badge**: use `<span class="venue-badge">CVPR</span>` anywhere a
+  publication venue is shown. Home, Selected/Preview cards, and the publication
+  list all share this component's size, weight, radius, and theme colors.
 - **New lab member**: `people.html` is the single source for both the People page
   and the Home member preview. In the `#members .people-grid`, copy an existing
   `<article class="card person-card" data-member-record>` and update its name,
@@ -63,6 +84,8 @@ Any other static host (Netlify, Cloudflare Pages) also works as-is.
 - **CV**: replace `assets/CV-SeungWookKim.pdf` when it changes.
 - **Colors / fonts**: edit the CSS custom properties and `@font-face` rules at
   the top of `css/style.css`.
-- **Header logos**: `assets/magnetic-glow-fallback.svg` is the resolution-independent
-  immediate fallback and `js/magnetic-glow.js` progressively adds the interactive
-  monochrome WebGL mark. `assets/kaist-ai-logo.svg` is the official KAIST AI mark.
+- **Lab logos**: the header starts with `assets/glow-mark.svg`, then
+  `js/magnetic-glow.js` progressively adds the interactive 3D mark beside the
+  Figma-exported `logo-half` wordmark. The footer assembles the outlined
+  `assets/logo-full-*.svg` exports from Figma.
+  `assets/kaist-ai-logo.svg` is the official KAIST AI mark.
