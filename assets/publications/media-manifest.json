@@ -1,0 +1,347 @@
+{
+  "version": 1,
+  "outputs": {
+    "list": {
+      "width": 192,
+      "height": 134,
+      "quality": 76
+    },
+    "card": {
+      "width": 720,
+      "height": 960,
+      "quality": 78
+    },
+    "motion": {
+      "width": 540,
+      "height": 720,
+      "fps": 24,
+      "crf": 28,
+      "duration": 6
+    }
+  },
+  "publications": [
+    {
+      "slug": "instant-nurec",
+      "title": "Instant NuRec",
+      "projectUrl": "https://research.nvidia.com/labs/sil/projects/instant-nurec/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/sil/projects/instant-nurec/assets/teaser-poster.webp"
+      }
+    },
+    {
+      "slug": "omnidreams",
+      "title": "NVIDIA OmniDreams",
+      "projectUrl": "https://research.nvidia.com/labs/sil/projects/omnidreams-blog/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 1,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/sil/projects/omnidreams-blog/teaser.mp4",
+        "seek": 1
+      }
+    },
+    {
+      "slug": "ddspo",
+      "title": "Direct Diffusion Score Preference Optimization",
+      "projectUrl": "https://dohyun-as.github.io/DDSPO/",
+      "focalPoint": { "x": 0.5, "y": 0.45 },
+      "still": {
+        "type": "url",
+        "url": "https://dohyun-as.github.io/DDSPO/static/images/qual_sdxl_align.png"
+      }
+    },
+    {
+      "slug": "connecting-the-objects",
+      "title": "Connecting the Objects",
+      "projectUrl": "https://www.csehong.com/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "nearest-page-image",
+        "pageUrl": "https://www.csehong.com/",
+        "titleFragment": "Connecting the Objects"
+      }
+    },
+    {
+      "slug": "cosmos-drive-dreams",
+      "title": "Cosmos-Drive-Dreams",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 1,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams/assets/optimized/demo_medium.mp4",
+        "seek": 1
+      }
+    },
+    {
+      "slug": "random-conditioning",
+      "title": "Random Conditioning",
+      "projectUrl": "https://dohyun-as.github.io/Random-Conditioning/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://dohyun-as.github.io/Random-Conditioning/static/images/randcond.png"
+      }
+    },
+    {
+      "slug": "cosmos-world",
+      "title": "Cosmos World Foundation Model Platform",
+      "projectUrl": "https://research.nvidia.com/labs/dir/cosmos1/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/cosmos-lab/cosmos-predict1/assets/sec12_video1.mp4"
+      }
+    },
+    {
+      "slug": "l4gm",
+      "title": "L4GM",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/l4gm/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "animated-webp",
+        "url": "https://research.nvidia.com/labs/toronto-ai/l4gm/assets/backgrounds/teaser_video.webp"
+      }
+    },
+    {
+      "slug": "distillnerf",
+      "title": "DistillNeRF",
+      "projectUrl": "https://distillnerf.github.io/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "url",
+        "url": "https://distillnerf.github.io/static/videos/ours.mp4",
+        "fps": 3
+      }
+    },
+    {
+      "slug": "diffusion-texture-painting",
+      "title": "Diffusion Texture Painting",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/DiffusionTexturePainting/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/DiffusionTexturePainting/assets/videos/paint_dress.mp4"
+      }
+    },
+    {
+      "slug": "align-your-gaussians",
+      "title": "Align Your Gaussians",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/assets/4d_scenes/christmas_composed.mp4"
+      }
+    },
+    {
+      "slug": "emerdiff",
+      "title": "EmerDiff",
+      "projectUrl": "https://kmcode1.github.io/Projects/EmerDiff/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://kmcode1.github.io/Projects/EmerDiff/static/images/teaser.jpeg"
+      }
+    },
+    {
+      "slug": "emernerf",
+      "title": "EmerNeRF",
+      "projectUrl": "https://emernerf.github.io/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 1,
+      "motion": {
+        "type": "url",
+        "url": "https://emernerf.github.io/static/754-bb62f86dbf85bbc0e82fb789d3978d81.mp4"
+      }
+    },
+    {
+      "slug": "wildfusion",
+      "title": "WildFusion",
+      "projectUrl": "https://katjaschwarz.github.io/wildfusion/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://katjaschwarz.github.io/assets/img/wildfusion/teaser.jpg"
+      }
+    },
+    {
+      "slug": "dreamteacher",
+      "title": "DreamTeacher",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/DreamTeacher/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/DreamTeacher/resources/overview.jpg"
+      }
+    },
+    {
+      "slug": "neuralfield-ldm",
+      "title": "NeuralField-LDM",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/NFLDM/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 1,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/NFLDM/assets/short_teaser.mp4",
+        "seek": 1
+      }
+    },
+    {
+      "slug": "video-ldm",
+      "title": "Align your Latents",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/VideoLDM/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 1,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/VideoLDM/assets/text_to_video/teddy_bear_guitar.mp4"
+      }
+    },
+    {
+      "slug": "polymorphicgan",
+      "title": "PolymorphicGAN",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/PMGAN/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "stacked-gifs",
+        "topUrl": "https://research.nvidia.com/labs/toronto-ai/PMGAN/assets/img/edit_car2.gif",
+        "bottomUrl": "https://research.nvidia.com/labs/toronto-ai/PMGAN/assets/img/edit_car3.gif",
+        "fps": "25/3"
+      }
+    },
+    {
+      "slug": "bigdatasetgan",
+      "title": "BigDatasetGAN",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/big-datasetgan/",
+      "focalPoint": { "x": 0.5, "y": 0.45 },
+      "still": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/big-datasetgan/resources/teaser_final.jpg"
+      }
+    },
+    {
+      "slug": "histopathology-consistency",
+      "title": "Self-Supervised Driven Consistency Training",
+      "projectUrl": "https://arxiv.org/abs/2102.03897",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://ar5iv.labs.arxiv.org/html/2102.03897/assets/x1.png"
+      }
+    },
+    {
+      "slug": "editgan",
+      "title": "EditGAN",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/editGAN/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/editGAN/resources/results1.png"
+      }
+    },
+    {
+      "slug": "drivegan",
+      "title": "DriveGAN",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/DriveGAN/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/DriveGAN/assets/interactive_simulation-2.mp4"
+      }
+    },
+    {
+      "slug": "amodal-vae",
+      "title": "Variational Amodal Object Completion",
+      "projectUrl": "http://www.cs.toronto.edu/~linghuan/vae_mask/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "http://www.cs.toronto.edu/~linghuan/vae_mask/resources/results1.png"
+      }
+    },
+    {
+      "slug": "gamegan",
+      "title": "GameGAN",
+      "projectUrl": "https://research.nvidia.com/labs/toronto-ai/gameGAN/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "posterTime": 0.5,
+      "motion": {
+        "type": "url",
+        "url": "https://research.nvidia.com/labs/toronto-ai/gameGAN/assets/pacman_bandai_video.mp4",
+        "fps": 4
+      }
+    },
+    {
+      "slug": "progressive-module-networks",
+      "title": "Visual Reasoning by Progressive Module Networks",
+      "projectUrl": "https://seung-kim.github.io/pmn_pj_page/",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://seung-kim.github.io/pmn_pj_page/images/pmn-vqa.jpg"
+      }
+    },
+    {
+      "slug": "shmoop-corpus",
+      "title": "The Shmoop Corpus",
+      "projectUrl": "https://arxiv.org/abs/1912.13082",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://ar5iv.labs.arxiv.org/html/1912.13082/assets/x1.png"
+      }
+    },
+    {
+      "slug": "cascaded-pyramid-network",
+      "title": "Cascaded Pyramid Network for 3D Human Pose",
+      "projectUrl": "https://arxiv.org/abs/1810.01616",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://ar5iv.labs.arxiv.org/html/1810.01616/assets/qualitative.jpg"
+      }
+    },
+    {
+      "slug": "keep-and-learn",
+      "title": "Keep and Learn",
+      "projectUrl": "https://arxiv.org/abs/1805.10784",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "url",
+        "url": "https://ar5iv.labs.arxiv.org/html/1805.10784/assets/x1.png"
+      }
+    },
+    {
+      "slug": "class-distance-loss",
+      "title": "Class-Distance Loss",
+      "projectUrl": "https://openreview.net/forum?id=ByXrfaGFe&noteId=ByXrfaGFe",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "pdf-xref",
+        "url": "https://web.archive.org/web/20170822093601id_/https://openreview.net/pdf?id=ByXrfaGFe",
+        "xref": 147
+      }
+    },
+    {
+      "slug": "huffman-text-entry",
+      "title": "Word Prediction and r-ary Huffman Coding",
+      "projectUrl": "https://www.isca-archive.org/slpat_2016/kim16_slpat.html",
+      "focalPoint": { "x": 0.5, "y": 0.5 },
+      "still": {
+        "type": "pdf-xref",
+        "url": "https://www.cs.toronto.edu/~frank/Download/Papers/slpat2016_eyeTyping.pdf",
+        "xref": 14
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+# Publication originals are temporary inputs, never production assets.
+assets/publications/source/
+assets/publications/.work/
+
+# Local optimizer scratch/output reports, if manually retained for inspection.
+.media-work/
