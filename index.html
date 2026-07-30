@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GLOW Lab — Generative Learning of Worlds | KAIST AI</title>
+  <title>GLOW Lab | KAIST AI</title>
   <meta name="description" content="GLOW (Generative Learning of Worlds) Lab at KAIST AI builds generative world models that learn to simulate, understand, and act in complex environments. Led by Prof. Seung Wook Kim.">
-  <meta property="og:title" content="GLOW Lab — Generative Learning of Worlds">
+  <meta property="og:title" content="GLOW Lab | Generative Learning of Worlds">
   <meta property="og:description" content="Generative world models that learn to simulate, understand, and act in complex environments. KAIST AI, opening August 2026.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://glowlab-kaist.vercel.app/">
@@ -19,6 +19,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/glow-mark.svg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preload" href="assets/glow-mark.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/logo-half-wordmark.svg" as="image" type="image/svg+xml">
   <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -28,7 +29,9 @@
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
         <img src="assets/glow-mark.svg" alt="" width="69" height="70">
       </span>
-      <span class="wordmark">GLOW<br>LAB</span>
+      <span class="brand-figma-copy" aria-hidden="true">
+        <img class="brand-half-wordmark" src="assets/logo-half-wordmark.svg" alt="" width="829" height="111">
+      </span>
     </a>
     <nav class="main-nav" aria-label="Main navigation">
       <a href="index.html" data-nav-label="Home" aria-current="page"><span class="nav-label">Home</span></a>
@@ -48,7 +51,7 @@
       <!-- Reserved for future external links. -->
       <span class="page-ornaments" aria-hidden="true" hidden><i></i><i></i><i></i></span>
       <section class="mission-section dotted-section" id="research">
-        <h1 id="main-heading"><span>Generative Learning of</span><br><span>Worlds Lab</span></h1>
+        <h1 id="main-heading"><span>Generative Learning</span><br><span>of Worlds Labs</span></h1>
         <div class="member-stack" data-member-stack>
           <a class="member-stack-people" href="people.html" aria-label="Meet the people of GLOW Lab"></a>
           <span class="member-stack-cells" aria-hidden="true">
@@ -70,10 +73,10 @@
           Generative models have learned to produce strikingly realistic images and video.
           The next step is worlds: models that capture how environments evolve, respond to
           actions, and stay coherent over time. GLOW (Generative Learning of Worlds) Lab,
-          led by (Incoming) <a class="profile-link" href="people.html#profile">Prof. Seung Wook Kim</a>, studies these visual world models
-          in both of their roles — as <a class="research-term" href="#research-simulators">simulators</a> that can stand in for reality, and as
-          <a class="research-term" href="#research-policies">policies</a> that let agents plan and act — along with the
-          <a class="research-term" href="#research-representations">representations</a> that make both possible. World models
+          led by <a class="profile-link" href="people.html#profile">Prof. Seung Wook Kim</a>, studies these visual world models
+          in both of their roles — as <a class="research-term" href="#research-simulators"><span class="research-term-signature" aria-hidden="true"><img src="assets/polygon-12-83-44.svg" alt="" width="318" height="345"></span>simulators</a> that can stand in for reality, and as
+          <a class="research-term" href="#research-policies"><span class="research-term-signature" aria-hidden="true"><img src="assets/polygon-12-83-44.svg" alt="" width="318" height="345"></span>policies</a> that let agents plan and act — along with the
+          <a class="research-term" href="#research-representations"><span class="research-term-signature" aria-hidden="true"><img src="assets/polygon-12-83-44.svg" alt="" width="318" height="345"></span>representations</a> that make both possible. World models
           like these are essential for physical AI: any system that must sense, predict, and
           act in the real world needs one.
         </p>
@@ -89,34 +92,34 @@
             </a>
           </div>
           <div class="cards home-publication-grid">
-            <a class="card-link" data-transition-key="omnidreams" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
-              <article class="card publication-card selected-publication-card">
-                <div class="visual" data-visual="1" aria-hidden="true" style="view-transition-name: publication-thumbnail-omnidreams"></div>
+            <a class="card-link" data-transition-key="omnidreams" data-preview-video="assets/publications/motion/omnidreams.mp4" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
+              <article class="card publication-card selected-publication-card publication-card--media-reveal">
+                <div class="visual" data-visual="1" data-thumbnail="assets/publications/omnidreams.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-omnidreams"></div>
                 <div class="card-copy">
                   <h3 style="view-transition-name: publication-heading-omnidreams">NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</h3>
                   <p class="card-authors">NVIDIA</p>
-                  <p class="card-meta"><span class="pill">arXiv</span><span class="publication-year">2026</span></p>
+                  <p class="card-meta"><span class="venue-badge">arXiv</span><span class="publication-year">2026</span></p>
                 </div>
               </article>
             </a>
-            <a class="card-link" data-transition-key="cosmos-world" href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">
-              <article class="card publication-card selected-publication-card">
-                <div class="visual" data-visual="2" aria-hidden="true" style="view-transition-name: publication-thumbnail-cosmos-world"></div>
+            <a class="card-link" data-transition-key="cosmos-world" data-preview-video="assets/publications/motion/cosmos-world.mp4" href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">
+              <article class="card publication-card selected-publication-card publication-card--media-reveal">
+                <div class="visual" data-visual="2" data-thumbnail="assets/publications/cosmos-world.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-cosmos-world"></div>
                 <div class="card-copy">
                   <h3 style="view-transition-name: publication-heading-cosmos-world">Cosmos World Foundation Model Platform for Physical AI</h3>
                   <p class="card-authors">NVIDIA</p>
-                  <p class="card-meta"><span class="pill">arXiv</span><span class="publication-year">2025</span></p>
+                  <p class="card-meta"><span class="venue-badge">arXiv</span><span class="publication-year">2025</span></p>
                 </div>
               </article>
             </a>
-            <a class="card-link" data-transition-key="align-your-gaussians" href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">
-              <article class="card publication-card selected-publication-card">
-                <div class="visual" data-visual="3" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-gaussians"></div>
+            <a class="card-link" data-transition-key="align-your-gaussians" data-preview-video="assets/publications/motion/align-your-gaussians.mp4" href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">
+              <article class="card publication-card selected-publication-card publication-card--media-reveal">
+                <div class="visual" data-visual="3" data-thumbnail="assets/publications/align-your-gaussians.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-gaussians"></div>
                 <div class="card-copy">
                   <h3 style="view-transition-name: publication-heading-align-your-gaussians">Align Your Gaussians: Text-to-4D with Dynamic 3D Gaussians and Composed Diffusion Models</h3>
                   <p class="card-authors">Huan Ling*, Seung Wook Kim*, Antonio Torralba, Sanja Fidler, Karsten Kreis</p>
                   <p class="card-meta">
-                    <span class="pill">CVPR</span>
+                    <span class="venue-badge">CVPR</span>
                     <span class="publication-year">2024</span>
                     <span class="card-distinction">Highlight</span>
                   </p>
@@ -128,37 +131,37 @@
 
         <section class="home-publications home-publications-row-secondary home-wheel-panel" data-home-wheel-panel="publications-secondary" aria-label="More selected publications">
           <div class="cards home-publication-grid">
-            <a class="card-link" data-transition-key="align-your-latents" href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">
-              <article class="card publication-card selected-publication-card">
-                <div class="visual" data-visual="4" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-latents"></div>
+            <a class="card-link" data-transition-key="align-your-latents" data-preview-video="assets/publications/motion/video-ldm.mp4" href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">
+              <article class="card publication-card selected-publication-card publication-card--media-reveal">
+                <div class="visual" data-visual="4" data-thumbnail="assets/publications/video-ldm.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-latents"></div>
                 <div class="card-copy">
                   <h3 style="view-transition-name: publication-heading-align-your-latents">Align your Latents: High-Resolution Video Synthesis with Latent Diffusion Models</h3>
                   <p class="card-authors">Andreas Blattmann*, Robin Rombach*, Huan Ling*, Tim Dockhorn*, Seung Wook Kim, Sanja Fidler, Karsten Kreis</p>
-                  <p class="card-meta"><span class="pill">CVPR</span><span class="publication-year">2023</span></p>
+                  <p class="card-meta"><span class="venue-badge">CVPR</span><span class="publication-year">2023</span></p>
                 </div>
               </article>
             </a>
-            <a class="card-link" data-transition-key="drivegan" href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">
-              <article class="card publication-card selected-publication-card">
-                <div class="visual" data-visual="0" aria-hidden="true" style="view-transition-name: publication-thumbnail-drivegan"></div>
+            <a class="card-link" data-transition-key="drivegan" data-preview-video="assets/publications/motion/drivegan.mp4" href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">
+              <article class="card publication-card selected-publication-card publication-card--media-reveal">
+                <div class="visual" data-visual="0" data-thumbnail="assets/publications/drivegan.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-drivegan"></div>
                 <div class="card-copy">
                   <h3 style="view-transition-name: publication-heading-drivegan">DriveGAN: Towards a Controllable High-Quality Neural Simulation</h3>
                   <p class="card-authors">Seung Wook Kim, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
                   <p class="card-meta">
-                    <span class="pill">CVPR</span>
+                    <span class="venue-badge">CVPR</span>
                     <span class="publication-year">2021</span>
                     <span class="card-distinction">Oral</span>
                   </p>
                 </div>
               </article>
             </a>
-            <a class="card-link" data-transition-key="gamegan" href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">
-              <article class="card publication-card selected-publication-card">
-                <div class="visual" data-visual="1" aria-hidden="true" style="view-transition-name: publication-thumbnail-gamegan"></div>
+            <a class="card-link" data-transition-key="gamegan" data-preview-video="assets/publications/motion/gamegan.mp4" href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">
+              <article class="card publication-card selected-publication-card publication-card--media-reveal">
+                <div class="visual" data-visual="1" data-thumbnail="assets/publications/gamegan.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-gamegan"></div>
                 <div class="card-copy">
                   <h3 style="view-transition-name: publication-heading-gamegan">Learning to Simulate Dynamic Environments with GameGAN</h3>
                   <p class="card-authors">Seung Wook Kim, Henry Zhou, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
-                  <p class="card-meta"><span class="pill">CVPR</span><span class="publication-year">2020</span></p>
+                  <p class="card-meta"><span class="venue-badge">CVPR</span><span class="publication-year">2020</span></p>
                 </div>
               </article>
             </a>
@@ -166,21 +169,29 @@
           <p class="equal-note">* indicates equal contribution</p>
         </section>
 
+        <section class="home-publications home-publications-row-tertiary home-wheel-panel" aria-label="More selected publications" hidden>
+          <div class="cards home-publication-grid"></div>
+        </section>
+
         <section class="home-research dotted-section home-wheel-panel" data-home-wheel-panel="research" aria-labelledby="research-directions-title">
           <div class="section-heading research-section-heading">
+            <span class="research-direction-signature" aria-hidden="true">
+              <span class="research-direction-signature-default"></span>
+              <img class="research-direction-signature-active" src="assets/research-direction-signature-active.svg" alt="" width="892" height="800">
+            </span>
             <h2 id="research-directions-title">Research Direction</h2>
           </div>
           <div class="cards research-grid">
             <article class="research-card" id="research-simulators">
-              <h3>Worlds as simulators</h3>
+              <h3><span class="research-heading-signature" aria-hidden="true"><img src="assets/polygon-12-83-44.svg" alt="" width="318" height="345"></span>Worlds as simulators</h3>
               <p>Can a neural network learn an environment well enough to replace it? We study action-conditioned video and world prediction, neural game and robotics simulators, and controllable video generation.</p>
             </article>
             <article class="research-card" id="research-policies">
-              <h3>Worlds for action</h3>
+              <h3><span class="research-heading-signature" aria-hidden="true"><img src="assets/polygon-12-83-44.svg" alt="" width="318" height="345"></span>Worlds for action</h3>
               <p>A model that predicts the world can also decide in it. We use world models as the backbone of policy models: planning with learned dynamics, video-as-policy, and grounding control in inverse dynamics.</p>
             </article>
             <article class="research-card" id="research-representations">
-              <h3>Representations of worlds</h3>
+              <h3><span class="research-heading-signature" aria-hidden="true"><img src="assets/polygon-12-83-44.svg" alt="" width="318" height="345"></span>Representations of worlds</h3>
               <p>What makes a latent space good for prediction and control? We investigate the representations world models learn and are built on — video VAEs and latent-space design, predictive representation learning, and latents that are rich in dynamics.</p>
             </article>
           </div>
@@ -188,20 +199,22 @@
       </div>
 
       <section class="home-news" aria-labelledby="news-title">
-        <div>
-          <h2 id="news-title">Recent News</h2>
-          <p class="section-kicker">Latest from the lab</p>
+        <div class="home-news-grid">
+          <div>
+            <h2 id="news-title">Recent News</h2>
+            <p class="section-kicker">Latest from the lab</p>
+          </div>
+          <ul class="news-list">
+            <li class="news-item">
+              <time class="news-date" datetime="2026-08">August 2026</time>
+              <p>Wonjun Chang, Sanghyeop Kim, Kyaw Ye Thu, Minseo Kim, and Yeonwoo Shin join the lab as research interns — welcome!</p>
+            </li>
+            <li class="news-item">
+              <time class="news-date" datetime="2026-08">August 2026</time>
+              <p>GLOW Lab opens at the Kim Jaechul Graduate School of AI, KAIST.</p>
+            </li>
+          </ul>
         </div>
-        <ul class="news-list">
-          <li class="news-item">
-            <time class="news-date" datetime="2026-08">August 2026</time>
-            <p>Wonjun Chang, Sanghyeop Kim, Kyaw Ye Thu, Minseo Kim, and Yeonwoo Shin join the lab as research interns — welcome!</p>
-          </li>
-          <li class="news-item">
-            <time class="news-date" datetime="2026-08">August 2026</time>
-            <p>GLOW Lab opens at the Kim Jaechul Graduate School of AI, KAIST.</p>
-          </li>
-        </ul>
       </section>
     </div>
   </main>
@@ -223,8 +236,11 @@
       </a>
     </nav>
     <a class="footer-brand" href="index.html" aria-label="GLOW LAB home">
-      <img src="assets/glow-mark.svg" alt="" width="42" height="43">
-      <span>GLOW<br>LAB</span>
+      <span class="footer-logo footer-logo-full" aria-hidden="true">
+        <img class="footer-logo-mark" src="assets/logo-full-mark.svg" alt="" width="314" height="291">
+        <img class="footer-logo-wordmark" src="assets/logo-full-wordmark.svg" alt="" width="766" height="102">
+        <img class="footer-logo-tagline" src="assets/logo-full-tagline.svg" alt="" width="425" height="92">
+      </span>
     </a>
   </footer>
 

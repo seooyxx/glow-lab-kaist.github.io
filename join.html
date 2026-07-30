@@ -8,6 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/glow-mark.svg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preload" href="assets/glow-mark.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/logo-half-wordmark.svg" as="image" type="image/svg+xml">
   <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,7 +18,9 @@
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
         <img src="assets/glow-mark.svg" alt="" width="69" height="70">
       </span>
-      <span class="wordmark">GLOW<br>LAB</span>
+      <span class="brand-figma-copy" aria-hidden="true">
+        <img class="brand-half-wordmark" src="assets/logo-half-wordmark.svg" alt="" width="829" height="111">
+      </span>
     </a>
     <nav class="main-nav" aria-label="Main navigation">
       <a href="index.html" data-nav-label="Home"><span class="nav-label">Home</span></a>
@@ -38,16 +41,6 @@
         <h1>Join Us</h1>
         <p>Build worlds with us.</p>
       </div>
-      <nav class="section-jumps" aria-label="Join sections">
-        <a class="with-icon" href="#apply">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 18h11v-2.675H9zM4 8.675h3V6H4zm0 4.675h3v-2.675H4zM4 18h3v-2.675H4zm5-4.65h11v-2.675H9zm0-4.675h11V6H9zM4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20z"/></svg>
-          <span>How to Apply</span>
-        </a>
-        <a class="with-icon" href="#criteria">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 13h5v-2h-5zm0-3h5V8h-5zm-9 6h8v-.55q0-1.125-1.1-1.787T9 13t-2.9.663T5 15.45zm4-4q.825 0 1.413-.587T11 10t-.587-1.412T9 8t-1.412.588T7 10t.588 1.413T9 12m-5 8q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.587 1.413T20 20z"/></svg>
-          <span>What We Look For</span>
-        </a>
-      </nav>
     </section>
 
     <section class="join-section dotted-section" id="apply">
@@ -71,8 +64,8 @@
         <article class="join-card" id="criteria">
           <h2>What we look for</h2>
           <p>
-            Prior experience on closely related topics is <strong>not a strict prerequisite</strong>.
-            We look for highly motivated students with strong and interesting prior experiences —
+            Prior experience on closely related topics is not a strict prerequisite.
+            We look for <strong>highly motivated students with strong and interesting prior experiences</strong> —
             research projects, open-source contributions, internships, or other evidence of
             initiative and curiosity.
           </p>
@@ -112,8 +105,11 @@
       </a>
     </nav>
     <a class="footer-brand" href="index.html" aria-label="GLOW LAB home">
-      <img src="assets/glow-mark.svg" alt="" width="42" height="43">
-      <span>GLOW<br>LAB</span>
+      <span class="footer-logo footer-logo-full" aria-hidden="true">
+        <img class="footer-logo-mark" src="assets/logo-full-mark.svg" alt="" width="314" height="291">
+        <img class="footer-logo-wordmark" src="assets/logo-full-wordmark.svg" alt="" width="766" height="102">
+        <img class="footer-logo-tagline" src="assets/logo-full-tagline.svg" alt="" width="425" height="92">
+      </span>
     </a>
   </footer>
 

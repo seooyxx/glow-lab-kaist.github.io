@@ -8,6 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="assets/glow-mark.svg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preload" href="assets/glow-mark.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/logo-half-wordmark.svg" as="image" type="image/svg+xml">
   <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,7 +18,9 @@
       <span class="magnetic-logo" data-magnetic-glow aria-hidden="true">
         <img src="assets/glow-mark.svg" alt="" width="69" height="70">
       </span>
-      <span class="wordmark">GLOW<br>LAB</span>
+      <span class="brand-figma-copy" aria-hidden="true">
+        <img class="brand-half-wordmark" src="assets/logo-half-wordmark.svg" alt="" width="829" height="111">
+      </span>
     </a>
     <nav class="main-nav" aria-label="Main navigation">
       <a href="index.html" data-nav-label="Home"><span class="nav-label">Home</span></a>
@@ -54,71 +57,71 @@
     </section>
 
     <section class="featured-scroller dotted-section" id="featured" aria-label="Selected publications">
-      <a class="card-link" data-transition-key="omnidreams" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
-        <article class="card publication-card selected-publication-card">
-          <div class="visual" data-visual="1" aria-hidden="true" style="view-transition-name: publication-thumbnail-omnidreams"></div>
+      <a class="card-link" data-transition-key="omnidreams" data-preview-video="assets/publications/motion/omnidreams.mp4" href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card publication-card--media-reveal">
+          <div class="visual" data-visual="1" data-thumbnail="assets/publications/omnidreams.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-omnidreams"></div>
           <div class="card-copy">
             <h3 style="view-transition-name: publication-heading-omnidreams">NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</h3>
             <p class="card-authors">NVIDIA</p>
-            <p class="card-meta"><span class="pill">arXiv</span><span class="publication-year">2026</span></p>
+            <p class="card-meta"><span class="venue-badge">arXiv</span><span class="publication-year">2026</span></p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="cosmos-world" href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">
-        <article class="card publication-card selected-publication-card">
-          <div class="visual" data-visual="2" aria-hidden="true" style="view-transition-name: publication-thumbnail-cosmos-world"></div>
+      <a class="card-link" data-transition-key="cosmos-world" data-preview-video="assets/publications/motion/cosmos-world.mp4" href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card publication-card--media-reveal">
+          <div class="visual" data-visual="2" data-thumbnail="assets/publications/cosmos-world.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-cosmos-world"></div>
           <div class="card-copy">
             <h3 style="view-transition-name: publication-heading-cosmos-world">Cosmos World Foundation Model Platform for Physical AI</h3>
             <p class="card-authors">NVIDIA</p>
-            <p class="card-meta"><span class="pill">arXiv</span><span class="publication-year">2025</span></p>
+            <p class="card-meta"><span class="venue-badge">arXiv</span><span class="publication-year">2025</span></p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="align-your-gaussians" href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">
-        <article class="card publication-card selected-publication-card">
-          <div class="visual" data-visual="3" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-gaussians"></div>
+      <a class="card-link" data-transition-key="align-your-gaussians" data-preview-video="assets/publications/motion/align-your-gaussians.mp4" href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card publication-card--media-reveal">
+          <div class="visual" data-visual="3" data-thumbnail="assets/publications/align-your-gaussians.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-gaussians"></div>
           <div class="card-copy">
             <h3 style="view-transition-name: publication-heading-align-your-gaussians">Align Your Gaussians: Text-to-4D with Dynamic 3D Gaussians and Composed Diffusion Models</h3>
             <p class="card-authors">Huan Ling*, Seung Wook Kim*, Antonio Torralba, Sanja Fidler, Karsten Kreis</p>
             <p class="card-meta">
-              <span class="pill">CVPR</span>
+              <span class="venue-badge">CVPR</span>
               <span class="publication-year">2024</span>
               <span class="card-distinction">Highlight</span>
             </p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="align-your-latents" href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">
-        <article class="card publication-card selected-publication-card">
-          <div class="visual" data-visual="4" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-latents"></div>
+      <a class="card-link" data-transition-key="align-your-latents" data-preview-video="assets/publications/motion/video-ldm.mp4" href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card publication-card--media-reveal">
+          <div class="visual" data-visual="4" data-thumbnail="assets/publications/video-ldm.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-align-your-latents"></div>
           <div class="card-copy">
             <h3 style="view-transition-name: publication-heading-align-your-latents">Align your Latents: High-Resolution Video Synthesis with Latent Diffusion Models</h3>
             <p class="card-authors">Andreas Blattmann*, Robin Rombach*, Huan Ling*, Tim Dockhorn*, Seung Wook Kim, Sanja Fidler, Karsten Kreis</p>
-            <p class="card-meta"><span class="pill">CVPR</span><span class="publication-year">2023</span></p>
+            <p class="card-meta"><span class="venue-badge">CVPR</span><span class="publication-year">2023</span></p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="drivegan" href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">
-        <article class="card publication-card selected-publication-card">
-          <div class="visual" data-visual="0" aria-hidden="true" style="view-transition-name: publication-thumbnail-drivegan"></div>
+      <a class="card-link" data-transition-key="drivegan" data-preview-video="assets/publications/motion/drivegan.mp4" href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card publication-card--media-reveal">
+          <div class="visual" data-visual="0" data-thumbnail="assets/publications/drivegan.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-drivegan"></div>
           <div class="card-copy">
             <h3 style="view-transition-name: publication-heading-drivegan">DriveGAN: Towards a Controllable High-Quality Neural Simulation</h3>
             <p class="card-authors">Seung Wook Kim, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
             <p class="card-meta">
-              <span class="pill">CVPR</span>
+              <span class="venue-badge">CVPR</span>
               <span class="publication-year">2021</span>
               <span class="card-distinction">Oral</span>
             </p>
           </div>
         </article>
       </a>
-      <a class="card-link" data-transition-key="gamegan" href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">
-        <article class="card publication-card selected-publication-card">
-          <div class="visual" data-visual="1" aria-hidden="true" style="view-transition-name: publication-thumbnail-gamegan"></div>
+      <a class="card-link" data-transition-key="gamegan" data-preview-video="assets/publications/motion/gamegan.mp4" href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">
+        <article class="card publication-card selected-publication-card publication-card--media-reveal">
+          <div class="visual" data-visual="1" data-thumbnail="assets/publications/gamegan.webp" aria-hidden="true" style="view-transition-name: publication-thumbnail-gamegan"></div>
           <div class="card-copy">
             <h3 style="view-transition-name: publication-heading-gamegan">Learning to Simulate Dynamic Environments with GameGAN</h3>
             <p class="card-authors">Seung Wook Kim, Henry Zhou, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
-            <p class="card-meta"><span class="pill">CVPR</span><span class="publication-year">2020</span></p>
+            <p class="card-meta"><span class="venue-badge">CVPR</span><span class="publication-year">2020</span></p>
           </div>
         </article>
       </a>
@@ -138,7 +141,7 @@
       </div>
       <h2 class="pub-year">2026</h2>
       <ul class="pub-list">
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/instant-nurec.webp">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/sil/projects/instant-nurec/" target="_blank" rel="noopener">Instant NuRec: Feed-Forward 3D Gaussian Reconstruction for Driving Scene Simulation</a></h3>
           <p class="pub-authors">NVIDIA</p>
           <div class="pub-meta">
@@ -149,7 +152,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/omnidreams.webp" data-preview-video="assets/publications/motion/omnidreams.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/sil/projects/omnidreams-blog/" target="_blank" rel="noopener">NVIDIA OmniDreams: Real-Time Generative World Model for Closed-Loop Autonomous Vehicle Simulation</a></h3>
           <p class="pub-authors">NVIDIA</p>
           <div class="pub-meta">
@@ -160,7 +163,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/ddspo.webp">
           <h3 class="pub-title"><a href="https://dohyun-as.github.io/DDSPO/" target="_blank" rel="noopener">Direct Diffusion Score Preference Optimization via Stepwise Contrastive Policy-Pair Supervision</a></h3>
           <p class="pub-authors">Dohyun Kim, Seungwoo Lyu, <span class="me">Seung Wook Kim</span>, Paul Hongsuck Seo</p>
           <div class="pub-meta">
@@ -171,7 +174,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/connecting-the-objects.webp">
           <h3 class="pub-title"><a href="https://www.sciencedirect.com/science/article/abs/pii/S0167865526002230" target="_blank" rel="noopener">Connecting the Objects: Relational Occlusion Graphs for Amodal Segmentation</a></h3>
           <p class="pub-authors">Huiling Liu, Eunnam Cho, Soyun Choi, Aecheon Jung, <span class="me">Seung Wook Kim</span>, Sungeun Hong</p>
           <div class="pub-meta">
@@ -185,7 +188,7 @@
 
       <h2 class="pub-year">2025</h2>
       <ul class="pub-list">
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/cosmos-drive-dreams.webp" data-preview-video="assets/publications/motion/cosmos-drive-dreams.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/cosmos_drive_dreams" target="_blank" rel="noopener">Cosmos-Drive-Dreams: Scalable Synthetic Driving Data Generation with World Foundation Models</a></h3>
           <p class="pub-authors">Xuanchi Ren*, Yifan Lu*, Tianshi Cao*, Ruiyuan Gao*, Shengyu Huang, Amirmojtaba Sabour, Tianchang Shen, Tobias Pfaff, Jay Zhangjie Wu, Runjian Chen, <span class="me">Seung Wook Kim</span>, Jun Gao, Laura Leal-Taixe, Mike Chen, Sanja Fidler, Huan Ling</p>
           <div class="pub-meta">
@@ -196,7 +199,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/random-conditioning.webp">
           <h3 class="pub-title"><a href="https://dohyun-as.github.io/Random-Conditioning/" target="_blank" rel="noopener">Random Conditioning with Distillation for Data-Efficient Diffusion Model Compression</a></h3>
           <p class="pub-authors">Dohyun Kim*, Sehwan Park*, Geonhee Han, <span class="me">Seung Wook Kim</span>, Paul Hongsuck Seo</p>
           <div class="pub-meta">
@@ -207,7 +210,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/cosmos-world.webp" data-preview-video="assets/publications/motion/cosmos-world.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/dir/cosmos1/" target="_blank" rel="noopener">Cosmos World Foundation Model Platform for Physical AI</a></h3>
           <p class="pub-authors">NVIDIA</p>
           <div class="pub-meta">
@@ -222,7 +225,7 @@
 
       <h2 class="pub-year">2024</h2>
       <ul class="pub-list">
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/l4gm.webp" data-preview-video="assets/publications/motion/l4gm.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/l4gm/" target="_blank" rel="noopener">L4GM: Large 4D Gaussian Reconstruction Model</a></h3>
           <p class="pub-authors">Jiawei Ren, Kevin Xie, Ashkan Mirzaei, Hanxue Liang, Xiaohui Zeng, Karsten Kreis, Ziwei Liu, Antonio Torralba, Sanja Fidler, <span class="me">Seung Wook Kim</span>, Huan Ling</p>
           <div class="pub-meta">
@@ -233,7 +236,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/distillnerf.webp" data-preview-video="assets/publications/motion/distillnerf.mp4">
           <h3 class="pub-title"><a href="https://distillnerf.github.io/" target="_blank" rel="noopener">DistillNeRF: Perceiving 3D Scenes from Single-Glance Images by Distilling Neural Fields</a></h3>
           <p class="pub-authors">Letian Wang, <span class="me">Seung Wook Kim</span>, Jiawei Yang, Cunjun Yu, Boris Ivanovic, Steven Waslander, Yue Wang, Sanja Fidler, Marco Pavone, Peter Karkus</p>
           <div class="pub-meta">
@@ -244,7 +247,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/diffusion-texture-painting.webp" data-preview-video="assets/publications/motion/diffusion-texture-painting.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/DiffusionTexturePainting/" target="_blank" rel="noopener">Diffusion Texture Painting</a></h3>
           <p class="pub-authors">Anita Hu, Nishkrit Desai, Hassan Abu Alhaija, <span class="me">Seung Wook Kim</span>, Masha Shugrina</p>
           <div class="pub-meta">
@@ -254,7 +257,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/align-your-gaussians.webp" data-preview-video="assets/publications/motion/align-your-gaussians.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/AlignYourGaussians/" target="_blank" rel="noopener">Align Your Gaussians: Text-to-4D with Dynamic 3D Gaussians and Composed Diffusion Models</a></h3>
           <p class="pub-authors">Huan Ling*, <span class="me">Seung Wook Kim</span>*, Antonio Torralba, Sanja Fidler, Karsten Kreis</p>
           <div class="pub-meta">
@@ -266,7 +269,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/emerdiff.webp">
           <h3 class="pub-title"><a href="https://kmcode1.github.io/Projects/EmerDiff/" target="_blank" rel="noopener">EmerDiff: Emerging Pixel-level Semantic Knowledge in Diffusion Models</a></h3>
           <p class="pub-authors">Koichi Namekata, Amirmojtaba Sabour, Sanja Fidler, <span class="me">Seung Wook Kim</span></p>
           <div class="pub-meta">
@@ -277,7 +280,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/emernerf.webp" data-preview-video="assets/publications/motion/emernerf.mp4">
           <h3 class="pub-title"><a href="https://emernerf.github.io/" target="_blank" rel="noopener">EmerNeRF: Emergent Spatial-Temporal Scene Decomposition via Self-Supervision</a></h3>
           <p class="pub-authors">Jiawei Yang, Boris Ivanovic, Or Litany, Xinshuo Weng, <span class="me">Seung Wook Kim</span>, Boyi Li, Tong Che, Danfei Xu, Sanja Fidler, Marco Pavone, Yue Wang</p>
           <div class="pub-meta">
@@ -288,7 +291,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/wildfusion.webp">
           <h3 class="pub-title"><a href="https://katjaschwarz.github.io/wildfusion/" target="_blank" rel="noopener">WildFusion: Learning 3D-Aware Latent Diffusion Models in View Space</a></h3>
           <p class="pub-authors">Katja Schwarz, <span class="me">Seung Wook Kim</span>, Jun Gao, Sanja Fidler, Andreas Geiger, Karsten Kreis</p>
           <div class="pub-meta">
@@ -303,7 +306,7 @@
 
       <h2 class="pub-year">2023</h2>
       <ul class="pub-list">
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/dreamteacher.webp">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/DreamTeacher/" target="_blank" rel="noopener">DreamTeacher: Pretraining Image Backbones with Deep Generative Models</a></h3>
           <p class="pub-authors">Daiqing Li*, Huan Ling*, Amlan Kar, David Acuna, <span class="me">Seung Wook Kim</span>, Karsten Kreis, Antonio Torralba, Sanja Fidler</p>
           <div class="pub-meta">
@@ -314,7 +317,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/neuralfield-ldm.webp" data-preview-video="assets/publications/motion/neuralfield-ldm.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/NFLDM/" target="_blank" rel="noopener">NeuralField-LDM: Scene Generation with Hierarchical Latent Diffusion Models</a></h3>
           <p class="pub-authors"><span class="me">Seung Wook Kim</span>*, Bradley Brown*, Kangxue Yin, Karsten Kreis, Katja Schwarz, Daiqing Li, Robin Rombach, Antonio Torralba, Sanja Fidler</p>
           <div class="pub-meta">
@@ -325,7 +328,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/video-ldm.webp" data-preview-video="assets/publications/motion/video-ldm.mp4">
           <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/" target="_blank" rel="noopener">Align your Latents: High-Resolution Video Synthesis with Latent Diffusion Models</a></h3>
           <p class="pub-authors">Andreas Blattmann*, Robin Rombach*, Huan Ling*, Tim Dockhorn*, <span class="me">Seung Wook Kim</span>, Sanja Fidler, Karsten Kreis</p>
           <div class="pub-meta">
@@ -340,7 +343,7 @@
 
       <h2 class="pub-year">2022</h2>
       <ul class="pub-list">
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/polymorphicgan.webp" data-preview-video="assets/publications/motion/polymorphicgan.mp4">
           <h3 class="pub-title"><a href="https://nv-tlabs.github.io/PMGAN/" target="_blank" rel="noopener">PolymorphicGAN: Generating Aligned Samples Across Multiple Domains With Learned Morph Maps</a></h3>
           <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Karsten Kreis, Daiqing Li, Antonio Torralba, Sanja Fidler</p>
           <div class="pub-meta">
@@ -352,7 +355,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/bigdatasetgan.webp">
           <h3 class="pub-title"><a href="https://nv-tlabs.github.io/big-datasetgan/" target="_blank" rel="noopener">BigDatasetGAN: Synthesizing ImageNet with Pixel-wise Annotations</a></h3>
           <p class="pub-authors">Daiqing Li, Huan Ling, <span class="me">Seung Wook Kim</span>, Karsten Kreis, Adela Barriuso, Sanja Fidler, Antonio Torralba</p>
           <div class="pub-meta">
@@ -363,7 +366,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/histopathology-consistency.webp">
           <h3 class="pub-title"><a href="https://arxiv.org/abs/2102.03897" target="_blank" rel="noopener">Self-Supervised Driven Consistency Training for Annotation Efficient Histopathology Image Analysis</a></h3>
           <p class="pub-authors">Chetan L. Srinidhi, <span class="me">Seung Wook Kim</span>, Fu-Der Chen, Anne L. Martel</p>
           <div class="pub-meta">
@@ -377,14 +380,18 @@
 
       <h2 class="pub-year">2021</h2>
       <ul class="pub-list">
-        <li class="pub">
-          <h3 class="pub-title">EditGAN: High-Precision Semantic Image Editing</h3>
+        <li class="pub" data-thumbnail="assets/publications/editgan.webp">
+          <h3 class="pub-title"><a href="https://research.nvidia.com/labs/toronto-ai/editGAN/" target="_blank" rel="noopener">EditGAN: High-Precision Semantic Image Editing</a></h3>
           <p class="pub-authors">Huan Ling, Karsten Kreis, Daiqing Li, <span class="me">Seung Wook Kim</span>, Antonio Torralba, Sanja Fidler</p>
           <div class="pub-meta">
             <span class="venue">NeurIPS 2021</span>
+            <div class="pub-links">
+              <a href="https://arxiv.org/abs/2111.03186" target="_blank" rel="noopener">Paper</a>
+              <a href="https://research.nvidia.com/labs/toronto-ai/editGAN/" target="_blank" rel="noopener">Project</a>
+            </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/drivegan.webp" data-preview-video="assets/publications/motion/drivegan.mp4">
           <h3 class="pub-title"><a href="https://nv-tlabs.github.io/DriveGAN/" target="_blank" rel="noopener">DriveGAN: Towards a Controllable High-Quality Neural Simulation</a></h3>
           <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
           <div class="pub-meta">
@@ -400,7 +407,7 @@
 
       <h2 class="pub-year">2020</h2>
       <ul class="pub-list">
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/amodal-vae.webp">
           <h3 class="pub-title"><a href="http://www.cs.toronto.edu/~linghuan/vae_mask/" target="_blank" rel="noopener">Variational Amodal Object Completion</a></h3>
           <p class="pub-authors">Huan Ling, David Acuna, Karsten Kreis, <span class="me">Seung Wook Kim</span>, Sanja Fidler</p>
           <div class="pub-meta">
@@ -410,7 +417,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/gamegan.webp" data-preview-video="assets/publications/motion/gamegan.mp4">
           <h3 class="pub-title"><a href="https://nv-tlabs.github.io/gameGAN/" target="_blank" rel="noopener">Learning to Simulate Dynamic Environments with GameGAN</a></h3>
           <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Henry Zhou, Jonah Philion, Antonio Torralba, Sanja Fidler</p>
           <div class="pub-meta">
@@ -425,7 +432,7 @@
 
       <h2 class="pub-year">2019</h2>
       <ul class="pub-list">
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/progressive-module-networks.webp">
           <h3 class="pub-title"><a href="https://seung-kim.github.io/pmn_pj_page/" target="_blank" rel="noopener">Visual Reasoning by Progressive Module Networks</a></h3>
           <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Makarand Tapaswi, Sanja Fidler</p>
           <div class="pub-meta">
@@ -435,7 +442,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/shmoop-corpus.webp">
           <h3 class="pub-title"><a href="https://arxiv.org/pdf/1912.13082.pdf" target="_blank" rel="noopener">The Shmoop Corpus: A Dataset of Stories with Loosely Aligned Summaries</a></h3>
           <p class="pub-authors">Atef Chaudhury, Makarand Tapaswi, <span class="me">Seung Wook Kim</span>, Sanja Fidler</p>
           <div class="pub-meta">
@@ -450,14 +457,17 @@
 
       <h2 class="pub-year">2018 &amp; earlier</h2>
       <ul class="pub-list">
-        <li class="pub">
-          <h3 class="pub-title">Cascaded Pyramid Network for 3D Human Pose Estimation Challenge</h3>
+        <li class="pub" data-thumbnail="assets/publications/cascaded-pyramid-network.webp">
+          <h3 class="pub-title"><a href="https://arxiv.org/abs/1810.01616" target="_blank" rel="noopener">Cascaded Pyramid Network for 3D Human Pose Estimation Challenge</a></h3>
           <p class="pub-authors">Sungeun Hong, Wonjin Jung, Ilsang Woo, <span class="me">Seung Wook Kim</span></p>
           <div class="pub-meta">
             <span class="venue">ECCV PoseTrack Workshop 2018</span>
+            <div class="pub-links">
+              <a href="https://arxiv.org/abs/1810.01616" target="_blank" rel="noopener">Paper</a>
+            </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/keep-and-learn.webp">
           <h3 class="pub-title"><a href="https://arxiv.org/abs/1805.10784" target="_blank" rel="noopener">Keep and Learn: Continual Learning by Constraining the Latent Space for Knowledge Preservation in Neural Networks</a></h3>
           <p class="pub-authors">Hyo-Eun Kim, <span class="me">Seung Wook Kim</span>, Jaehwan Lee</p>
           <div class="pub-meta">
@@ -467,7 +477,7 @@
             </div>
           </div>
         </li>
-        <li class="pub">
+        <li class="pub" data-thumbnail="assets/publications/class-distance-loss.webp">
           <h3 class="pub-title"><a href="https://openreview.net/forum?id=ByXrfaGFe&amp;noteId=ByXrfaGFe" target="_blank" rel="noopener">Transferring Knowledge to Smaller Network with Class-Distance Loss</a></h3>
           <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Hyo-Eun Kim</p>
           <div class="pub-meta">
@@ -477,11 +487,14 @@
             </div>
           </div>
         </li>
-        <li class="pub">
-          <h3 class="pub-title">Combining Word Prediction and r-ary Huffman Coding for Text Entry</h3>
+        <li class="pub" data-thumbnail="assets/publications/huffman-text-entry.webp">
+          <h3 class="pub-title"><a href="https://www.isca-archive.org/slpat_2016/kim16_slpat.html" target="_blank" rel="noopener">Combining Word Prediction and r-ary Huffman Coding for Text Entry</a></h3>
           <p class="pub-authors"><span class="me">Seung Wook Kim</span>, Frank Rudzicz</p>
           <div class="pub-meta">
             <span class="venue">SLPAT Workshop 2016</span>
+            <div class="pub-links">
+              <a href="https://www.cs.toronto.edu/~frank/Download/Papers/slpat2016_eyeTyping.pdf" target="_blank" rel="noopener">Paper</a>
+            </div>
           </div>
         </li>
       </ul>
@@ -512,8 +525,11 @@
       </a>
     </nav>
     <a class="footer-brand" href="index.html" aria-label="GLOW LAB home">
-      <img src="assets/glow-mark.svg" alt="" width="42" height="43">
-      <span>GLOW<br>LAB</span>
+      <span class="footer-logo footer-logo-full" aria-hidden="true">
+        <img class="footer-logo-mark" src="assets/logo-full-mark.svg" alt="" width="314" height="291">
+        <img class="footer-logo-wordmark" src="assets/logo-full-wordmark.svg" alt="" width="766" height="102">
+        <img class="footer-logo-tagline" src="assets/logo-full-tagline.svg" alt="" width="425" height="92">
+      </span>
     </a>
   </footer>
 
