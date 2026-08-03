@@ -331,6 +331,172 @@ h1, h2, h3, h4 {
   letter-spacing: -0.015em;
 }
 
+/* ---------- Home member stack ---------- */
+
+.member-stack-stage {
+  position: relative;
+  z-index: 2;
+  margin: 42px 0 48px;
+}
+
+.member-stack {
+  --member-cell-width: clamp(38px, 4.4vw, 58px);
+  --member-stack-width: 7;
+  --member-stack-height: 1.154701;
+  position: relative;
+  width: calc(var(--member-cell-width) * var(--member-stack-width));
+  max-width: 100%;
+  height: calc(var(--member-cell-width) * var(--member-stack-height));
+  display: block;
+  overflow: visible;
+  transform-origin: left center;
+  transition: filter 220ms ease-out, transform 220ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.member-stack-cells,
+.member-stack-outline {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.member-stack-cells {
+  z-index: 0;
+  pointer-events: none;
+}
+
+.member-stack-people {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+
+.member-stack-join {
+  --earth-axis-tilt: 23.44deg;
+  --axis-arrow-rest-rotation: 90deg;
+  --axis-arrow-hover-rotation: calc(0deg - var(--earth-axis-tilt));
+  --axis-arrow-size: calc(var(--member-cell-width) * 0.27);
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  top: 0;
+  width: var(--member-cell-width);
+  height: calc(var(--member-cell-width) * 1.154701);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--gradient);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  color: #fff;
+}
+
+.member-stack-join:hover,
+.member-stack-join:focus-visible {
+  color: #fff;
+}
+
+.member-stack-join .axis-arrow-icon {
+  width: var(--axis-arrow-size);
+  height: var(--axis-arrow-size);
+  display: inline-flex;
+  flex: 0 0 var(--axis-arrow-size);
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+  transform: rotate(var(--axis-arrow-rest-rotation));
+  transform-origin: center;
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+.member-stack-join .axis-arrow-icon::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: currentColor;
+  -webkit-mask: url("../assets/axis-arrow.svg") center / contain no-repeat;
+  mask: url("../assets/axis-arrow.svg") center / contain no-repeat;
+}
+
+@media (hover: hover) {
+  .member-stack-join[data-axis-arrow-trigger]:hover .axis-arrow-icon {
+    transform: rotate(
+      calc(var(--axis-arrow-rest-rotation) + var(--axis-arrow-hover-rotation))
+    );
+  }
+}
+
+.member-stack-join[data-axis-arrow-trigger]:focus-visible .axis-arrow-icon {
+  transform: rotate(
+    calc(var(--axis-arrow-rest-rotation) + var(--axis-arrow-hover-rotation))
+  );
+}
+
+.member-stack-join[data-axis-arrow-trigger]:active .axis-arrow-icon {
+  transform:
+    rotate(calc(var(--axis-arrow-rest-rotation) + var(--axis-arrow-hover-rotation)))
+    scale(0.9);
+  transition-duration: 100ms;
+}
+
+.member-stack:not(.is-member-stack-ready) .member-stack-cells {
+  position: relative;
+  display: flex;
+}
+
+.member-stack .member-cell,
+.member-stack .member-avatar {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  background: var(--card);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  isolation: isolate;
+}
+
+.member-stack:not(.is-member-stack-ready) .member-cell {
+  position: relative;
+  width: var(--member-cell-width);
+  height: calc(var(--member-cell-width) * 1.154701);
+  flex: 0 0 var(--member-cell-width);
+}
+
+.member-stack .member-cell img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 14%;
+  filter: saturate(0.76);
+}
+
+.member-stack-outline {
+  z-index: 4;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.member-stack-outline path {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+  vector-effect: non-scaling-stroke;
+}
+
+.member-stack-gradient-start { stop-color: var(--glow-a); }
+.member-stack-gradient-end { stop-color: var(--glow-c); }
+
+.member-stack:hover,
+.member-stack:focus-within {
+  filter: drop-shadow(0 7px 9px rgba(79, 70, 229, 0.18));
+  transform: translate3d(0, -4px, 0);
+}
+
 /* ---------- Sections ---------- */
 
 .section { padding: 96px 0; }
