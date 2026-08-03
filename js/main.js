@@ -27,6 +27,66 @@
     });
   }
 
+  /* ---------- Navigation indicator ---------- */
+
+  function initNavigationIndicator() {
+    const navigation = document.querySelector(".nav-links");
+    if (!navigation) return;
+    const navigationLinks = Array.from(navigation.querySelectorAll("a[href]"));
+    let current = navigation.querySelector('[aria-current="page"]') || navigationLinks[0];
+    if (!current) return;
+
+    function moveTo(link, immediate = false) {
+      if (!link) return;
+      const navigationBounds = navigation.getBoundingClientRect();
+      const label = link.querySelector(".nav-label") || link;
+      const labelBounds = label.getBoundingClientRect();
+      const indicatorSize = parseFloat(
+        getComputedStyle(navigation).getPropertyValue("--nav-indicator-size"),
+      ) || 9;
+
+      navigation.classList.toggle("indicator-immediate", immediate);
+      navigation.style.setProperty(
+        "--nav-indicator-x",
+        `${labelBounds.left - navigationBounds.left}px`,
+      );
+      navigation.style.setProperty(
+        "--nav-indicator-y",
+        `${labelBounds.top - navigationBounds.top - indicatorSize * 0.45}px`,
+      );
+      navigation.style.setProperty("--nav-indicator-width", `${labelBounds.width}px`);
+      navigation.classList.add("indicator-ready");
+
+      if (immediate) {
+        requestAnimationFrame(() => navigation.classList.remove("indicator-immediate"));
+      }
+    }
+
+    navigationLinks.forEach((link) => {
+      link.addEventListener("pointerenter", (event) => {
+        if (event.pointerType !== "touch") moveTo(link);
+      });
+      link.addEventListener("focus", () => moveTo(link));
+      link.addEventListener("click", () => moveTo(link));
+    });
+
+    navigation.addEventListener("pointerleave", () => moveTo(current));
+    navigation.addEventListener("focusout", (event) => {
+      if (!navigation.contains(event.relatedTarget)) moveTo(current);
+    });
+
+    function refresh(immediate = true) {
+      current = navigation.querySelector('[aria-current="page"]') || navigationLinks[0];
+      requestAnimationFrame(() => moveTo(current, immediate));
+    }
+
+    refresh();
+    window.addEventListener("resize", () => refresh(), { passive: true });
+    document.fonts?.ready?.then(() => refresh());
+  }
+
+  initNavigationIndicator();
+
   /* ---------- Reveal on scroll ---------- */
 
   const revealed = document.querySelectorAll(".reveal");
@@ -45,6 +105,420 @@
     revealed.forEach((el) => io.observe(el));
   } else {
     revealed.forEach((el) => el.classList.add("visible"));
+  }
+
+  /* ---------- Home member stack ---------- */
+
+  const MEMBER_LIMIT = 16;
+  const MEMBER_ROW_SIZE = 9;
+  const MEMBER_HEX_HEIGHT = 2 / Math.sqrt(3);
+  const MEMBER_ROW_OFFSET = MEMBER_HEX_HEIGHT * 0.75;
+  let memberStackRenderId = 0;
+
+  function memberRecordsFromPage(scope) {
+    return Array.from(scope.querySelectorAll("[data-member-record]"))
+      .map((card) => {
+        const avatar = card.querySelector("[data-member-transition]");
+        const heading = card.querySelector("h2, h3");
+        const image = avatar?.querySelector("img");
+        if (!avatar || !heading) return null;
+        return {
+          slug: avatar.dataset.memberTransition,
+          name: heading.textContent.trim(),
+          image: image?.getAttribute("src") || "",
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function memberRecordsFromFallback(stack) {
+    return Array.from(stack.querySelectorAll(".member-cell[data-member-transition]")).map((cell) => ({
+      slug: cell.dataset.memberTransition,
+      name: cell.title || cell.dataset.memberTransition,
+      image: cell.querySelector("img")?.getAttribute("src") || "",
+    }));
+  }
+
+  function memberHexPoints(left, top) {
+    const quarterHeight = MEMBER_HEX_HEIGHT * 0.25;
+    return [
+      [left + 0.5, top],
+      [left + 1, top + quarterHeight],
+      [left + 1, top + MEMBER_HEX_HEIGHT - quarterHeight],
+      [left + 0.5, top + MEMBER_HEX_HEIGHT],
+      [left, top + MEMBER_HEX_HEIGHT - quarterHeight],
+      [left, top + quarterHeight],
+    ];
+  }
+
+  function memberOutlinePath(positions) {
+    const edges = new Map();
+    const pointsByKey = new Map();
+    const adjacency = new Map();
+    const edgeKey = (first, second) => (first < second ? `${first}|${second}` : `${second}|${first}`);
+
+    function connect(first, second) {
+      if (!adjacency.has(first)) adjacency.set(first, new Set());
+      if (!adjacency.has(second)) adjacency.set(second, new Set());
+      adjacency.get(first).add(second);
+      adjacency.get(second).add(first);
+    }
+
+    positions.forEach((position) => {
+      const points = memberHexPoints(position.x, position.y);
+      points.forEach((point, index) => {
+        const next = points[(index + 1) % points.length];
+        const first = point.map((value) => Math.round(value * 1000) / 10);
+        const second = next.map((value) => Math.round(value * 1000) / 10);
+        const firstKey = first.join(",");
+        const secondKey = second.join(",");
+        const key = edgeKey(firstKey, secondKey);
+        pointsByKey.set(firstKey, first);
+        pointsByKey.set(secondKey, second);
+        if (!edges.has(key)) {
+          edges.set(key, [firstKey, secondKey]);
+          connect(firstKey, secondKey);
+        }
+      });
+    });
+
+    const visited = new Set();
+    const polylines = [];
+
+    function walk(firstKey, secondKey) {
+      const line = [firstKey];
+      let previous = firstKey;
+      let current = secondKey;
+      visited.add(edgeKey(firstKey, secondKey));
+
+      while (true) {
+        line.push(current);
+        const neighbors = Array.from(adjacency.get(current) || []);
+        if (neighbors.length !== 2) break;
+        const next = neighbors.find(
+          (candidate) => candidate !== previous && !visited.has(edgeKey(current, candidate)),
+        );
+        if (!next) break;
+        visited.add(edgeKey(current, next));
+        previous = current;
+        current = next;
+      }
+      return line;
+    }
+
+    adjacency.forEach((neighbors, pointKey) => {
+      if (neighbors.size === 2) return;
+      neighbors.forEach((neighborKey) => {
+        if (!visited.has(edgeKey(pointKey, neighborKey))) {
+          polylines.push(walk(pointKey, neighborKey));
+        }
+      });
+    });
+
+    edges.forEach((edge) => {
+      if (!visited.has(edgeKey(edge[0], edge[1]))) {
+        polylines.push(walk(edge[0], edge[1]));
+      }
+    });
+
+    return polylines
+      .map((line) => {
+        const closed = line.length > 2 && line[0] === line[line.length - 1];
+        const pointKeys = closed ? line.slice(0, -1) : line;
+        const commands = pointKeys.map((pointKey, index) => {
+          const point = pointsByKey.get(pointKey);
+          return `${index ? "L" : "M"}${point.join(" ")}`;
+        });
+        return commands.join("") + (closed ? "Z" : "");
+      })
+      .join("");
+  }
+
+  function renderMemberStack(stack, records, totalCount) {
+    const members = records.slice(0, MEMBER_LIMIT);
+    if (!members.length) {
+      stack.hidden = true;
+      return;
+    }
+
+    const visualCount = members.length + 1;
+    const positions = Array.from({ length: visualCount }, (_item, index) => {
+      const row = index >= MEMBER_ROW_SIZE ? 1 : 0;
+      const column = row ? index - MEMBER_ROW_SIZE : index;
+      return { x: column + (row ? 0.5 : 0), y: row ? MEMBER_ROW_OFFSET : 0 };
+    });
+    const joinPosition = positions.at(-1);
+    const topCount = Math.min(visualCount, MEMBER_ROW_SIZE);
+    const bottomCount = Math.max(0, visualCount - MEMBER_ROW_SIZE);
+    const width = Math.max(topCount, bottomCount ? bottomCount + 0.5 : 0);
+    const height = bottomCount ? MEMBER_HEX_HEIGHT + MEMBER_ROW_OFFSET : MEMBER_HEX_HEIGHT;
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    const gradientId = `member-stack-gradient-${++memberStackRenderId}`;
+
+    const peopleLink = document.createElement("a");
+    peopleLink.className = "member-stack-people";
+    peopleLink.href = "people.html";
+    peopleLink.setAttribute(
+      "aria-label",
+      `Meet ${totalCount} ${totalCount === 1 ? "member" : "members"} of GLOW Lab`,
+    );
+
+    const cells = document.createElement("span");
+    cells.className = "member-stack-cells";
+    cells.setAttribute("aria-hidden", "true");
+    members.forEach((member, index) => {
+      const cell = document.createElement("span");
+      const position = positions[index];
+      cell.className = `member-avatar member-cell${member.image ? " member-photo" : ""}`;
+      cell.dataset.memberTransition = member.slug;
+      cell.title = member.name;
+      cell.style.left = `${(position.x / width) * 100}%`;
+      cell.style.top = `${(position.y / height) * 100}%`;
+      cell.style.width = `${(1 / width) * 100}%`;
+      cell.style.height = `${(MEMBER_HEX_HEIGHT / height) * 100}%`;
+
+      if (member.image) {
+        const image = document.createElement("img");
+        image.src = member.image;
+        image.alt = "";
+        image.decoding = "async";
+        cell.appendChild(image);
+      }
+      cells.appendChild(cell);
+    });
+
+    const joinLink = document.createElement("a");
+    joinLink.className = "member-stack-join";
+    joinLink.dataset.axisArrowTrigger = "";
+    joinLink.href = "join.html";
+    joinLink.setAttribute("aria-label", "Join GLOW Lab");
+    joinLink.style.left = `${(joinPosition.x / width) * 100}%`;
+    joinLink.style.top = `${(joinPosition.y / height) * 100}%`;
+    joinLink.style.width = `${(1 / width) * 100}%`;
+    joinLink.style.height = `${(MEMBER_HEX_HEIGHT / height) * 100}%`;
+    const joinArrow = document.createElement("span");
+    joinArrow.className = "axis-arrow-icon";
+    joinArrow.setAttribute("aria-hidden", "true");
+    joinLink.appendChild(joinArrow);
+
+    const outline = document.createElementNS(svgNamespace, "svg");
+    outline.classList.add("member-stack-outline");
+    outline.setAttribute("viewBox", `0 0 ${width * 100} ${height * 100}`);
+    outline.setAttribute("preserveAspectRatio", "none");
+    outline.setAttribute("aria-hidden", "true");
+    const definitions = document.createElementNS(svgNamespace, "defs");
+    const gradient = document.createElementNS(svgNamespace, "linearGradient");
+    gradient.id = gradientId;
+    gradient.setAttribute("gradientUnits", "userSpaceOnUse");
+    gradient.setAttribute("x1", "0");
+    gradient.setAttribute("y1", "0");
+    gradient.setAttribute("x2", String(width * 100));
+    gradient.setAttribute("y2", String(height * 100));
+    const gradientStart = document.createElementNS(svgNamespace, "stop");
+    gradientStart.setAttribute("offset", "0");
+    gradientStart.classList.add("member-stack-gradient-start");
+    const gradientEnd = document.createElementNS(svgNamespace, "stop");
+    gradientEnd.setAttribute("offset", "1");
+    gradientEnd.classList.add("member-stack-gradient-end");
+    gradient.append(gradientStart, gradientEnd);
+    definitions.appendChild(gradient);
+    const path = document.createElementNS(svgNamespace, "path");
+    path.setAttribute("d", memberOutlinePath(positions));
+    path.setAttribute("stroke", `url(#${gradientId})`);
+    outline.append(definitions, path);
+
+    stack.hidden = false;
+    stack.style.setProperty("--member-stack-width", String(width));
+    stack.style.setProperty("--member-stack-height", String(height));
+    stack.replaceChildren(peopleLink, cells, outline, joinLink);
+    stack.classList.add("is-member-stack-ready");
+  }
+
+  function initMemberStack() {
+    const stack = document.querySelector("[data-member-stack]");
+    if (!stack) return;
+    const fallbackMembers = memberRecordsFromFallback(stack);
+    renderMemberStack(stack, fallbackMembers, fallbackMembers.length);
+
+    fetch("people.html")
+      .then((response) => {
+        if (!response.ok) throw new Error(`People page returned ${response.status}`);
+        return response.text();
+      })
+      .then((html) => {
+        if (!stack.isConnected) return;
+        const peopleDocument = new DOMParser().parseFromString(html, "text/html");
+        const records = memberRecordsFromPage(peopleDocument);
+        if (records.length) renderMemberStack(stack, records, records.length);
+      })
+      .catch(() => {
+        // Keep the inline fallback so the stack also works offline.
+      });
+  }
+
+  initMemberStack();
+
+  /* ---------- Publication media cards ---------- */
+
+  const publicationReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const publicationSaveData = Boolean(navigator.connection?.saveData);
+  let publicationMediaObserver = null;
+
+  function normalizePublicationTitle(value) {
+    return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+
+  function loadPublicationVisual(visual) {
+    if (!visual || visual.dataset.loaded === "true") return;
+    visual.dataset.loaded = "true";
+    visual.style.backgroundImage = `url("${visual.dataset.src}")`;
+    publicationMediaObserver?.unobserve(visual);
+  }
+
+  function observePublicationVisual(visual) {
+    if (!("IntersectionObserver" in window)) {
+      loadPublicationVisual(visual);
+      return;
+    }
+    if (!publicationMediaObserver) {
+      publicationMediaObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) loadPublicationVisual(entry.target);
+          });
+        },
+        { rootMargin: "240px 0px" },
+      );
+    }
+    publicationMediaObserver.observe(visual);
+  }
+
+  function splitPublicationVenue(card) {
+    const venue = card.querySelector(".venue");
+    if (!venue || card.querySelector(".publication-year")) return;
+    const match = venue.textContent.trim().match(/^(.*\S)\s+((?:19|20)\d{2})$/);
+    if (!match) return;
+    venue.textContent = match[1];
+    venue.title = match[1];
+    const year = document.createElement("span");
+    year.className = "publication-year";
+    year.textContent = match[2];
+    venue.insertAdjacentElement("afterend", year);
+  }
+
+  function positionPublicationCardLinks() {
+    document.querySelectorAll(".pub").forEach((card) => {
+      const links = card.querySelector(".pub-meta > .pub-links");
+      const authors = card.querySelector(":scope > .pub-authors");
+      if (!links || !authors || !links.querySelector("a")) return;
+      card.classList.add("has-publication-links");
+      authors.insertAdjacentElement("beforebegin", links);
+    });
+  }
+
+  function stopPublicationMotion(card) {
+    const video = card.querySelector(".pub-card-motion");
+    if (!video) return;
+    video.pause();
+    card.classList.remove("is-motion-playing");
+    try {
+      video.currentTime = 0;
+    } catch (_error) {
+      // The video may not have a seekable range yet.
+    }
+  }
+
+  function playPublicationMotion(card) {
+    const source = card.dataset.previewVideo;
+    if (!source || publicationReduceMotion.matches || publicationSaveData) return;
+    const visual = card.querySelector(".pub-card-visual");
+    loadPublicationVisual(visual);
+    let video = card.querySelector(".pub-card-motion");
+    if (!video) {
+      video = document.createElement("video");
+      video.className = "pub-card-motion";
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = "none";
+      video.disablePictureInPicture = true;
+      video.setAttribute("aria-hidden", "true");
+      video.style.objectPosition = visual.style.backgroundPosition;
+      video.src = source;
+      video.addEventListener("playing", () => card.classList.add("is-motion-playing"));
+      video.addEventListener("error", () => card.classList.remove("is-motion-playing"));
+      visual.appendChild(video);
+    }
+    video.play().catch(() => {});
+  }
+
+  function initPublicationCardInteraction(card) {
+    card.addEventListener("pointerenter", (event) => {
+      if (event.pointerType !== "touch") playPublicationMotion(card);
+    });
+    card.addEventListener("pointerleave", () => {
+      card.classList.remove("is-touch-preview");
+      stopPublicationMotion(card);
+    });
+    card.addEventListener("focusin", () => playPublicationMotion(card));
+    card.addEventListener("focusout", (event) => {
+      if (!card.contains(event.relatedTarget)) stopPublicationMotion(card);
+    });
+    card.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch" || event.target.closest("a")) return;
+      document.querySelectorAll(".publication-media-card.is-touch-preview").forEach((candidate) => {
+        if (candidate !== card) {
+          candidate.classList.remove("is-touch-preview");
+          stopPublicationMotion(candidate);
+        }
+      });
+      card.classList.toggle("is-touch-preview");
+      if (card.classList.contains("is-touch-preview")) playPublicationMotion(card);
+      else stopPublicationMotion(card);
+    });
+  }
+
+  function enhancePublicationCards(manifest) {
+    const entries = [...manifest.publications].sort((a, b) => b.title.length - a.title.length);
+    document.querySelectorAll(".pub").forEach((card) => {
+      const title = normalizePublicationTitle(card.querySelector(".pub-title")?.textContent || "");
+      const entry = entries.find((candidate) =>
+        title.includes(normalizePublicationTitle(candidate.title)),
+      );
+      if (!entry) return;
+
+      card.classList.add("publication-media-card");
+      card.dataset.publicationSlug = entry.slug;
+      if (entry.motion) {
+        card.dataset.previewVideo = `assets/publications/motion/${entry.slug}.mp4`;
+      }
+
+      const visual = document.createElement("div");
+      visual.className = "pub-card-visual";
+      visual.setAttribute("aria-hidden", "true");
+      visual.dataset.src = `assets/publications/card-media/${entry.slug}.webp`;
+      const focalX = entry.focalPoint?.x ?? 0.5;
+      const focalY = entry.focalPoint?.y ?? 0.5;
+      visual.style.backgroundPosition = `${focalX * 100}% ${focalY * 100}%`;
+      card.prepend(visual);
+      splitPublicationVenue(card);
+      observePublicationVisual(visual);
+      initPublicationCardInteraction(card);
+    });
+  }
+
+  positionPublicationCardLinks();
+
+  if (document.querySelector(".pub")) {
+    fetch("assets/publications/media-manifest.json")
+      .then((response) => {
+        if (!response.ok) throw new Error(`Media manifest returned ${response.status}`);
+        return response.json();
+      })
+      .then(enhancePublicationCards)
+      .catch(() => {
+        // The publication cards remain fully usable without media enhancement.
+      });
   }
 
   /* ---------- Hero: a slowly turning generative world ----------
