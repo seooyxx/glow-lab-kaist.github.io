@@ -298,6 +298,169 @@
 
   initMemberStack();
 
+  /* ---------- Publication media cards ---------- */
+
+  const publicationReduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const publicationSaveData = Boolean(navigator.connection?.saveData);
+  let publicationMediaObserver = null;
+
+  function normalizePublicationTitle(value) {
+    return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+
+  function loadPublicationVisual(visual) {
+    if (!visual || visual.dataset.loaded === "true") return;
+    visual.dataset.loaded = "true";
+    visual.style.backgroundImage = `url("${visual.dataset.src}")`;
+    publicationMediaObserver?.unobserve(visual);
+  }
+
+  function observePublicationVisual(visual) {
+    if (!("IntersectionObserver" in window)) {
+      loadPublicationVisual(visual);
+      return;
+    }
+    if (!publicationMediaObserver) {
+      publicationMediaObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) loadPublicationVisual(entry.target);
+          });
+        },
+        { rootMargin: "240px 0px" },
+      );
+    }
+    publicationMediaObserver.observe(visual);
+  }
+
+  function splitPublicationVenue(card) {
+    const venue = card.querySelector(".venue");
+    if (!venue || card.querySelector(".publication-year")) return;
+    const match = venue.textContent.trim().match(/^(.*\S)\s+((?:19|20)\d{2})$/);
+    if (!match) return;
+    venue.textContent = match[1];
+    venue.title = match[1];
+    const year = document.createElement("span");
+    year.className = "publication-year";
+    year.textContent = match[2];
+    venue.insertAdjacentElement("afterend", year);
+  }
+
+  function positionPublicationCardLinks() {
+    document.querySelectorAll(".pub").forEach((card) => {
+      const links = card.querySelector(".pub-meta > .pub-links");
+      const authors = card.querySelector(":scope > .pub-authors");
+      if (!links || !authors || !links.querySelector("a")) return;
+      card.classList.add("has-publication-links");
+      authors.insertAdjacentElement("beforebegin", links);
+    });
+  }
+
+  function stopPublicationMotion(card) {
+    const video = card.querySelector(".pub-card-motion");
+    if (!video) return;
+    video.pause();
+    card.classList.remove("is-motion-playing");
+    try {
+      video.currentTime = 0;
+    } catch (_error) {
+      // The video may not have a seekable range yet.
+    }
+  }
+
+  function playPublicationMotion(card) {
+    const source = card.dataset.previewVideo;
+    if (!source || publicationReduceMotion.matches || publicationSaveData) return;
+    const visual = card.querySelector(".pub-card-visual");
+    loadPublicationVisual(visual);
+    let video = card.querySelector(".pub-card-motion");
+    if (!video) {
+      video = document.createElement("video");
+      video.className = "pub-card-motion";
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = "none";
+      video.disablePictureInPicture = true;
+      video.setAttribute("aria-hidden", "true");
+      video.style.objectPosition = visual.style.backgroundPosition;
+      video.src = source;
+      video.addEventListener("playing", () => card.classList.add("is-motion-playing"));
+      video.addEventListener("error", () => card.classList.remove("is-motion-playing"));
+      visual.appendChild(video);
+    }
+    video.play().catch(() => {});
+  }
+
+  function initPublicationCardInteraction(card) {
+    card.addEventListener("pointerenter", (event) => {
+      if (event.pointerType !== "touch") playPublicationMotion(card);
+    });
+    card.addEventListener("pointerleave", () => {
+      card.classList.remove("is-touch-preview");
+      stopPublicationMotion(card);
+    });
+    card.addEventListener("focusin", () => playPublicationMotion(card));
+    card.addEventListener("focusout", (event) => {
+      if (!card.contains(event.relatedTarget)) stopPublicationMotion(card);
+    });
+    card.addEventListener("pointerdown", (event) => {
+      if (event.pointerType !== "touch" || event.target.closest("a")) return;
+      document.querySelectorAll(".publication-media-card.is-touch-preview").forEach((candidate) => {
+        if (candidate !== card) {
+          candidate.classList.remove("is-touch-preview");
+          stopPublicationMotion(candidate);
+        }
+      });
+      card.classList.toggle("is-touch-preview");
+      if (card.classList.contains("is-touch-preview")) playPublicationMotion(card);
+      else stopPublicationMotion(card);
+    });
+  }
+
+  function enhancePublicationCards(manifest) {
+    const entries = [...manifest.publications].sort((a, b) => b.title.length - a.title.length);
+    document.querySelectorAll(".pub").forEach((card) => {
+      const title = normalizePublicationTitle(card.querySelector(".pub-title")?.textContent || "");
+      const entry = entries.find((candidate) =>
+        title.includes(normalizePublicationTitle(candidate.title)),
+      );
+      if (!entry) return;
+
+      card.classList.add("publication-media-card");
+      card.dataset.publicationSlug = entry.slug;
+      if (entry.motion) {
+        card.dataset.previewVideo = `assets/publications/motion/${entry.slug}.mp4`;
+      }
+
+      const visual = document.createElement("div");
+      visual.className = "pub-card-visual";
+      visual.setAttribute("aria-hidden", "true");
+      visual.dataset.src = `assets/publications/card-media/${entry.slug}.webp`;
+      const focalX = entry.focalPoint?.x ?? 0.5;
+      const focalY = entry.focalPoint?.y ?? 0.5;
+      visual.style.backgroundPosition = `${focalX * 100}% ${focalY * 100}%`;
+      card.prepend(visual);
+      splitPublicationVenue(card);
+      observePublicationVisual(visual);
+      initPublicationCardInteraction(card);
+    });
+  }
+
+  positionPublicationCardLinks();
+
+  if (document.querySelector(".pub")) {
+    fetch("assets/publications/media-manifest.json")
+      .then((response) => {
+        if (!response.ok) throw new Error(`Media manifest returned ${response.status}`);
+        return response.json();
+      })
+      .then(enhancePublicationCards)
+      .catch(() => {
+        // The publication cards remain fully usable without media enhancement.
+      });
+  }
+
   /* ---------- Hero: a slowly turning generative world ----------
      A fibonacci-lattice point sphere with gentle noise displacement,
      rendered with pre-baked glow sprites. Static frame if the user
