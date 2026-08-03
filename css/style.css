@@ -52,6 +52,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+main {
+  view-transition-name: page;
+}
+
 img { max-width: 100%; display: block; }
 
 a { color: inherit; text-decoration: none; }
@@ -141,6 +145,7 @@ h1, h2, h3, h4 {
   align-items: center;
   transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   border-bottom: 1px solid transparent;
+  view-transition-name: site-header;
 }
 .site-header.scrolled {
   background: rgba(248, 250, 253, 0.85);
@@ -390,6 +395,7 @@ h1, h2, h3, h4 {
 }
 
 .hero h1 {
+  view-transition-name: page-heading;
   font-size: clamp(38px, 5.6vw, 62px);
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -598,7 +604,10 @@ h1, h2, h3, h4 {
     transparent 70%);
   pointer-events: none;
 }
-.page-head h1 { font-size: clamp(34px, 5vw, 52px); }
+.page-head h1 {
+  view-transition-name: page-heading;
+  font-size: clamp(34px, 5vw, 52px);
+}
 .page-head p { color: var(--text-muted); font-size: 18px; max-width: 640px; margin: 0; }
 
 .publication-contribution-note {
@@ -1222,6 +1231,39 @@ h1, h2, h3, h4 {
   font-size: 13.5px;
 }
 
+/* ---------- Cross-document page transitions ---------- */
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(*) {
+  animation-duration: 180ms;
+  animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  height: 100%;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(page) {
+  animation: page-fade-out 180ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+::view-transition-new(page) {
+  animation: page-fade-in 180ms cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+
+@keyframes page-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes page-fade-in {
+  from { opacity: 0; }
+}
+
 /* ---------- Reveal on scroll ---------- */
 
 .reveal {
@@ -1237,6 +1279,12 @@ h1, h2, h3, h4 {
 .reveal-delay-2 { transition-delay: 0.2s; }
 
 @media (prefers-reduced-motion: reduce) {
+  main,
+  .site-header,
+  .hero h1,
+  .page-head h1 {
+    view-transition-name: none !important;
+  }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   * { transition-duration: 0.01ms !important; }
