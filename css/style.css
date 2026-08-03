@@ -185,6 +185,11 @@ h1, h2, h3, h4 {
 }
 
 .nav-links {
+  --nav-indicator-x: 0px;
+  --nav-indicator-y: 0px;
+  --nav-indicator-width: 0px;
+  --nav-indicator-size: 9px;
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -192,20 +197,87 @@ h1, h2, h3, h4 {
   margin: 0;
   padding: 0;
 }
-.nav-links a:not(.btn) {
-  display: inline-block;
+
+.nav-links::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: var(--nav-indicator-size);
+  height: var(--nav-indicator-size);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 34%),
+    conic-gradient(from 210deg, #2dd4bf, #6366f1, #c084fc, #2dd4bf);
+  box-shadow:
+    0 0 7px rgba(99, 102, 241, 0.48),
+    0 0 14px rgba(192, 132, 252, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(
+    calc(var(--nav-indicator-x) + var(--nav-indicator-width) + 3px),
+    var(--nav-indicator-y),
+    0
+  );
+  transition:
+    transform 333ms cubic-bezier(0.76, 0, 0.24, 1),
+    opacity 100ms ease-out;
+}
+
+.nav-links.indicator-ready::after { opacity: 1; }
+.nav-links.indicator-immediate::after { transition: none; }
+
+.nav-links a {
+  position: relative;
+  display: grid;
+  grid-template-areas: "label";
+  align-items: center;
+  justify-items: start;
   padding: 8px 14px;
-  border-radius: 8px;
+  color: var(--text-muted);
+  line-height: 1;
+  white-space: nowrap;
+  transition: color 220ms ease-out;
+}
+
+.nav-links a::before,
+.nav-links .nav-label {
+  grid-area: label;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.nav-links a::before {
+  content: attr(data-nav-label);
+  visibility: hidden;
+  font-size: 16px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.nav-links .nav-label {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  display: inline-block;
   font-size: 15px;
   font-weight: 500;
-  color: var(--text-muted);
-  transition: color 0.2s ease, background 0.2s ease;
+  transform: translateY(-50%);
+  transition:
+    font-size 333ms cubic-bezier(0.76, 0, 0.24, 1),
+    font-weight 333ms cubic-bezier(0.76, 0, 0.24, 1);
 }
-.nav-links a:not(.btn):hover { color: var(--text); background: var(--card-hover); }
-.nav-links a:not(.btn)[aria-current="page"] { color: var(--text); }
 
-.nav-cta {
-  margin-left: 10px;
+.nav-links a:hover,
+.nav-links a:focus-visible,
+.nav-links a[aria-current="page"] {
+  color: var(--text);
+}
+
+.nav-links a[aria-current="page"] .nav-label {
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .nav-toggle {

@@ -27,6 +27,66 @@
     });
   }
 
+  /* ---------- Navigation indicator ---------- */
+
+  function initNavigationIndicator() {
+    const navigation = document.querySelector(".nav-links");
+    if (!navigation) return;
+    const navigationLinks = Array.from(navigation.querySelectorAll("a[href]"));
+    let current = navigation.querySelector('[aria-current="page"]') || navigationLinks[0];
+    if (!current) return;
+
+    function moveTo(link, immediate = false) {
+      if (!link) return;
+      const navigationBounds = navigation.getBoundingClientRect();
+      const label = link.querySelector(".nav-label") || link;
+      const labelBounds = label.getBoundingClientRect();
+      const indicatorSize = parseFloat(
+        getComputedStyle(navigation).getPropertyValue("--nav-indicator-size"),
+      ) || 9;
+
+      navigation.classList.toggle("indicator-immediate", immediate);
+      navigation.style.setProperty(
+        "--nav-indicator-x",
+        `${labelBounds.left - navigationBounds.left}px`,
+      );
+      navigation.style.setProperty(
+        "--nav-indicator-y",
+        `${labelBounds.top - navigationBounds.top - indicatorSize * 0.45}px`,
+      );
+      navigation.style.setProperty("--nav-indicator-width", `${labelBounds.width}px`);
+      navigation.classList.add("indicator-ready");
+
+      if (immediate) {
+        requestAnimationFrame(() => navigation.classList.remove("indicator-immediate"));
+      }
+    }
+
+    navigationLinks.forEach((link) => {
+      link.addEventListener("pointerenter", (event) => {
+        if (event.pointerType !== "touch") moveTo(link);
+      });
+      link.addEventListener("focus", () => moveTo(link));
+      link.addEventListener("click", () => moveTo(link));
+    });
+
+    navigation.addEventListener("pointerleave", () => moveTo(current));
+    navigation.addEventListener("focusout", (event) => {
+      if (!navigation.contains(event.relatedTarget)) moveTo(current);
+    });
+
+    function refresh(immediate = true) {
+      current = navigation.querySelector('[aria-current="page"]') || navigationLinks[0];
+      requestAnimationFrame(() => moveTo(current, immediate));
+    }
+
+    refresh();
+    window.addEventListener("resize", () => refresh(), { passive: true });
+    document.fonts?.ready?.then(() => refresh());
+  }
+
+  initNavigationIndicator();
+
   /* ---------- Reveal on scroll ---------- */
 
   const revealed = document.querySelectorAll(".reveal");
