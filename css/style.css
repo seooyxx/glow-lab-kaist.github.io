@@ -1104,6 +1104,42 @@ h1, h2, h3, h4 {
 
 /* ---------- Join ---------- */
 
+.join-notice {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 22px 26px;
+  margin-bottom: 26px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(147, 51, 234, 0.28);
+  background: linear-gradient(
+    100deg,
+    rgba(79, 70, 229, 0.06),
+    rgba(147, 51, 234, 0.06)
+  );
+}
+.join-notice-icon {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--gradient);
+}
+.join-notice h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+.join-notice p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15.5px;
+}
+
 .join-grid {
   display: grid;
   grid-template-columns: 1.15fr 1fr;
