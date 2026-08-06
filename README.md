@@ -44,8 +44,9 @@ Any other static host (Netlify, Cloudflare Pages) also works as-is.
   `<span class="me">` around lab-member names, `*` for equal contribution, and
   `<span class="award">` for oral/spotlight/highlight badges.
 - **New lab member**: in `people.html`, copy a `.person-card` in the students
-  grid. To use a photo instead of the placeholder icon, put it in `assets/`
-  and replace the icon with `<img src="assets/name.jpg" alt="Portrait of …">`.
+  grid. Add a cropped 512×512 WebP portrait to `assets/people/` and update its
+  contact links. The Home member stack reads the same member records from
+  `people.html` and displays up to 16 members.
 - **CV**: replace `assets/CV-SeungWookKim.pdf` when it changes.
 - **Colors / fonts**: edit the CSS custom properties in `:root` at the top of
   `css/style.css`.

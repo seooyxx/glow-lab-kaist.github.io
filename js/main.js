@@ -281,6 +281,9 @@
         const image = document.createElement("img");
         image.src = member.image;
         image.alt = "";
+        image.width = 512;
+        image.height = 512;
+        image.loading = "lazy";
         image.decoding = "async";
         cell.appendChild(image);
       }

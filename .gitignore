@@ -1,0 +1,4 @@
+# Local source portraits; the site uses the optimized WebP versions.
+assets/people/*.jpg
+assets/people/*.jpeg
+assets/people/*.png

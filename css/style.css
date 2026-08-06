@@ -1055,6 +1055,9 @@ h1, h2, h3, h4 {
 }
 
 .person-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
@@ -1083,8 +1086,40 @@ h1, h2, h3, h4 {
   border-radius: 50%;
 }
 
+.person-avatar img[src$="yeonwoo-shin.webp"],
+.member-stack .member-cell img[src$="yeonwoo-shin.webp"] {
+  object-fit: contain;
+  object-position: center;
+  background: #e9e1dc;
+}
+
 .person-name { font-size: 17px; margin: 0 0 3px; }
 .person-role { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+.person-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 14px;
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.person-links a {
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+  transition: color 160ms ease, text-decoration-color 160ms ease;
+}
+
+.person-links a:hover,
+.person-links a:focus-visible {
+  color: var(--accent-2);
+  text-decoration-color: currentColor;
+}
 
 .person-card.person-join {
   border-style: dashed;
